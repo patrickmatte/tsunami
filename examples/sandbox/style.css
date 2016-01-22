@@ -1,0 +1,190 @@
+
+html, body {
+	margin: 0;
+	font-size: 10px;
+	font-family: Helvetica, 'Arial', sans-serif;
+}
+
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	font-family: inherit;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-webkit-font-smoothing:antialiased;
+	-webkit-text-size-adjust: none;
+	outline: 0;
+}
+
+a {
+	font-size: 1.2em;
+	margin: 0.5em 0;
+}
+
+p {
+	margin: 1em 0;
+}
+
+.size1 {
+	font-size: 20rem;
+	background-color: #000000;
+}
+.size2 {
+	font-size: 18rem;
+	background-color: #222233;
+}
+.size3 {
+	font-size: 16rem;
+	background-color: #444466;
+}
+.size4 {
+	font-size: 14rem;
+	background-color: #666699;
+}
+.size5 {
+	font-size: 12rem;
+	background-color: #8888CC;
+}
+.size6 {
+	font-size: 10rem;
+	background-color: #AAAAFF;
+}
+.size7 {
+	font-size: 8rem;
+	background-color: #CCCCFF;
+}
+.size8 {
+	font-size: 6rem;
+	background-color: #EEEEFF;
+}
+
+.shape {
+	position: absolute;
+
+	width: 0em;
+	height: 0em;
+	margin-left: 0em;
+	margin-top: 0em;
+
+	left: 50%;
+	top: 50%;
+
+	z-index: 100;
+
+	/*
+	-ms-transform: scale(0, 0);
+	-webkit-transform: scale(0, 0);
+	transform: scale(0, 0);
+	*/
+
+	-webkit-transition: All 0.5s ease 0s;
+	-moz-transition: All 0.5s ease 0s;
+	-o-transition: All 0.5s ease 0s;
+	-ms-transition: All 0.5s ease 0s;
+	transition: All 0.5s ease 0s;
+}
+
+.shape.visible {
+	margin-left: -0.5em;
+	margin-top: -0.5em;
+	width: 1em;
+	height: 1em;
+
+	/*
+	-ms-transform: scale(1, 1);
+	-webkit-transform: scale(1, 1);
+	transform: scale(1, 1);
+	*/
+}
+
+.shape img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.circle {
+	border-radius: 0.5em;
+	overflow: hidden;
+}
+
+.rectangle {
+	position: relative;
+	width: 100px;
+	height: 50px;
+	background-color: #ff0000;
+}
+
+.preloader {
+	position: absolute;
+	width: 50em;
+	height: 5em;
+	left:50%;
+	margin-left: -25em;
+	top: 50%;
+	margin-top: -2.5em;
+	z-index: 1000;
+	background-color: #aaaaaa;
+	visibility: hidden;
+	opacity: 0;
+	-webkit-transition: opacity 1s ease 0s, visibility 0s ease 1s;
+	-moz-transition: opacity 1s ease 0s, visibility 0s ease 1s;
+	-o-transition: opacity 1s ease 0s, visibility 0s ease 1s;
+	-ms-transition: opacity 1s ease 0s, visibility 0s ease 1s;
+	transition: opacity 1s ease 0s, visibility 0s ease 1s;
+}
+
+.preloader.visible {
+	visibility: visible;
+	opacity:1;
+	-webkit-transition: opacity 1s ease 0s, visibility 0s ease 0s;
+	-moz-transition: opacity 1s ease 0s, visibility 0s ease 0s;
+	-o-transition: opacity 1s ease 0s, visibility 0s ease 0s;
+	-ms-transition: opacity 1s ease 0s, visibility 0s ease 0s;
+	transition: opacity 1s ease 0s, visibility 0s ease 0s;
+}
+
+.preloader .progressbar {
+	width: 100%;
+	height: 100%;
+	background-color: #ff0000;
+	-ms-transform-origin: 0% 0%;
+	-webkit-transform-origin: 0% 0%;
+	transform-origin: 0% 0%;
+}
+
+.anim {
+	-webkit-animation: flash 1s ease 3;
+	-moz-animation: flash 1s ease 3;
+	-ms-animation: flash 1s ease 3;
+	-o-animation: flash 1s ease 3;
+	animation: flash 1s ease 3;
+}
+
+/* animation */
+@-webkit-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@-moz-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@-ms-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@-o-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@keyframes flash {
+	50% { opacity: 0; }
+}
+
