@@ -209,9 +209,6 @@ tsunami = this.tsunami || {};
 		this.path = null;
 		this.root = null;
 		this.popStateHandlerMethod = null;
-
-		this.hideTasks = null;
-		this.showTasks = null;
 	};
 
 	p.toString = function() {

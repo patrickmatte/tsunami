@@ -21,9 +21,24 @@ tsunami = this.tsunami || {};
 		this.push.apply(this, array);
 	};
 
+	Object.defineProperty(p, 'length', {
+		get: function() {
+			return this._value.length;
+		}
+	});
+
 	p.getLength = function() {
 		return this._value.length;
 	};
+
+	Object.defineProperty(o, 'value', {
+		get: function() {
+			return this.getValue();
+		},
+		set: function(value) {
+			this.setValue(value);
+		}
+	});
 
 	p.setValue = function(value) {
 		this._value = value;
@@ -56,7 +71,6 @@ tsunami = this.tsunami || {};
 		}
 		if (added.length > 0) {
 			this.dispatchEvent({type:"add", value:added});
-			this.dispatchEvent({type:"change", value:this._value});
 		}
 		return this._value.length;
 	};
@@ -70,7 +84,6 @@ tsunami = this.tsunami || {};
 		var element = this._value.shift();
 		this.length.setValue(this._value.length);
 		this.dispatchEvent({type:"remove", value:[element]});
-		this.dispatchEvent({type:"change", value:this._value});
 		return element;
 	};
 
@@ -89,10 +102,8 @@ tsunami = this.tsunami || {};
 			added.push(arguments[i]);
 		}
 		this.length.setValue(this._value.length);
+
 		if (added.length > 0) {
-			this.dispatchEvent({type:"remove", value:elements});
-		}
-		if (elements.length > 0 || added.length > 0) {
 			this.dispatchEvent({type:"add", value:added});
 		}
 		return elements;
@@ -107,7 +118,6 @@ tsunami = this.tsunami || {};
 		}
 		if (added.length > 0) {
 			this.dispatchEvent({type:"add", value:added});
-			this.dispatchEvent({type:"change", value:this._value});
 		}
 		return length;
 	};
@@ -115,6 +125,22 @@ tsunami = this.tsunami || {};
 	p.includes = function(element) {
 		var index = this._value.indexOf(element);
 		return (index != -1);
+	};
+
+	p.join = function() {
+		return this._value.join.apply(this._value, arguments);
+	};
+
+	p.concat = function() {
+		return this._value.concat.apply(this._value, arguments);
+	};
+
+	p.slice = function() {
+		return this._value.slice.apply(this._value, arguments);
+	};
+
+	p.toString = function() {
+		return this.getValue().toString();
 	};
 
 }());

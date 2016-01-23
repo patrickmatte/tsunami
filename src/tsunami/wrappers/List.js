@@ -12,20 +12,38 @@ tsunami = this.tsunami || {};
 			}
 			var array = eval(this.getAttribute("dataProvider"));
 			if (array && this.template) {
-				this.setDataProvider(array);
+				this.model = array;
 			}
+			this.elements = [];
 		};
 
-		o.getDataProvider = function() {
-			return this._dataProvider;
+		Object.defineProperty(o, 'model', {
+			get: function() {
+				return this.getModel();
+			},
+			set: function(value) {
+				this.setModel(value);
+			}
+		});
+
+		o.getModel = function() {
+			return this._model;
 		};
 
-		o.setDataProvider = function(value) {
-			this.innerHTML = "";
-			this._dataProvider = value;
+		o.setModel = function(value) {
+			for (var i = 0; i < this.elements.length; i++) {
+				var oldElement = this.elements[i];
+				oldElement.model = null;
+				if (oldElement.parentNode) {
+					oldElement.parentNode.removeChild(oldElement);
+				}
+			}
+			this._model = value;
+			this.elements = [];
 			for (var i = 0; i < value.length; i++) {
 				var model = value[i];
-				var object = tsunami.utils.createElement(this.template, this, "wrapper", model, i);
+				var element = tsunami.utils.createElement(this.template, this, "wrapper", model, i);
+				this.elements.push(element);
 			}
 		};
 

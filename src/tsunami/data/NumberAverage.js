@@ -52,5 +52,8 @@ tsunami = this.tsunami || {};
 		return this._value;
 	};
 
+	p.toString = function() {
+		return this.getValue().toString();
+	};
 
 }());

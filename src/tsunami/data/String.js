@@ -2,11 +2,11 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Number = function(value) {
+	tsunami.String = function(value) {
 		this.construct(value);
 	};
 
-	var p = tsunami.Number.prototype = new tsunami.EventDispatcher();
+	var p = tsunami.String.prototype = new tsunami.EventDispatcher();
 
 	p.constructEventDispatcher = p.construct;
 
@@ -33,21 +33,13 @@ tsunami = this.tsunami || {};
 
 	p.setValue = function(value) {
 		if (value != this._value) {
-			this._value = value;
+			this._value = value.toString();
 			this.dispatchEvent({type:"change", value:this._value});
 		}
 	};
 
-	p.add = function(value) {
-		this.setValue(this._value + value);
-	};
-
-	p.subtract = function(value) {
-		this.setValue(this._value - value);
-	};
-
 	p.toString = function() {
-		return this.getValue().toString();
+		return this.getValue();
 	};
 
 }());
