@@ -8,13 +8,15 @@ tsunami = this.tsunami || {};
 
 	var p = tsunami.Router.prototype = new tsunami.EventDispatcher();
 
+	p.constructor = tsunami.Router;
+
 	p.constructEventDispatcher = p.construct;
 
 	p.construct = function(root) {
 		this.constructEventDispatcher();
 
 		this._overrideLocation = null;
-		this.branches = [];
+		this.branches = new tsunami.Array();
 		this._location = "";
 		this.forwards = {};
 		this.fragment = "";
@@ -59,7 +61,7 @@ tsunami = this.tsunami || {};
 	};
 
 	p.getLocation = function() {
-		return this._getBranchPath(this.branches[this.branches.length - 1]);
+		return this._getBranchPath(this.branches.item(this.branches.length - 1));
 	};
 
 	p.setLocation = function(value, pushState) {
@@ -129,7 +131,7 @@ tsunami = this.tsunami || {};
 		var nextLocationArray = this._nextLocation.split("/");
 		var breakIndex = -1;
 		for (var i = 0; i < this.branches.length; i++) {
-			var branchId = this.branches[i].id;
+			var branchId = this.branches.item(i).id;
 			var nextBranchId = nextLocationArray[i];
 			if (branchId == nextBranchId) {
 				breakIndex = i;
@@ -138,7 +140,7 @@ tsunami = this.tsunami || {};
 		this.hide.branches = this.branches.splice(breakIndex + 1).reverse();
 		var parent = this;
 		if (this.branches.length > 0) {
-			parent = this.branches[this.branches.length - 1];
+			parent = this.branches.item(this.branches.length - 1);
 		}
 		var newBranches = [];
 		for (var i = breakIndex + 1; i < nextLocationArray.length; i++) {
@@ -157,13 +159,13 @@ tsunami = this.tsunami || {};
 			this._inTransition = false;
 			this._gotoLocation(this._overrideLocation);
 		} else {
+			this.branches.push.apply(this.branches, this.show.branches);
 			this.show.start();
 		}
 	};
 
 	p._showComplete = function(event) {
 		this._inTransition = false;
-		this.branches = this.branches.concat(this.show.branches);
 		this.dispatchEvent({type:"complete"});
 		if (this._overrideLocation) {
 			this._gotoLocation(this._overrideLocation);

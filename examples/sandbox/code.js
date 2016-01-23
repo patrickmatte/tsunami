@@ -137,6 +137,14 @@ Preloader = function(o) {
 
 };
 
+Mustache.escape = function(string){
+	return string
+};
+tsunami.mustacheRender = function(text, scope) {
+	var rendered = Mustache.render(text, scope);
+	return rendered;
+};
+
 router = new tsunami.Router();
 router.path = location.origin + location.pathname;
 router.forward("", "circle1/circle2");

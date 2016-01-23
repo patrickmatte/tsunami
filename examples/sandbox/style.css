@@ -188,3 +188,12 @@ p {
 	50% { opacity: 0; }
 }
 
+.breadcrumbs {
+	margin: 1em;
+}
+
+.breadcrumbs a {
+	font-size: 1.2em;
+	color: #808080;
+	margin: 1em;
+}

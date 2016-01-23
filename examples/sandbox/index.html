@@ -7,11 +7,6 @@
 </head>
 <body>
 
-<div class="breadcrumbs" wrapper="tsunami.List">
-	<script class="template" type="text/template">
-		<a href=""></a>
-	</script>
-</div>
 <div class="circle1 shape size1 circle" wrapper="ShapeImage">
 	<div class="circle2 shape size2 circle" wrapper="ShapeImage">
 		<div class="circle3 shape size3 circle" wrapper="ShapeImage">
@@ -77,6 +72,13 @@
 	<a href="?circle3" wrapper="AppButton">circle3</a>
 </p>
 <div class="rectangle" wrapper="Rectangle"></div>
+
+<div class="breadcrumbs" wrapper="tsunami.List" model="router.branches">
+	<script class="template" type="text/template">
+		<a href="{{model.path}}" wrapper="AppButton">{{model.id}}</a>
+	</script>
+</div>
+
 <script src="../../src/tsunami/utils/Polyfills.js"></script>
 <script src="../../src/tsunami/EventDispatcher.js"></script>
 <script src="../../src/tsunami/tsunami.js"></script>
@@ -90,6 +92,10 @@
 <script src="../../src/tsunami/wrappers/DataBind.js"></script>
 <script src="../../src/tsunami/wrappers/Button.js"></script>
 <script src="../../src/tsunami/data/Attribute.js"></script>
+<script src="../../src/tsunami/data/Number.js"></script>
+<script src="../../src/tsunami/data/String.js"></script>
+<script src="../../src/tsunami/data/Boolean.js"></script>
+<script src="../../src/tsunami/data/Array.js"></script>
 <script src="../../src/tsunami/animation/Easing.js"></script>
 <script src="../../src/tsunami/animation/Tween.js"></script>
 <script src="../../src/tsunami/animation/TimeTween.js"></script>
@@ -100,6 +106,7 @@
 <script src="../../src/tsunami/BranchWrapper.js"></script>
 <script src="../../src/tsunami/History.js"></script>
 <script src="../../src/tsunami/Router.js"></script>
+<script src="mustache.min.js"></script>
 <script src="code.js"></script>
 </body>
 </html>

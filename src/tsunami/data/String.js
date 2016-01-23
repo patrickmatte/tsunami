@@ -18,7 +18,7 @@ tsunami = this.tsunami || {};
 		this._value = value;
 	};
 
-	Object.defineProperty(o, 'value', {
+	Object.defineProperty(p, 'value', {
 		get: function() {
 			return this.getValue();
 		},

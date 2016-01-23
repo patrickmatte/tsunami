@@ -62,7 +62,7 @@ tsunami.applyWrapperAttribute = function(element, attributeName) {
 						if (method) {
 							method(object);
 						} else {
-							throw (className + " is an undefined method.");
+							console.log ("Warning! ", className + " is an undefined method.");
 						}
 					}
 				}
