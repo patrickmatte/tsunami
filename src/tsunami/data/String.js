@@ -6,16 +6,16 @@ tsunami = this.tsunami || {};
 		this.construct(value);
 	};
 
-	var p = tsunami.String.prototype = new tsunami.EventDispatcher();
+	var p = tsunami.String.prototype = new tsunami.Model();
 
-	p.constructEventDispatcher = p.construct;
+	p.constructor = tsunami.String;
+
+	p.constructModel = p.construct;
 
 	p.construct = function(value) {
-		this.constructEventDispatcher();
+		this.constructModel();
 
-		this.isData = true;
-
-		this._value = value;
+		this.value = value;
 	};
 
 	Object.defineProperty(p, 'value', {

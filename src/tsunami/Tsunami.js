@@ -41,6 +41,18 @@ if (tsunami.isMobile.any) {
 tsunami.events.complete = "complete";
 tsunami.events.change = "change";
 
+tsunami.evalProperty = function(path, object) {
+	if (!object) {
+		object = window;
+	}
+	var array = path.split("|");
+	while(array.length > 0) {
+		var name = array.shift();
+		object = object[name];
+	}
+	return object;
+};
+
 tsunami.mustacheRender = null;
 
 tsunami.applyWrapperAttribute = function(element, attributeName) {
@@ -251,7 +263,7 @@ tsunami.window.isHidden = function() {
 	}
 }());
 
-tsunami.window.fixURLProtocol = function(url, protocol) {
+tsunami.window.forceProtocol = function(url, protocol) {
 	var isHttps = (protocol.indexOf("https") != -1);
 	var urlIsHttps = (url.indexOf("https") != -1);
 	if (isHttps && !urlIsHttps) {
@@ -261,5 +273,4 @@ tsunami.window.fixURLProtocol = function(url, protocol) {
 	}
 	return url;
 };
-
 

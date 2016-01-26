@@ -6,17 +6,15 @@ tsunami = this.tsunami || {};
 		this.construct(arguments);
 	};
 
-	var p = tsunami.Array.prototype = new tsunami.EventDispatcher();
+	var p = tsunami.Array.prototype = new tsunami.Model();
 
 	p.constructor = tsunami.Array;
 
-	p.constructEventDispatcher = p.construct;
+	p.constructModel = p.construct;
 
 	p.construct = function(array) {
-		this.constructEventDispatcher();
-
-		this.isData = true;
-
+		this.constructModel();
+		this.length = new tsunami.Number(NaN);
 		this._value = [];
 		this.push.apply(this, array);
 	};
@@ -24,14 +22,13 @@ tsunami = this.tsunami || {};
 	p.item = function(index) {
 		return this._value[index];
 	};
-
-
+/*
 	Object.defineProperty(p, 'length', {
 		get: function() {
 			return this._value.length;
 		}
 	});
-
+*/
 	Object.defineProperty(p, 'value', {
 		get: function() {
 			return this.getValue();
@@ -43,6 +40,7 @@ tsunami = this.tsunami || {};
 
 	p.setValue = function(value) {
 		this._value = value;
+		this.length.value = this._value.length;
 		this.dispatchEvent({type:"change", value:this._value});
 	};
 
@@ -56,6 +54,7 @@ tsunami = this.tsunami || {};
 
 	p.pop = function() {
 		var element = this._value.pop();
+		this.length.value = this._value.length;
 		this.dispatchEvent({type:"remove", value:[element]});
 		this.dispatchEvent({type:"change", value:this._value});
 		return element;
@@ -63,12 +62,14 @@ tsunami = this.tsunami || {};
 
 	p.push = function() {
 		var length = this._value.push.apply(this._value, arguments);
+		this.length.value = length;
 		var added = [];
 		for (var i = 0; i < arguments.length; i++) {
 			added.push(arguments[i]);
 		}
 		if (added.length > 0) {
 			this.dispatchEvent({type:"add", value:added});
+			this.dispatchEvent({type:"change", value:this._value});
 		}
 		return length;
 	};
@@ -80,7 +81,9 @@ tsunami = this.tsunami || {};
 
 	p.shift = function() {
 		var element = this._value.shift();
+		this.length.value = this._value.length;
 		this.dispatchEvent({type:"remove", value:[element]});
+		this.dispatchEvent({type:"change", value:this._value});
 		return element;
 	};
 
@@ -91,28 +94,33 @@ tsunami = this.tsunami || {};
 
 	p.splice = function() {
 		var elements = this._value.splice.apply(this._value, arguments);
-		if (elements.length > 0) {
-			this.dispatchEvent({type:"remove", value:elements});
-		}
 		var added = [];
 		for (var i = 2; i < arguments.length; i++) {
 			added.push(arguments[i]);
 		}
-
+		this.length.value = this._value.length;
+		if (elements.length > 0) {
+			this.dispatchEvent({type:"remove", value:elements});
+		}
 		if (added.length > 0) {
 			this.dispatchEvent({type:"add", value:added});
+		}
+		if (elements.length > 0 || added.length > 0) {
+			this.dispatchEvent({type:"change", value:this._value});
 		}
 		return elements;
 	};
 
 	p.unshift = function() {
 		var length = this._value.unshift.apply(this._value, arguments);
+		this.length.value = length;
 		var added = [];
 		for (var i = 0; i < arguments.length; i++) {
 			added.push(arguments[i]);
 		}
 		if (added.length > 0) {
 			this.dispatchEvent({type:"add", value:added});
+			this.dispatchEvent({type:"change", value:this._value});
 		}
 		return length;
 	};

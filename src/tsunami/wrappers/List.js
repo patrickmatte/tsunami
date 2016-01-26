@@ -5,16 +5,26 @@ tsunami = this.tsunami || {};
 	tsunami.List = function(o) {
 
 		o.construct = function() {
+
+			this.changeHandler = this.modelChange.bind(this);
 			this.elements = [];
 
-			var script = this.querySelector(".template");
+			var templateSelector = this.getAttribute("template");
+			var script;
+			if (templateSelector) {
+				script = document.querySelector(templateSelector);
+			}
 			if (script) {
 				this.template = script.text;
-				script.parentNode.removeChild(script);
+				//script.parentNode.removeChild(script);
 			}
-			var array = eval(this.getAttribute("model"));
-			if (array && this.template) {
-				this.model = array;
+			var modelPath = this.getAttribute("model");
+			var model;
+			if (modelPath) {
+				model = eval(modelPath);
+			}
+			if (model && this.template) {
+				this.model = model;
 			}
 		};
 
@@ -32,20 +42,28 @@ tsunami = this.tsunami || {};
 		};
 
 		o.setModel = function(value) {
+			if (this._model) {
+				if (this._model instanceof tsunami.Array) {
+					this._model.removeEventListener("add", this.changeHandler);
+					this._model.removeEventListener("remove", this.changeHandler);
+					this._model.removeEventListener("change", this.changeHandler);
+				}
+			}
 			this._removeElements();
 			this._model = value;
-			this._addElements();
 			if (this._model) {
-				if (this._model.isData) {
-					this._model.addEventListener("add", this.modelChange.bind(this));
-					this._model.addEventListener("remove", this.modelChange.bind(this));
-					this._model.addEventListener("change", this.modelChange.bind(this));
+				if (this._model instanceof tsunami.Array) {
+					this._model.addEventListener("add", this.changeHandler);
+					this._model.addEventListener("remove", this.changeHandler);
+					this._model.addEventListener("change", this.changeHandler);
+					this._addElements(this._model.value);
+				} else {
+					this._addElements(this._model);
 				}
 			}
 		};
 
 		o._removeElements = function() {
-			console.log("_removeElements");
 			for (var i = 0; i < this.elements.length; i++) {
 				var oldElement = this.elements[i];
 				oldElement.model = null;
@@ -56,19 +74,17 @@ tsunami = this.tsunami || {};
 			this.elements = [];
 		};
 
-		o._addElements = function() {
-			console.log("_addElements", this._model.value);
-			for (var i = 0; i < this._model.value.length; i++) {
-				var model = this._model.item(i);
+		o._addElements = function(array) {
+			for (var i = 0; i < array.length; i++) {
+				var model = array[i];
 				var element = tsunami.createElement(this.template, this, "wrapper", model, i);
 				this.elements.push(element);
 			}
 		};
 
 		o.modelChange = function(event) {
-			console.log("modelChange", event.type);
 			this._removeElements();
-			this._addElements();
+			this._addElements(this._model.value);
 		};
 
 		o.construct();

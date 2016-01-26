@@ -61,7 +61,7 @@ tsunami = this.tsunami || {};
 	};
 
 	p.getLocation = function() {
-		return this._getBranchPath(this.branches.item(this.branches.length - 1));
+		return this._getBranchPath(this.branches.item(this.branches.value.length - 1));
 	};
 
 	p.setLocation = function(value, pushState) {
@@ -130,8 +130,8 @@ tsunami = this.tsunami || {};
 	p._startTransitions = function() {
 		var nextLocationArray = this._nextLocation.split("/");
 		var breakIndex = -1;
-		for (var i = 0; i < this.branches.length; i++) {
-			var branchId = this.branches.item(i).id;
+		for (var i = 0; i < this.branches.value.length; i++) {
+			var branchId = this.branches.value[i].id;
 			var nextBranchId = nextLocationArray[i];
 			if (branchId == nextBranchId) {
 				breakIndex = i;
@@ -139,8 +139,8 @@ tsunami = this.tsunami || {};
 		}
 		this.hide.branches = this.branches.splice(breakIndex + 1).reverse();
 		var parent = this;
-		if (this.branches.length > 0) {
-			parent = this.branches.item(this.branches.length - 1);
+		if (this.branches.value.length > 0) {
+			parent = this.branches.value[this.branches.value.length - 1];
 		}
 		var newBranches = [];
 		for (var i = breakIndex + 1; i < nextLocationArray.length; i++) {

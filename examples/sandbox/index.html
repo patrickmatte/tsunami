@@ -60,7 +60,7 @@
 	<a href="?square1/square2/square3/square4/square5" wrapper="AppButton">square5</a>
 	<a href="?square1/square2/square3/square4/square5/square6" wrapper="AppButton">square6</a>
 	<a href="?square1/square2/square3/square4/square5/square6/square7" wrapper="AppButton">square7</a>
-	<a href="?square1/square2/square3/square4/square5/square6/square7/square8" wrapper="AppButton">square7</a>
+	<a href="?square1/square2/square3/square4/square5/square6/square7/square8" wrapper="AppButton">square8</a>
 </p>
 <p>
 	<a href="?" wrapper="AppButton">home</a>
@@ -73,12 +73,22 @@
 </p>
 <div class="rectangle" wrapper="Rectangle"></div>
 
-<div class="breadcrumbs" wrapper="tsunami.List" model="router.branches">
-	<script class="template" type="text/template">
-		<a href="{{model.path}}" wrapper="AppButton">{{model.id}}</a>
-	</script>
+<script class="breadcrumbsTemplate" type="text/template">
+	<a href="{{model.path}}" wrapper="AppButton">{{model.id}}</a>
+</script>
+<div class="breadcrumbs" wrapper="tsunami.List" model="window.router.branches" template=".breadcrumbsTemplate"></div>
+<div class="branchesLength">
+	<span wrapper="tsunami.DataBind" model="window.router.branches.length"></span>
+	<span> </span>
+	<span wrapper="tsunami.Noun" singular="branch" plural="branches" model="window.router.branches.length"></span>
+	<span> in the router location</span>
 </div>
-
+<div wrapper="tsunami.Switch" model="window.router.branches.length">
+	<span class="case" val="0">No branch</span>
+	<span class="case" val="1">1 Branch</span>
+	<span class="case" val="2">2 branches</span>
+	<span class="default">More than 2 branches</span>
+</div>
 <script src="../../src/tsunami/utils/Polyfills.js"></script>
 <script src="../../src/tsunami/EventDispatcher.js"></script>
 <script src="../../src/tsunami/tsunami.js"></script>
@@ -86,16 +96,19 @@
 <script src="../../src/tsunami/geom/Rectangle.js"></script>
 <script src="../../src/tsunami/geom/Ratio.js"></script>
 <script src="../../src/tsunami/Promises.js"></script>
+<script src="../../src/tsunami/data/Model.js"></script>
+<script src="../../src/tsunami/data/Number.js"></script>
+<script src="../../src/tsunami/data/String.js"></script>
+<script src="../../src/tsunami/data/Boolean.js"></script>
+<script src="../../src/tsunami/data/Array.js"></script>
 <script src="../../src/tsunami/wrappers/Element.js"></script>
 <script src="../../src/tsunami/wrappers/DisplayObject.js"></script>
 <script src="../../src/tsunami/wrappers/List.js"></script>
 <script src="../../src/tsunami/wrappers/DataBind.js"></script>
 <script src="../../src/tsunami/wrappers/Button.js"></script>
-<script src="../../src/tsunami/data/Attribute.js"></script>
-<script src="../../src/tsunami/data/Number.js"></script>
-<script src="../../src/tsunami/data/String.js"></script>
-<script src="../../src/tsunami/data/Boolean.js"></script>
-<script src="../../src/tsunami/data/Array.js"></script>
+<script src="../../src/tsunami/wrappers/Attribute.js"></script>
+<script src="../../src/tsunami/wrappers/Noun.js"></script>
+<script src="../../src/tsunami/wrappers/Switch.js"></script>
 <script src="../../src/tsunami/animation/Easing.js"></script>
 <script src="../../src/tsunami/animation/Tween.js"></script>
 <script src="../../src/tsunami/animation/TimeTween.js"></script>

@@ -6,19 +6,27 @@ tsunami = this.tsunami || {};
 		this.construct(arguments);
 	};
 
-	var p = tsunami.NumberAverage.prototype = new tsunami.EventDispatcher();
+	var p = tsunami.NumberAverage.prototype = new tsunami.Model();
 
-	p.constructEventDispatcher = p.construct;
+	p.constructor = tsunami.NumberAverage;
+
+	p.constructModel = p.construct;
 
 	p.construct = function(array) {
+		this.constructModel();
 		this.numberChangeBind = this.numberChangeHandler.bind(this);
 		this._currentNumbers = [];
 		this.average = NaN;
 		this.numbers = new tsunami.Array();
 		this.numbers.addEventListener("change", this.arrayChange.bind(this));
 		this.numbers.setValue(array);
-		this.constructEventDispatcher();
 	};
+
+	Object.defineProperty(p, 'value', {
+		get: function() {
+			return this.getValue();
+		}
+	});
 
 	p.arrayChange = function() {
 		for (var i = 0; i < this._currentNumbers.length; i++) {
@@ -39,7 +47,7 @@ tsunami = this.tsunami || {};
 
 	p.calculateAverage = function() {
 		var total = 0;
-		var array = this.numbers.getValue();
+		var array = this.numbers.value;
 		for (var i = 0; i < array.length; i++) {
 			var number = array[i];
 			total += number.getValue();
