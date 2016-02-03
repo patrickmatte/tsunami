@@ -171,7 +171,7 @@ tsunami = this.tsunami || {};
 			this._gotoLocation(this._overrideLocation);
 		}
 	};
-
+/*
 	p._startPreload = function(task) {
 		this._currentTask = task;
 		//this._currentTask.debugPreload = true;
@@ -193,7 +193,7 @@ tsunami = this.tsunami || {};
 		this.preloader.setProgress(1);
 		this._isMonitoringProgress = false;
 	};
-
+*/
 	p.getBranch = function(id) {
 		return this[id];
 	};
@@ -358,6 +358,7 @@ tsunami = this.tsunami || {};
 			this.branch = this.parent.getBranch(this.id);
 			if (!this.branch) {
 				this.branch = {};
+				console.log("No branch " + this.id + " in " + this.parent.id);
 			}
 			this.branch.root = this.root;
 			this.branch.path = this.path;
@@ -392,7 +393,17 @@ tsunami = this.tsunami || {};
 	};
 
 	p.getBranch = function(id) {
-		return this.branch.getBranch(id);
+		var branch;
+		if (this.branch) {
+			if (this.branch.getBranch) {
+				branch = this.branch.getBranch(id);
+			} else {
+				console.log("The getBranch method isn't implemented by " + this.id);
+			}
+		} else {
+			console.log("No branch with id " + this.id);
+		}
+		return branch;
 	};
 
 }());

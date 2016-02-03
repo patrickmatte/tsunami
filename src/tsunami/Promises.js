@@ -63,15 +63,42 @@ tsunami.promises.progressiveImage = function(url, img) {
 
 	Object.defineProperty(promise2, "progress", {
 		get: function () {
-			var p = promise.progress;
-			console.log("promise.progress", p);
-			return p;
+			return promise.progress;
 		}
 	});
 
 	return promise2;
 
 };
+
+tsunami.promises.template = function(url) {
+
+	var promise = tsunami.promises.xhr(url, "GET", null, null, "text", null);
+	var promise2 = promise.then(function(xhr) {
+		var container = document.createElement("div");
+		container.innerHTML = xhr.response;
+		var scripts = container.querySelectorAll("script");
+		if (!tsunami.templates) {
+			tsunami.templates = {};
+		}
+		for (var i = 0; i < scripts.length; i++) {
+			var script = scripts.item(i);
+			tsunami.templates[script.className] = script.text;
+		}
+		return tsunami.templates;
+	});
+
+	Object.defineProperty(promise2, "progress", {
+		get: function () {
+			return promise.progress;
+		}
+	});
+
+	return promise2;
+
+};
+
+
 
 tsunami.promises.xhr = function(url, method, data, requestHeaders, responseType, noCache) {
 

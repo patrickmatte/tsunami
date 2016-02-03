@@ -1,0 +1,84 @@
+<script class="breadcrumbButton" type="text/template">
+	<a href="{{model.path}}" wrapper="AppButton">{{model.id}}</a>
+</script>
+<script class="main" type="text/template">
+	<div class="circle1 shape size1 circle" wrapper="ShapeImage">
+		<div class="circle2 shape size2 circle" wrapper="ShapeImage">
+			<div class="circle3 shape size3 circle" wrapper="ShapeImage">
+				<div class="circle4 shape size4 circle" wrapper="ShapeImage">
+					<div class="circle5 shape size5 circle" wrapper="ShapeImage">
+						<div class="circle6 shape size6 circle" wrapper="ShapeImage">
+							<div class="circle7 shape size7 circle" wrapper="ShapeImage">
+								<div class="circle8 shape size8 circle" wrapper="ShapeImage">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="square1 shape size1" wrapper="Shape">
+		<div class="square2 shape size2" wrapper="Shape">
+			<div class="square3 shape size3" wrapper="Shape">
+				<div class="square4 shape size4" wrapper="Shape">
+					<div class="square5 shape size5" wrapper="Shape">
+						<div class="square6 shape size6" wrapper="Shape">
+							<div class="square7 shape size7" wrapper="Shape">
+								<div class="square8 shape size8" wrapper="Shape">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p>
+		<a href="?circle1" wrapper="AppButton">circle1</a>
+		<a href="?circle1/circle2" wrapper="AppButton">circle2</a>
+		<a href="?circle1/circle2/circle3" wrapper="AppButton">circle3</a>
+		<a href="?circle1/circle2/circle3/circle4" wrapper="AppButton">circle4</a>
+		<a href="?circle1/circle2/circle3/circle4/circle5" wrapper="AppButton">circle5</a>
+		<a href="?circle1/circle2/circle3/circle4/circle5/circle6" wrapper="AppButton">circle6</a>
+		<a href="?circle1/circle2/circle3/circle4/circle5/circle6/circle7" wrapper="AppButton">circle7</a>
+		<a href="?circle1/circle2/circle3/circle4/circle5/circle6/circle7/circle8" wrapper="AppButton">circle8</a>
+	</p>
+	<p>
+		<a href="?square1" wrapper="AppButton">square1</a>
+		<a href="?square1/square2" wrapper="AppButton">square2</a>
+		<a href="?square1/square2/square3" wrapper="AppButton">square3</a>
+		<a href="?square1/square2/square3/square4" wrapper="AppButton">square4</a>
+		<a href="?square1/square2/square3/square4/square5" wrapper="AppButton">square5</a>
+		<a href="?square1/square2/square3/square4/square5/square6" wrapper="AppButton">square6</a>
+		<a href="?square1/square2/square3/square4/square5/square6/square7" wrapper="AppButton">square7</a>
+		<a href="?square1/square2/square3/square4/square5/square6/square7/square8" wrapper="AppButton">square8</a>
+	</p>
+	<p>
+		<a href="../index.html" wrapper="AppButton">home</a>
+	</p>
+	<p>
+		<a href="?rectangle" wrapper="AppButton">rectangle</a>
+	</p>
+	<p>
+		<a href="?circle3" wrapper="AppButton">circle3</a>
+	</p>
+	<div class="rectangle" wrapper="Rectangle"></div>
+	<div class="breadcrumbs" wrapper="tsunami.List" model="router.branches" template="breadcrumbButton"></div>
+	<div class="branchesLength">
+		<span wrapper="tsunami.DataBind" model="window.router.branches.length"></span>
+		<span> </span>
+		<span wrapper="tsunami.Noun" singular="branch" plural="branches" model="window.router.branches.length"></span>
+		<span> in the router</span>
+	</div>
+	<div>
+		<span>There's </span>
+		<span wrapper="tsunami.Switch" model="window.router.branches.length">
+			<span class="case" val="0">no branch</span>
+			<span class="case" val="1">1 branch</span>
+			<span class="case" val="2">2 branches</span>
+			<span class="default">more than 2 branches</span>
+		</span>
+		<span> in the router</span>
+	</div>
+</script>

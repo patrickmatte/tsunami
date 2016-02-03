@@ -45,7 +45,7 @@ tsunami.evalProperty = function(path, object) {
 	if (!object) {
 		object = window;
 	}
-	var array = path.split("|");
+	var array = path.split(".");
 	while(array.length > 0) {
 		var name = array.shift();
 		object = object[name];
@@ -95,22 +95,53 @@ tsunami.applyWrapper = function(element, method) {
 	method(element);
 };
 
-tsunami.createElement = function(templateText, parent, wrapper, model, index) {
+tsunami.createHTML = function(text, scope) {
+	var factory = document.createElement("div");
+	if (tsunami.mustacheRender) {
+		text = tsunami.mustacheRender(text, scope);
+	}
+	factory.innerHTML = text;
+	var children = [];
+	for (var i = 0; i < factory.children.length; i++) {
+		var child = factory.children.item(i);
+		children.push(child);
+	}
+	return children;
+};
+
+tsunami.insertHTML = function(text, scope, referenceNode) {
+	var children = tsunami.createHTML(text, scope);
+	var parent = referenceNode.parentNode;
+	for (var i = 0; i < children.length; i++) {
+		var child = children[i];
+		parent.insertBefore(child, referenceNode);
+		tsunami.applyWrapperAttribute(child, "wrapper");
+	}
+	return children;
+};
+
+tsunami.appendHTML = function(text, scope, parent) {
+	var children = tsunami.createHTML(text, scope);
+	for (var i = 0; i < children.length; i++) {
+		var child = children[0];
+		parent.appendChild(child);
+	}
+	return children;
+};
+
+tsunami.createElement = function(templateText, parent, wrapper, model, index, branch) {
 	if (!wrapper) {
 		wrapper = "wrapper";
 	}
-	if (!tsunami.factory) {
-		tsunami.factory = document.createElement("div");
-	}
+	var factory = document.createElement("div");
 	if (tsunami.mustacheRender) {
-		templateText = tsunami.mustacheRender(templateText, {model:model, index:index, window:window});
+		templateText = tsunami.mustacheRender(templateText, {model:model, index:index, window:window, branch:branch});
 	}
-	tsunami.factory.innerHTML = templateText;
-	var element = tsunami.factory.children.item(0);
+	factory.innerHTML = templateText;
+	var element = factory.children.item(0);
 	if (parent) {
 		parent.appendChild(element);
 	}
-	tsunami.applyWrapper(element, tsunami.Element);
 	tsunami.applyWrapperAttribute(element, wrapper);
 	if (model) {
 		element.model = model;

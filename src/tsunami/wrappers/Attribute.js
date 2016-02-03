@@ -12,7 +12,6 @@ tsunami = this.tsunami || {};
 
 	p.construct = function(element, attributeName, value, unit) {
 		this.constructEventDispatcher();
-		this.isData = true;
 		this.element = element;
 		this.attributeName = attributeName;
 		this.unit = unit;
@@ -20,6 +19,15 @@ tsunami = this.tsunami || {};
 			this.setValue(value);
 		}
 	};
+
+	Object.defineProperty(p, 'value', {
+		get: function() {
+			return this.getValue();
+		},
+		set: function(value) {
+			this.setValue(value);
+		}
+	});
 
 	p.setValue = function(value) {
 		var string = value.toString();

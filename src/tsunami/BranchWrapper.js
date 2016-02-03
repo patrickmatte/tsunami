@@ -17,7 +17,8 @@ tsunami = this.tsunami || {};
 		};
 
 		o.getBranch = function(id) {
-			return this.querySelector("." + id);
+			var child = this.querySelector("." + id);
+			return child;
 		};
 
 		o.getDefaultBranch = function() {

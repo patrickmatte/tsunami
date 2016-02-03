@@ -1,3 +1,26 @@
+Root = function(o) {
+
+	tsunami.BranchWrapper(o);
+
+	o.load = function(assetList) {
+		var promise = tsunami.promises.template("templates/main.html");
+		assetList.add(promise);
+		return promise.then(this.templateLoaded.bind(this));
+	};
+
+	o.templateLoaded = function(templates) {
+		var children = tsunami.insertHTML(templates.main, {window:window}, this.querySelector(".preloader"));
+		return tsunami.promises.timeout(0.001);
+	};
+
+	o.show = function() {
+
+	};
+
+	return o;
+
+};
+
 AppButton = function(o) {
 
 	o.router = window.router;
@@ -43,7 +66,8 @@ ShapeImage = function(o) {
 		if (ShapeImage.urlsCopy.length == 0) {
 			ShapeImage.urlsCopy = ShapeImage.urls.slice();
 		}
-		var image = tsunami.promises.image(url + "?test=" + Math.round(Math.random() * 100000).toString(), this.background);
+		//var image = tsunami.promises.image(url + "?test=" + Math.round(Math.random() * 100000).toString(), this.background);
+		var image = tsunami.promises.image(url, this.background);
 		assetList.add(image);
 		return image;
 	};
@@ -145,13 +169,13 @@ tsunami.mustacheRender = function(text, scope) {
 	return rendered;
 };
 
+tsunami.applyWrapperAttribute(document.body, "wrapper");
 router = new tsunami.Router();
 router.path = location.origin + location.pathname;
 router.forward("", "circle1/circle2");
 router.forward("circle3", "circle1/circle2/circle3");
 router.fragment = "?";
-tsunami.applyWrapperAttribute(document.body, "wrapper");
-router.root = tsunami.BranchWrapper(document.body);
+router.root = document.body;
 router.setHistory(tsunami.history);
 router.addEventListener("locationChange", function(e) {
 	console.log("router locationChange", e.location);

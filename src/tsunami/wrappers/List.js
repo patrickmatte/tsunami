@@ -5,19 +5,14 @@ tsunami = this.tsunami || {};
 	tsunami.List = function(o) {
 
 		o.construct = function() {
-
 			this.changeHandler = this.modelChange.bind(this);
 			this.elements = [];
 
-			var templateSelector = this.getAttribute("template");
-			var script;
-			if (templateSelector) {
-				script = document.querySelector(templateSelector);
+			var templatePath = this.getAttribute("template");
+			if (templatePath) {
+				this.template = tsunami.evalProperty(templatePath, tsunami.templates);
 			}
-			if (script) {
-				this.template = script.text;
-				//script.parentNode.removeChild(script);
-			}
+
 			var modelPath = this.getAttribute("model");
 			var model;
 			if (modelPath) {
