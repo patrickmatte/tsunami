@@ -9,8 +9,37 @@ Root = function(o) {
 	};
 
 	o.templateLoaded = function(templates) {
-		var children = tsunami.insertHTML(templates.main, {window:window}, this.querySelector(".preloader"));
+		var children = tsunami.insertHTML(templates.main, this, this.querySelector(".preloader"));
+		document.querySelector(".myStringSetter").addEventListener("click", function() {
+			window.model.myString.value = "yo";
+		});
+		document.querySelector(".myInputText").addEventListener("click", function() {
+			document.querySelector(".myStringInput").value = "value set with button";
+		});
+
+		document.querySelector(".myRadioSetter").addEventListener("click", function() {
+			window.model.myRadio.value = "option3";
+		});
+		document.querySelector(".radioChecker").addEventListener("click", function() {
+			var radios = document.querySelectorAll("input[type=radio]");
+			console.log("radios", radios);
+			radios.item(1).checked = true;
+		});
+
+		document.querySelector(".myCheckboxSetter").addEventListener("click", function() {
+			window.model.myCheckbox.value = true;
+		});
+		document.querySelector(".checkboxChecker").addEventListener("click", function() {
+			var checkbox = document.querySelector("input[type=checkbox]");
+			console.log("checkbox", checkbox);
+			checkbox.checked = true;
+		});
+
 		return tsunami.promises.timeout(0.001);
+	};
+
+	o.myStringSetterClick = function() {
+
 	};
 
 	o.show = function() {
@@ -160,6 +189,18 @@ Preloader = function(o) {
 	return o;
 
 };
+
+model = {
+	myString:new tsunami.String("test"),
+	myRadio:new tsunami.String("option3"),
+	myCheckbox:new tsunami.Boolean(false)
+};
+/*
+model.averageNumber = new tsunami.AverageNumber([
+	new tsunami.RangeNumber(10, 0, 20),
+	new tsunami.RangeNumber(5, -5, 10)
+]);
+*/
 
 Mustache.escape = function(string){
 	return string

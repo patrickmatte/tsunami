@@ -24,7 +24,7 @@
 			var modelPath = this.getAttribute("model");
 			var model;
 			if (modelPath) {
-				model = eval(modelPath);
+				model = tsunami.evalProperty(modelPath, window);
 			}
 			if (model) {
 				this.model = model;

@@ -2,13 +2,13 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.NumberAverage = function() {
+	tsunami.AverageNumber = function() {
 		this.construct(arguments);
 	};
 
-	var p = tsunami.NumberAverage.prototype = new tsunami.Model();
+	var p = tsunami.AverageNumber.prototype = new tsunami.Model();
 
-	p.constructor = tsunami.NumberAverage;
+	p.constructor = tsunami.AverageNumber;
 
 	p.constructModel = p.construct;
 
@@ -33,7 +33,7 @@ tsunami = this.tsunami || {};
 			var number = this._currentNumbers[i];
 			number.removeEventListener("change", this.numberChangeBind);
 		}
-		this._currentNumbers = this.numbers.getValue();
+		this._currentNumbers = this.numbers.value;
 		for (var i = 0; i < this._currentNumbers.length; i++) {
 			var number = this._currentNumbers[i];
 			number.addEventListener("change", this.numberChangeBind);

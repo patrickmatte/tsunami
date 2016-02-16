@@ -361,6 +361,7 @@ tsunami = this.tsunami || {};
 				console.log("No branch " + this.id + " in " + this.parent.id);
 			}
 			this.branch.root = this.root;
+			this.branch.router = this.router;
 			this.branch.path = this.path;
 			this.branch.parent = this.parent;
 		}

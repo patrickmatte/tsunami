@@ -32,6 +32,7 @@ tsunami = this.tsunami || {};
 	};
 
 	p.setValue = function(value) {
+		value = eval(value);
 		if (value != this._value) {
 			this._value = value;
 			this.dispatchEvent({type:"change", value:this._value});

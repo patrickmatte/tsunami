@@ -2,18 +2,14 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.DataBind = function(o) {
+	tsunami.InputNumber = function(o) {
 
 		o.construct = function() {
 			this.changeHandler = this.modelChange.bind(this);
 
-			var modelPath = this.getAttribute("model");
-			var model;
-			if (modelPath) {
-				model = tsunami.evalProperty(modelPath, window);
-			}
+			var model = eval(this.getAttribute("model"));
 			if (model) {
-				this.model = model;
+				this.model = eval(model);
 			}
 		};
 

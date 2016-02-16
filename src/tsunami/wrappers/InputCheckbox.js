@@ -2,10 +2,11 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.DataBind = function(o) {
+	tsunami.InputCheckbox = function(o) {
 
 		o.construct = function() {
-			this.changeHandler = this.modelChange.bind(this);
+			this.modelChangeHandler = this.modelChange.bind(this);
+			this.changeHandler = this.changeEvent.bind(this);
 
 			var modelPath = this.getAttribute("model");
 			var model;
@@ -33,24 +34,32 @@ tsunami = this.tsunami || {};
 		o.setModel = function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this._model.removeEventListener("change", this.changeHandler);
+					this.removeEventListener("change", this.changeHandler);
+					this._model.removeEventListener("change", this.modelChangeHandler);
 				}
 			}
 			this._model = value;
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this._model.addEventListener("change", this.changeHandler);
-					this.changeHandler();
+					this.addEventListener("change", this.changeHandler);
+					this._model.addEventListener("change", this.modelChangeHandler);
+					this.modelChangeHandler();
 				} else {
-					this.innerHTML = this._model;
+					this.checked = this._model;
 				}
 			} else {
-				this.innerHTML = "";
+				this.checked = false;
 			}
 		};
 
 		o.modelChange = function(event) {
-			this.innerHTML = this._model.value;
+			this.checked = this._model.value;
+		};
+
+		o.changeEvent = function(e) {
+			this._model.removeEventListener("change", this.modelChangeHandler);
+			this._model.value = this.checked;
+			this._model.addEventListener("change", this.modelChangeHandler);
 		};
 
 		o.construct();

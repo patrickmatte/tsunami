@@ -1,6 +1,9 @@
 <script class="breadcrumbButton" type="text/template">
 	<a href="{{model.path}}" wrapper="AppButton">{{model.id}}</a>
 </script>
+<script class="number" type="text/template">
+	<input type="number" wrapper="tsunami.InputNumber">
+</script>
 <script class="main" type="text/template">
 	<div class="circle1 shape size1 circle" wrapper="ShapeImage">
 		<div class="circle2 shape size2 circle" wrapper="ShapeImage">
@@ -35,24 +38,24 @@
 		</div>
 	</div>
 	<p>
-		<a href="?circle1" wrapper="AppButton">circle1</a>
-		<a href="?circle1/circle2" wrapper="AppButton">circle2</a>
-		<a href="?circle1/circle2/circle3" wrapper="AppButton">circle3</a>
-		<a href="?circle1/circle2/circle3/circle4" wrapper="AppButton">circle4</a>
-		<a href="?circle1/circle2/circle3/circle4/circle5" wrapper="AppButton">circle5</a>
-		<a href="?circle1/circle2/circle3/circle4/circle5/circle6" wrapper="AppButton">circle6</a>
-		<a href="?circle1/circle2/circle3/circle4/circle5/circle6/circle7" wrapper="AppButton">circle7</a>
-		<a href="?circle1/circle2/circle3/circle4/circle5/circle6/circle7/circle8" wrapper="AppButton">circle8</a>
+		<a href="{{router.fragment}}circle1" wrapper="AppButton">circle1</a>
+		<a href="{{router.fragment}}circle1/circle2" wrapper="AppButton">circle2</a>
+		<a href="{{router.fragment}}circle1/circle2/circle3" wrapper="AppButton">circle3</a>
+		<a href="{{router.fragment}}circle1/circle2/circle3/circle4" wrapper="AppButton">circle4</a>
+		<a href="{{router.fragment}}circle1/circle2/circle3/circle4/circle5" wrapper="AppButton">circle5</a>
+		<a href="{{router.fragment}}circle1/circle2/circle3/circle4/circle5/circle6" wrapper="AppButton">circle6</a>
+		<a href="{{router.fragment}}circle1/circle2/circle3/circle4/circle5/circle6/circle7" wrapper="AppButton">circle7</a>
+		<a href="{{router.fragment}}circle1/circle2/circle3/circle4/circle5/circle6/circle7/circle8" wrapper="AppButton">circle8</a>
 	</p>
 	<p>
-		<a href="?square1" wrapper="AppButton">square1</a>
-		<a href="?square1/square2" wrapper="AppButton">square2</a>
-		<a href="?square1/square2/square3" wrapper="AppButton">square3</a>
-		<a href="?square1/square2/square3/square4" wrapper="AppButton">square4</a>
-		<a href="?square1/square2/square3/square4/square5" wrapper="AppButton">square5</a>
-		<a href="?square1/square2/square3/square4/square5/square6" wrapper="AppButton">square6</a>
-		<a href="?square1/square2/square3/square4/square5/square6/square7" wrapper="AppButton">square7</a>
-		<a href="?square1/square2/square3/square4/square5/square6/square7/square8" wrapper="AppButton">square8</a>
+		<a href="{{router.fragment}}square1" wrapper="AppButton">square1</a>
+		<a href="{{router.fragment}}square1/square2" wrapper="AppButton">square2</a>
+		<a href="{{router.fragment}}square1/square2/square3" wrapper="AppButton">square3</a>
+		<a href="{{router.fragment}}square1/square2/square3/square4" wrapper="AppButton">square4</a>
+		<a href="{{router.fragment}}square1/square2/square3/square4/square5" wrapper="AppButton">square5</a>
+		<a href="{{router.fragment}}square1/square2/square3/square4/square5/square6" wrapper="AppButton">square6</a>
+		<a href="{{router.fragment}}square1/square2/square3/square4/square5/square6/square7" wrapper="AppButton">square7</a>
+		<a href="{{router.fragment}}square1/square2/square3/square4/square5/square6/square7/square8" wrapper="AppButton">square8</a>
 	</p>
 	<p>
 		<a href="index.html" wrapper="AppButton">home</a>
@@ -66,14 +69,14 @@
 	<div class="rectangle" wrapper="Rectangle"></div>
 	<div class="breadcrumbs" wrapper="tsunami.List" model="router.branches" template="breadcrumbButton"></div>
 	<div class="branchesLength">
-		<span wrapper="tsunami.DataBind" model="window.router.branches.length"></span>
+		<span wrapper="tsunami.DataBind" model="router.branches.length"></span>
 		<span> </span>
-		<span wrapper="tsunami.Noun" singular="branch" plural="branches" model="window.router.branches.length"></span>
+		<span wrapper="tsunami.Noun" singular="branch" plural="branches" model="router.branches.length"></span>
 		<span> in the router</span>
 	</div>
 	<div>
 		<span>There's </span>
-		<span wrapper="tsunami.Switch" model="window.router.branches.length">
+		<span wrapper="tsunami.Switch" model="router.branches.length">
 			<span class="case" val="0">no branch</span>
 			<span class="case" val="1">1 branch</span>
 			<span class="case" val="2">2 branches</span>
@@ -81,4 +84,30 @@
 		</span>
 		<span> in the router</span>
 	</div>
+<!--
+	<div wrapper="tsunami.DataBind" model="model.myRange"></div>
+	<div wrapper="tsunami.InputNumber" model="" template=""></div>
+-->
+	<br/>
+	<div>model.myCheckbox = <span wrapper="tsunami.DataBind" model="model.myCheckbox"></span></div>
+	<div>
+		<input type="checkbox" wrapper="tsunami.InputCheckbox" model="model.myCheckbox" checked> checkbox<br/>
+		<button class="myCheckboxSetter">set myCheckbox to true</button>
+		<button class="checkboxChecker">check checkbox</button>
+	</div>
+	<br/>
+	<div>model.myRadio = <span wrapper="tsunami.DataBind" model="model.myRadio"></span></div>
+	<div>
+		<input type="radio" name="gender" value="option1" wrapper="tsunami.InputRadio" model="model.myRadio"> Option 1<br/>
+		<input type="radio" name="gender" value="option2" wrapper="tsunami.InputRadio" model="model.myRadio" checked> Option 2<br/>
+		<input type="radio" name="gender" value="option3" wrapper="tsunami.InputRadio" model="model.myRadio"> Option 3<br/>
+		<button class="myRadioSetter">set myRadio to option3</button>
+		<button class="radioChecker">check option2 radio</button>
+	</div>
+	<br/>
+	<div wrapper="tsunami.DataBind" model="model.myString"></div>
+	<div>
+		<input class="myStringInput" type="text" wrapper="tsunami.InputText" model="model.myString">
+	</div>
+	<button class="myStringSetter">set myString value</button><button class="myInputText">set input text value</button>
 </script>
