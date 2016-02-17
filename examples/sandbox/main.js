@@ -27,12 +27,27 @@ Root = function(o) {
 		});
 
 		document.querySelector(".myCheckboxSetter").addEventListener("click", function() {
-			window.model.myCheckbox.value = true;
+			window.model.myCheckbox.value = !window.model.myCheckbox.value;
 		});
 		document.querySelector(".checkboxChecker").addEventListener("click", function() {
 			var checkbox = document.querySelector("input[type=checkbox]");
-			console.log("checkbox", checkbox);
 			checkbox.checked = true;
+		});
+
+		document.querySelector(".myNumberSetter").addEventListener("click", function() {
+			window.model.myNumber.value = 100;
+		});
+		document.querySelector(".numberSetter").addEventListener("click", function() {
+			var number = document.querySelector("input[type=number]");
+			number.value = 50;
+		});
+
+		document.querySelector(".myRangeSetter").addEventListener("click", function() {
+			window.model.myRange.value = 10;
+		});
+		document.querySelector(".rangeSetter").addEventListener("click", function() {
+			var number = document.querySelector("input[type=range]");
+			number.value = 15;
 		});
 
 		return tsunami.promises.timeout(0.001);
@@ -193,7 +208,9 @@ Preloader = function(o) {
 model = {
 	myString:new tsunami.String("test"),
 	myRadio:new tsunami.String("option3"),
-	myCheckbox:new tsunami.Boolean(false)
+	myCheckbox:new tsunami.Boolean(false),
+	myNumber:new tsunami.Number(5),
+	myRange:new tsunami.Number(25)
 };
 /*
 model.averageNumber = new tsunami.AverageNumber([

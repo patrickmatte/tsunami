@@ -5,11 +5,16 @@ tsunami = this.tsunami || {};
 	tsunami.InputNumber = function(o) {
 
 		o.construct = function() {
-			this.changeHandler = this.modelChange.bind(this);
+			this.modelChangeHandler = this.modelChange.bind(this);
+			this.inputHandler = this.inputEvent.bind(this);
 
-			var model = eval(this.getAttribute("model"));
+			var modelPath = this.getAttribute("model");
+			var model;
+			if (modelPath) {
+				model = tsunami.evalProperty(modelPath, window);
+			}
 			if (model) {
-				this.model = eval(model);
+				this.model = model;
 			}
 		};
 
@@ -29,24 +34,32 @@ tsunami = this.tsunami || {};
 		o.setModel = function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this._model.removeEventListener("change", this.changeHandler);
+					this.removeEventListener("input", this.inputHandler);
+					this._model.removeEventListener("change", this.modelChangeHandler);
 				}
 			}
 			this._model = value;
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this._model.addEventListener("change", this.changeHandler);
-					this.changeHandler();
+					this.addEventListener("input", this.inputHandler);
+					this._model.addEventListener("change", this.modelChangeHandler);
+					this.modelChangeHandler();
 				} else {
-					this.innerHTML = this._model;
+					this.value = this._model;
 				}
 			} else {
-				this.innerHTML = "";
+				this.value = NaN;
 			}
 		};
 
 		o.modelChange = function(event) {
-			this.innerHTML = this._model.value;
+			this.value = this._model.value;
+		};
+
+		o.inputEvent = function(e) {
+			this._model.removeEventListener("change", this.modelChangeHandler);
+			this._model.value = this.value;
+			this._model.addEventListener("change", this.modelChangeHandler);
 		};
 
 		o.construct();

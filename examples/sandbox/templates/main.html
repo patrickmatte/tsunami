@@ -84,15 +84,25 @@
 		</span>
 		<span> in the router</span>
 	</div>
-<!--
-	<div wrapper="tsunami.DataBind" model="model.myRange"></div>
-	<div wrapper="tsunami.InputNumber" model="" template=""></div>
--->
+	<br/>
+	<div>model.myRange = <span wrapper="tsunami.DataBind" model="model.myRange"></span></div>
+	<div>
+		<input type="range" wrapper="tsunami.InputNumber" model="model.myRange" min="0" max="50" value="20"><br/>
+		<button class="myRangeSetter">set myRange value to 10</button>
+		<button class="rangeSetter">set input range to 15</button>
+	</div>
+	<br/>
+	<div>model.myNumber = <span wrapper="tsunami.DataBind" model="model.myNumber"></span></div>
+	<div>
+		<input type="number" wrapper="tsunami.InputNumber" model="model.myNumber"><br/>
+		<button class="myNumberSetter">set myNumber to 100</button>
+		<button class="numberSetter">set input number to 50</button>
+	</div>
 	<br/>
 	<div>model.myCheckbox = <span wrapper="tsunami.DataBind" model="model.myCheckbox"></span></div>
 	<div>
 		<input type="checkbox" wrapper="tsunami.InputCheckbox" model="model.myCheckbox" checked> checkbox<br/>
-		<button class="myCheckboxSetter">set myCheckbox to true</button>
+		<button class="myCheckboxSetter">toggle myCheckbox</button>
 		<button class="checkboxChecker">check checkbox</button>
 	</div>
 	<br/>
@@ -109,5 +119,6 @@
 	<div>
 		<input class="myStringInput" type="text" wrapper="tsunami.InputText" model="model.myString">
 	</div>
-	<button class="myStringSetter">set myString value</button><button class="myInputText">set input text value</button>
+	<button class="myStringSetter">set myString value</button>
+	<button class="myInputText">set input text value</button>
 </script>
