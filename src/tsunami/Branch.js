@@ -2,16 +2,15 @@ tsunami = this.tsunami || {};
 
 (function () {
 
-	tsunami.Branch = function(id, branches, defaultBranch) {
-		this.construct(id, branches, defaultBranch);
+	tsunami.Branch = function(id, branches) {
+		this.construct(id, branches);
 	};
 
 	var p = tsunami.Branch.prototype;
 
-	p.construct = function(id, branches, defaultBranch) {
+	p.construct = function(id, branches) {
 		this.id = id;
 		this.branches = branches || [];
-		this.defaultBranch = defaultBranch;
 	};
 
 	p.getBranch = function(id) {
@@ -23,20 +22,16 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	p.getDefaultBranch = function() {
-		return this.defaultBranch;
-	};
-
 	p.load = function() {
-		console.log("tsunami.Branch.load", this.id);
+		//console.log("tsunami.Branch.load", this.id);
 	};
 
 	p.show = function() {
-		console.log("tsunami.Branch.show", this.id);
+		//console.log("tsunami.Branch.show", this.id);
 	};
 
 	p.hide = function() {
-		console.log("tsunami.Branch.hide", this.id);
+		//console.log("tsunami.Branch.hide", this.id);
 	};
 
 }());

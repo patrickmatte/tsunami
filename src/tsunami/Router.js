@@ -18,7 +18,7 @@ tsunami = this.tsunami || {};
 		this._overrideLocation = null;
 		this.branches = new tsunami.Array();
 		this._location = "";
-		this.forwards = {};
+		this.redirects = {};
 		this.fragment = "";
 		this.path = "";
 		this.root = root;
@@ -76,8 +76,8 @@ tsunami = this.tsunami || {};
 		if (path.indexOf("&" != -1)) {
 			path = path.split("&")[0];
 		}
-		var forward = this.forwards[path];
-		path = forward || path;
+		var redirect = this.redirects[path];
+		path = redirect || path;
 
 		this._gotoLocation(path);
 		if (this._history && pushState) {
@@ -171,42 +171,20 @@ tsunami = this.tsunami || {};
 			this._gotoLocation(this._overrideLocation);
 		}
 	};
-/*
-	p._startPreload = function(task) {
-		this._currentTask = task;
-		//this._currentTask.debugPreload = true;
-		this.preloader.setProgress(0);
-		this._isMonitoringProgress = true;
-		this._updatePreloader();
-	};
 
-	p._updatePreloader = function() {
-		if (this._isMonitoringProgress) {
-			var progress = this._currentTask.getProgress();
-			this.preloader.setProgress(progress);
-			window.requestAnimationFrame(this._updatePreloader.bind(this));
-		}
-	};
-
-	p._endPreload = function(task) {
-		this._currentTask = null;
-		this.preloader.setProgress(1);
-		this._isMonitoringProgress = false;
-	};
-*/
 	p.getBranch = function(id) {
 		return this[id];
 	};
 
-	p.forward = function(path, newPath) {
-		this.forwards[path] = newPath;
+	p.redirect = function(path, newPath) {
+		this.redirects[path] = newPath;
 	};
 
 	p.destroy = function() {
 		this._overrideLocation = null;
 		this.branches = null;
 		this._location = null;
-		this.forwards = null;
+		this.redirects = null;
 		this.fragment = null;
 		this.path = null;
 		this.root = null;

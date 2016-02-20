@@ -1,7 +1,7 @@
 tsunami = this.tsunami || {};
-tsunami.promises = tsunami.promises || {};
+tsunami.load = tsunami.load || {};
 
-tsunami.promises.image = function(url, img) {
+tsunami.load.image = function(url, img) {
 
 	if (!img) {
 		img = new Image();
@@ -41,13 +41,13 @@ tsunami.promises.image = function(url, img) {
 
 };
 
-tsunami.promises.progressiveImage = function(url, img) {
+tsunami.load.progressiveImage = function(url, img) {
 
 	if (!img) {
 		img = new Image();
 	}
 
-	var promise = tsunami.promises.xhr(url, "GET", null, null, "blob", false);
+	var promise = tsunami.load.xhr(url, "GET", null, null, "blob", false);
 	var promise2 = promise.then(function(xhr) {
 		return new Promise(function(resolve, reject) {
 
@@ -71,36 +71,7 @@ tsunami.promises.progressiveImage = function(url, img) {
 
 };
 
-tsunami.promises.template = function(url) {
-
-	var promise = tsunami.promises.xhr(url, "GET", null, null, "text", null);
-	var promise2 = promise.then(function(xhr) {
-		var container = document.createElement("div");
-		container.innerHTML = xhr.response;
-		var scripts = container.querySelectorAll("script");
-		if (!tsunami.templates) {
-			tsunami.templates = {};
-		}
-		for (var i = 0; i < scripts.length; i++) {
-			var script = scripts.item(i);
-			tsunami.templates[script.className] = script.text;
-		}
-		return tsunami.templates;
-	});
-
-	Object.defineProperty(promise2, "progress", {
-		get: function () {
-			return promise.progress;
-		}
-	});
-
-	return promise2;
-
-};
-
-
-
-tsunami.promises.xhr = function(url, method, data, requestHeaders, responseType, noCache) {
+tsunami.load.xhr = function(url, method, data, requestHeaders, responseType, noCache) {
 
 	var promise = new Promise(function(resolve, reject) {
 
@@ -169,9 +140,36 @@ tsunami.promises.xhr = function(url, method, data, requestHeaders, responseType,
 
 };
 
-tsunami.promises.json = function(url, method, data, requestHeaders, noCache) {
+tsunami.load.htmlTemplates = function(url) {
 
-	var promise = tsunami.promises.xhr(url, method, data, requestHeaders, "text", noCache);
+	var promise = tsunami.load.xhr(url, "GET", null, null, "text", null);
+	var promise2 = promise.then(function(xhr) {
+		var container = document.createElement("div");
+		container.innerHTML = xhr.response;
+		var scripts = container.querySelectorAll("script");
+		if (!tsunami.templates) {
+			tsunami.templates = {};
+		}
+		for (var i = 0; i < scripts.length; i++) {
+			var script = scripts.item(i);
+			tsunami.templates[script.className] = script.text;
+		}
+		return tsunami.templates;
+	});
+
+	Object.defineProperty(promise2, "progress", {
+		get: function () {
+			return promise.progress;
+		}
+	});
+
+	return promise2;
+
+};
+
+tsunami.load.json = function(url, method, data, requestHeaders, noCache) {
+
+	var promise = tsunami.load.xhr(url, method, data, requestHeaders, "text", noCache);
 	var promise2 = promise.then(function(xhr) {
 		return JSON.parse(xhr.response);
 	}, function() {
@@ -188,14 +186,16 @@ tsunami.promises.json = function(url, method, data, requestHeaders, noCache) {
 
 };
 
-tsunami.promises.script = function(url, id, noCache) {
+tsunami.load.script = function(url, id, noCache) {
 
-	var promise = tsunami.promises.xhr(url, "GET", null, null, "text", noCache);
+	var promise = tsunami.load.xhr(url, "GET", null, null, "text", noCache);
 	var promise2 = promise.then(function(xhr) {
 		var script = document.createElement("script");
 		script.language = "javascript";
 		script.type = "text/javascript";
-		script.id = id;
+		if (id) {
+			script.id = id;
+		}
 		script.text = xhr.response;
 		document.querySelector("head").appendChild(script);
 		return script;
@@ -211,9 +211,9 @@ tsunami.promises.script = function(url, id, noCache) {
 
 };
 
-tsunami.promises.style = function(url, id, noCache) {
+tsunami.load.styleSheet = function(url, id, noCache) {
 
-	var promise = tsunami.promises.xhr(url, "GET", null, null, "text", noCache);
+	var promise = tsunami.load.xhr(url, "GET", null, null, "text", noCache);
 	var promise2 = promise.then(function(xhr) {
 		var style = document.createElement( "style" );
 		style.type = 'text/css';
@@ -233,78 +233,5 @@ tsunami.promises.style = function(url, id, noCache) {
 	});
 
 	return promise2;
-
-};
-
-tsunami.promises.eventListener = function(dispatcher, eventName, stopPropagation, stopImmediatePropagation, preventDefault, ignoreChildEventBubbling) {
-
-	var promise = new Promise(function(resolve, reject) {
-
-		var eventHandler = function(event) {
-			event.stopPropagation();
-			if (ignoreChildEventBubbling && event.target != dispatcher) {
-				return;
-			}
-			if (stopPropagation) {
-				event.stopPropagation();
-			}
-			if (stopImmediatePropagation) {
-				event.stopImmediatePropagation();
-			}
-			if (preventDefault) {
-				event.preventDefault();
-			}
-			dispatcher.removeEventListener(eventName, eventHandler);
-			resolve(event);
-		};
-
-		dispatcher.addEventListener(eventName, eventHandler);
-
-	});
-
-	return promise;
-
-};
-
-tsunami.promises.transition = function(dispatcher) {
-
-	return tsunami.promises.eventListener(dispatcher, tsunami.events.transitionend, true, false, false, true);
-
-};
-
-tsunami.promises.animation = function(dispatcher) {
-
-	return tsunami.promises.eventListener(dispatcher, tsunami.events.animationend, true, false, false, true);
-
-};
-
-tsunami.promises.timeout = function(seconds) {
-
-	var promise = new Promise(function(resolve, reject){
-
-		var timeoutComplete = function(){
-			resolve();
-		};
-
-		setTimeout(timeoutComplete, seconds * 1000);
-
-	});
-
-	return promise;
-
-};
-
-tsunami.promises.callback = function(target, method) {
-
-	var promise = new Promise(function(resolve, reject){
-
-		target[method] = function() {
-			target[method] = function(){};
-			resolve(arguments);
-		};
-
-	});
-
-	return promise;
 
 };

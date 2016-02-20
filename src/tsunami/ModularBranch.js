@@ -2,7 +2,7 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.ModuleBranch = function(id, htmlPaths, scriptPaths, stylePaths, imagePaths, containerSelector, targetSelector) {
+	tsunami.ModularBranch = function(id, imagePaths, scriptPaths, stylePaths, templatePaths, containerSelector) {
 
 		var o = new tsunami.Branch(id);
 

@@ -1,16 +1,6 @@
 tsunami = this.tsunami || {};
 tsunami.window = tsunami.window || {};
 
-
-tsunami.clock = new tsunami.EventDispatcher();
-
-tsunami.clock.time = new Date();
-
-tsunami.clock.tick = function() {
-	tsunami.clock.time = new Date();
-	tsunami.clock.dispatchEvent({type:"tick"});
-};
-
 tsunami.isMobile = {
 	android: navigator.userAgent.match(/Android/i) ? true : false,
 	blackBerry: navigator.userAgent.match(/BlackBerry/i) ? true : false,

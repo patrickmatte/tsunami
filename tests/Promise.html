@@ -8,10 +8,11 @@
 <span class="bold-red">Bold red</span>
 <script src="../src/tsunami/EventDispatcher.js"></script>
 <script src="../src/tsunami/Tsunami.js"></script>
-<script src="../src/tsunami/Promises.js"></script>
+<script src="../src/tsunami/promise.js"></script>
+<script src="../src/tsunami/load.js"></script>
+<script src="../src/tsunami/data/Model.js"></script>
 <script src="../src/tsunami/data/Number.js"></script>
 <script src="../src/tsunami/data/Array.js"></script>
-<script src="../src/tsunami/Promises.js"></script>
 <script src="../src/tsunami/Router.js"></script>
 <script>
 (function() {
@@ -26,24 +27,26 @@
 
 	p.load = function(assetList) {
 		this.assetList = assetList;
-		var jsonPromise = tsunami.promises.json("test.json", "GET", null, null, true);
+		var jsonPromise = tsunami.load.json("test.json", "GET", null, null, true);
 		var imagesPromise = jsonPromise.then(this.loadImages.bind(this)).then(this.imageComplete.bind(this));
 
-		var scriptPromise = tsunami.promises.script("test.js");
+		var scriptPromise = tsunami.load.script("test.js");
 		this.assetList.add(scriptPromise);
 		scriptPromise.then(this.scriptComplete.bind(this));
 
-		var stylePromise = tsunami.promises.style("test.css");
+		var stylePromise = tsunami.load.styleSheet("test.css");
 		this.assetList.add(stylePromise);
 		stylePromise.then(this.styleComplete.bind(this));
 
-		var callback = tsunami.promises.callback(this, "testCallback");
+		var callback = tsunami.promise.callback(this, "testCallback");
 		callback.then(function(value) {
 			console.log("callback success", value);
 		});
 
 		var date = new Date();
-		tsunami.promises.timeout(2).then(function(){console.log("timeout complete", (new Date() - date))});
+		tsunami.promise.timeout(2).then(function(){
+			console.log("timeout complete", (new Date() - date))
+		});
 
 		return Promise.all([imagesPromise, scriptPromise, stylePromise]);
 	};
@@ -51,8 +54,8 @@
 	p.loadImages = function(json) {
 		var promises = [];
 		for (var i = 0; i < json.length; i++) {
-			var imagePromise = tsunami.promises.image(json[i]);
-			//var imagePromise = tsunami.promises.progressiveImage(json[i]);
+			var imagePromise = tsunami.load.image(json[i]);
+			//var imagePromise = tsunami.load.progressiveImage(json[i]);
 			this.assetList.add(imagePromise);
 			promises.push(imagePromise);
 		}
