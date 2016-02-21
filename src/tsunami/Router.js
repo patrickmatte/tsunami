@@ -76,13 +76,21 @@ tsunami = this.tsunami || {};
 		if (path.indexOf("&" != -1)) {
 			path = path.split("&")[0];
 		}
-		var redirect = this.redirects[path];
-		path = redirect || path;
+		path = this.applyRedirect(path);
 
 		this._gotoLocation(path);
 		if (this._history && pushState) {
 			this._history.pushState({path:value}, "", value);
 		}
+	};
+
+	p.applyRedirect = function(path) {
+		var redirect = this.redirects[path];
+		var newPath = redirect || path;
+		if (newPath != path) {
+			newPath = this.applyRedirect(newPath);
+		}
+		return newPath;
 	};
 
 	p._getBranchPath = function(branch) {

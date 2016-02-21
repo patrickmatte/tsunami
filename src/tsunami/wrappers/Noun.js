@@ -4,9 +4,9 @@
 
 		o.construct = function() {
 			this.changeHandler = this.modelChange.bind(this);
-			this.plural = this.getAttribute("plural");
-			this.singular = this.getAttribute("singular");
-			var modelPath = this.getAttribute("model");
+			this.plural = this.getAttribute("data-plural");
+			this.singular = this.getAttribute("data-singular");
+			var modelPath = this.getAttribute("data-model");
 			var model;
 			if (modelPath) {
 				model = tsunami.evalProperty(modelPath, window);

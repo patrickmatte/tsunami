@@ -8,7 +8,7 @@ tsunami = this.tsunami || {};
 			this.modelChangeHandler = this.modelChange.bind(this);
 			this.inputHandler = this.inputEvent.bind(this);
 
-			var modelPath = this.getAttribute("model");
+			var modelPath = this.getAttribute("data-model");
 			var model;
 			if (modelPath) {
 				model = tsunami.evalProperty(modelPath, window);

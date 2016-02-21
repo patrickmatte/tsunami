@@ -61,12 +61,12 @@ tsunami.RouterButton = function(o) {
 
 	tsunami.Button(o);
 
-	var router = o.getAttribute("router");
+	var router = o.getAttribute("data-router");
 	if (router) {
 		o.router = eval(router);
 	}
 
-	var pushState = o.getAttribute("pushstate");
+	var pushState = o.getAttribute("data-pushstate");
 	if (pushState) {
 		o.pushState = eval(pushState);
 	}

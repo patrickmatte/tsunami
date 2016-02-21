@@ -14,14 +14,14 @@
 			var cases = this.querySelectorAll(".case");
 			for (var i = 0; i < cases.length; i++) {
 				var element = cases.item(i);
-				var val = element.getAttribute("val");
+				var val = element.getAttribute("data-value");
 				if (val) {
 					this.caseElements[val] = element;
 				}
 				this.hideElement(element);
 			}
 
-			var modelPath = this.getAttribute("model");
+			var modelPath = this.getAttribute("data-model");
 			var model;
 			if (modelPath) {
 				model = tsunami.evalProperty(modelPath, window);

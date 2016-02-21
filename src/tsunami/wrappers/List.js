@@ -5,55 +5,55 @@ tsunami = this.tsunami || {};
 	tsunami.List = function(o) {
 
 		o.construct = function() {
-			this.changeHandler = this.modelChange.bind(this);
+			this.providerChangeHandler = this.providerChange.bind(this);
 			this.elements = [];
 
-			var templatePath = this.getAttribute("template");
+			var templatePath = this.getAttribute("data-template");
 			if (templatePath) {
-				this.template = tsunami.evalProperty(templatePath, tsunami.templates);
+				this.template = tsunami.evalProperty(templatePath, window);
 			}
 
-			var modelPath = this.getAttribute("model");
-			var model;
-			if (modelPath) {
-				model = eval(modelPath);
+			var providerPath = this.getAttribute("data-provider");
+			var provider;
+			if (providerPath) {
+				provider = eval(providerPath);
 			}
-			if (model && this.template) {
-				this.model = model;
+			if (provider && this.template) {
+				this.provider = provider;
 			}
 		};
 
-		Object.defineProperty(o, 'model', {
+		Object.defineProperty(o, 'provider', {
 			get: function() {
-				return this.getModel();
+				return this.getProvider();
 			},
 			set: function(value) {
-				this.setModel(value);
+				this.setProvider(value);
 			}
 		});
 
-		o.getModel = function() {
-			return this._model;
+		o.getProvider = function() {
+			return this._provider;
 		};
 
-		o.setModel = function(value) {
-			if (this._model) {
-				if (this._model instanceof tsunami.Array) {
-					this._model.removeEventListener("add", this.changeHandler);
-					this._model.removeEventListener("remove", this.changeHandler);
-					this._model.removeEventListener("change", this.changeHandler);
+		o.setProvider = function(value) {
+			if (this._provider) {
+				if (this._provider instanceof tsunami.Array) {
+					this._provider.removeEventListener("add", this.providerChangeHandler);
+					this._provider.removeEventListener("remove", this.providerChangeHandler);
+					this._provider.removeEventListener("change", this.providerChangeHandler);
 				}
 			}
 			this._removeElements();
-			this._model = value;
-			if (this._model) {
-				if (this._model instanceof tsunami.Array) {
-					this._model.addEventListener("add", this.changeHandler);
-					this._model.addEventListener("remove", this.changeHandler);
-					this._model.addEventListener("change", this.changeHandler);
-					this._addElements(this._model.value);
+			this._provider = value;
+			if (this._provider) {
+				if (this._provider instanceof tsunami.Array) {
+					this._provider.addEventListener("add", this.providerChangeHandler);
+					this._provider.addEventListener("remove", this.providerChangeHandler);
+					this._provider.addEventListener("change", this.providerChangeHandler);
+					this._addElements(this._provider.value);
 				} else {
-					this._addElements(this._model);
+					this._addElements(this._provider);
 				}
 			}
 		};
@@ -72,14 +72,20 @@ tsunami = this.tsunami || {};
 		o._addElements = function(array) {
 			for (var i = 0; i < array.length; i++) {
 				var model = array[i];
-				var element = tsunami.createElement(this.template, this, "wrapper", model, i);
-				this.elements.push(element);
+				var elements = tsunami.append(this.template, this, {index:i, model:model, window:window});
+				this.elements = this.elements.concat(elements);
+				/*
+				for (var j = 0; j < elements.length; j++) {
+					var element = elements[j];
+					this.elements.push(element);
+				}
+				*/
 			}
 		};
 
-		o.modelChange = function(event) {
+		o.providerChange = function(event) {
 			this._removeElements();
-			this._addElements(this._model.value);
+			this._addElements(this._provider.value);
 		};
 
 		o.construct();

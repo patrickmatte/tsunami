@@ -88,55 +88,39 @@ tsunami.applyWrapper = function(element, method) {
 tsunami.createHTML = function(text, scope) {
 	var factory = document.createElement("div");
 	if (tsunami.mustacheRender) {
+		if (!scope) {
+			scope = window;
+		}
 		text = tsunami.mustacheRender(text, scope);
 	}
 	factory.innerHTML = text;
 	var children = [];
-	for (var i = 0; i < factory.children.length; i++) {
-		var child = factory.children.item(i);
+	for (var i = 0; i < factory.childNodes.length; i++) {
+		var child = factory.childNodes.item(i);
 		children.push(child);
 	}
 	return children;
 };
 
-tsunami.insertHTML = function(text, scope, referenceNode) {
+tsunami.insertBefore = function(text, referenceNode, scope) {
 	var children = tsunami.createHTML(text, scope);
 	var parent = referenceNode.parentNode;
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.insertBefore(child, referenceNode);
-		tsunami.applyWrapperAttribute(child, "wrapper");
+		tsunami.applyWrapperAttribute(child, "data-wrapper");
 	}
 	return children;
 };
 
-tsunami.appendHTML = function(text, scope, parent) {
+tsunami.append = function(text, parent, scope) {
 	var children = tsunami.createHTML(text, scope);
 	for (var i = 0; i < children.length; i++) {
-		var child = children[0];
+		var child = children[i];
 		parent.appendChild(child);
+		tsunami.applyWrapperAttribute(child, "data-wrapper");
 	}
 	return children;
-};
-
-tsunami.createElement = function(templateText, parent, wrapper, model, index, branch) {
-	if (!wrapper) {
-		wrapper = "wrapper";
-	}
-	var factory = document.createElement("div");
-	if (tsunami.mustacheRender) {
-		templateText = tsunami.mustacheRender(templateText, {model:model, index:index, window:window, branch:branch});
-	}
-	factory.innerHTML = templateText;
-	var element = factory.children.item(0);
-	if (parent) {
-		parent.appendChild(element);
-	}
-	tsunami.applyWrapperAttribute(element, wrapper);
-	if (model) {
-		element.model = model;
-	}
-	return element;
 };
 
 tsunami.getAllObjects = function(element, array) {

@@ -7,7 +7,7 @@ tsunami = this.tsunami || {};
 		o.construct = function() {
 			this.changeHandler = this.modelChange.bind(this);
 
-			var modelPath = this.getAttribute("model");
+			var modelPath = this.getAttribute("data-model");
 			var model;
 			if (modelPath) {
 				model = tsunami.evalProperty(modelPath, window);

@@ -2,15 +2,13 @@ tsunami = this.tsunami || {};
 tsunami.promise = tsunami.promise || {};
 
 
-tsunami.promise.eventListener = function(dispatcher, eventName, stopPropagation, stopImmediatePropagation, preventDefault, ignoreChildEventBubbling) {
+tsunami.promise.eventListener = function(dispatcher, eventName, stopPropagation, stopImmediatePropagation, preventDefault) {
 
 	var promise = new Promise(function(resolve, reject) {
 
 		var eventHandler = function(event) {
+			console.log(event);
 			event.stopPropagation();
-			if (ignoreChildEventBubbling && event.target != dispatcher) {
-				return;
-			}
 			if (stopPropagation) {
 				event.stopPropagation();
 			}
@@ -32,16 +30,56 @@ tsunami.promise.eventListener = function(dispatcher, eventName, stopPropagation,
 
 };
 
-tsunami.promise.transition = function(dispatcher) {
+tsunami.promise.transition = function(dispatcher, properties) {
 
-	return tsunami.promise.eventListener(dispatcher, tsunami.events.transitionend, true, false, false, true);
+	var promise = new Promise(function(resolve, reject) {
+
+		var eventHandler = function(event) {
+			var isProperty;
+			for (var i = 0; i < properties.length; i++) {
+				var prop = properties[i];
+				if (prop == event.propertyName) {
+					isProperty = true;
+				}
+			}
+			if (!isProperty) {
+				return;
+			}
+			event.stopPropagation();
+			//event.stopImmediatePropagation();
+			//event.preventDefault();
+			dispatcher.removeEventListener(tsunami.events.transitionend, eventHandler);
+			resolve(event);
+		};
+
+		dispatcher.addEventListener(tsunami.events.transitionend, eventHandler);
+
+	});
+
+	return promise;
 
 };
 
-tsunami.promise.animation = function(dispatcher) {
+tsunami.promise.animation = function(dispatcher, animationName) {
 
-	return tsunami.promise.eventListener(dispatcher, tsunami.events.animationend, true, false, false, true);
+	var promise = new Promise(function(resolve, reject) {
 
+		var eventHandler = function(event) {
+			if (animationName != event.animationName) {
+				return;
+			}
+			event.stopPropagation();
+			//event.stopImmediatePropagation();
+			//event.preventDefault();
+			dispatcher.removeEventListener(tsunami.events.animationend, eventHandler);
+			resolve(event);
+		};
+
+		dispatcher.addEventListener(tsunami.events.animationend, eventHandler);
+
+	});
+
+	return promise;
 };
 
 tsunami.promise.timeout = function(seconds) {

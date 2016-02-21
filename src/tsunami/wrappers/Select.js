@@ -2,7 +2,9 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.InputNumber = function(o) {
+	tsunami.Select = function(o) {
+
+		tsunami.List(o);
 
 		o.construct = function() {
 			this.modelChangeHandler = this.modelChange.bind(this);
@@ -48,7 +50,7 @@ tsunami = this.tsunami || {};
 					this.value = this._model;
 				}
 			} else {
-				this.value = NaN;
+				this.value = "";
 			}
 		};
 

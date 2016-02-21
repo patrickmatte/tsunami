@@ -152,7 +152,11 @@ tsunami.load.htmlTemplates = function(url) {
 		}
 		for (var i = 0; i < scripts.length; i++) {
 			var script = scripts.item(i);
-			tsunami.templates[script.className] = script.text;
+			var template = script.text;
+			if (tsunami.mustacheParse) {
+				template = tsunami.mustacheParse(template);
+			}
+			tsunami.templates[script.className] = template;
 		}
 		return tsunami.templates;
 	});

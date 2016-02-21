@@ -34,34 +34,68 @@ Preloader = function(o) {
 
 };
 
+AppButton = function(o) {
+
+	o.router = window.router;
+	o.pushState = true;
+
+	tsunami.RouterButton(o);
+
+	return o;
+};
+
 model = {
 	myString:new tsunami.String("test"),
-	myRadio:new tsunami.String("option2"),
-	myCheckbox:new tsunami.Boolean(false),
+	myRadio:new tsunami.String(""),
+	myCheckbox:new tsunami.Boolean(true),
 	myNumber:new tsunami.Number(5),
-	myRange:new tsunami.Number(25)
+	myRange:new tsunami.Number(25),
+	myArray:new tsunami.Array(
+		{value:"volvo", title:"Volvo"},
+		{value:"saab", title:"Saab"},
+		{value:"mercedes", title:"Mercedes"},
+		{value:"audi", title:"Audi"}
+	),
+	mySelectValue:new tsunami.String()
 };
+
+model.myRadio.value = model.myArray.item(2).value;
+model.mySelectValue.value = model.myArray.item(2).value;
 
 Mustache.escape = function(string) {
 	return string;
 };
-
-tsunami.mustacheRender = function(text, scope) {
-	var rendered = Mustache.render(text, scope);
-	return rendered;
+/*
+tsunami.mustacheParse = function(text) {
+	var token = Mustache.parse(text);
+	return text;
 };
 
-tsunami.applyWrapperAttribute(document.body, "wrapper");
+tsunami.mustacheRender = function(text, scope) {
+	return Mustache.render(text, scope);
+};
+*/
+tsunami.mustacheParse = function(text) {
+	var template = Handlebars.compile(text);
+	return template;
+};
+
+tsunami.mustacheRender = function(template, scope) {
+	return template(scope);
+};
+
 router = new tsunami.Router();
+tsunami.applyWrapperAttribute(document.body, "data-wrapper");
 router.path = location.origin + location.pathname;
-router.redirect("", "test/circle1/circle2");
-router.redirect("circle3", "test/circle1/circle2/circle3");
+router.redirect("", "circles");
+router.redirect("circles", "circles/circle1/circle2");
+router.redirect("circle3", "circles/circle1/circle2/circle3");
 router.fragment = "?";
 router.root = new tsunami.Branch("root");
-router.root.branches.push(new tsunami.BranchModule("test", "assets/root.js", "app.Root"));
+router.root.branches.push(new tsunami.BranchModule("circles", "assets/circles.js", "Circles"));
 router.setHistory(tsunami.history);
 router.addEventListener("locationChange", function(e) {
-	console.log("router locationChange", e.location);
+	//console.log("router locationChange", e.location);
 });
 router.addEventListener("complete", function() {
 	console.log("router complete", router.getLocation());

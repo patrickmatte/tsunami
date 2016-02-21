@@ -1,13 +1,3 @@
-AppButton = function(o) {
-
-	o.router = window.router;
-	o.pushState = true;
-
-	tsunami.RouterButton(o);
-
-	return o;
-};
-
 Shape = function(o) {
 
 	tsunami.BranchWrapper(o);
@@ -18,13 +8,13 @@ Shape = function(o) {
 	};
 
 	o.show = function(assetList) {
-		var transition = tsunami.promise.transition(this);
+		var transition = tsunami.promise.transition(this, ["height"]);
 		this.classList.add("visible");
 		return transition;
 	};
 
 	o.hide = function(assetList) {
-		var transition = tsunami.promise.transition(this);
+		var transition = tsunami.promise.transition(this, ["height"]);
 		this.classList.remove("visible");
 		return transition;
 	};
@@ -85,11 +75,11 @@ ShapeImage.urlsCopy = ShapeImage.urls.slice();
 Rectangle = function(o) {
 
 	o.load = function(assetList) {
-		console.log(this.id, "load", "assetList", assetList);
+		//console.log(this.id, "load", "assetList", assetList);
 	};
 
 	o.show = function(assetList) {
-		var animation = tsunami.promise.animation(this);
+		var animation = tsunami.promise.animation(this, "flash");
 		this.classList.add("anim");
 		return animation;
 	};

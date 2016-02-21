@@ -1,0 +1,137 @@
+<script class="breadcrumbButton" type="text/template">
+	<li><a href="{{model.path}}" data-wrapper="AppButton">{{model.id}}</a></li>
+</script>
+<script class="selectOption" type="text/template">
+	<option value="{{model.value}}">{{model.title}}</option>
+</script>
+<script class="radio" type="text/template">
+	<input type="radio" name="carmaker" value="{{model.value}}" data-wrapper="tsunami.InputRadio" data-model="model.myRadio"> {{model.title}}<br/>
+</script>
+<script class="circles" type="text/template">
+	<div class="circle1 shape size1 circle" data-wrapper="ShapeImage">
+		<div class="circle2 shape size2 circle" data-wrapper="ShapeImage">
+			<div class="circle3 shape size3 circle" data-wrapper="ShapeImage">
+				<div class="circle4 shape size4 circle" data-wrapper="ShapeImage">
+					<div class="circle5 shape size5 circle" data-wrapper="ShapeImage">
+						<div class="circle6 shape size6 circle" data-wrapper="ShapeImage">
+							<div class="circle7 shape size7 circle" data-wrapper="ShapeImage">
+								<div class="circle8 shape size8 circle" data-wrapper="ShapeImage">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="square1 shape size1" data-wrapper="Shape">
+		<div class="square2 shape size2" data-wrapper="Shape">
+			<div class="square3 shape size3" data-wrapper="Shape">
+				<div class="square4 shape size4" data-wrapper="Shape">
+					<div class="square5 shape size5" data-wrapper="Shape">
+						<div class="square6 shape size6" data-wrapper="Shape">
+							<div class="square7 shape size7" data-wrapper="Shape">
+								<div class="square8 shape size8" data-wrapper="Shape">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p>
+		<a href="{{router.fragment}}circles/circle1" data-wrapper="AppButton">circle1</a>
+		<a href="{{router.fragment}}circles/circle1/circle2" data-wrapper="AppButton">circle2</a>
+		<a href="{{router.fragment}}circles/circle1/circle2/circle3" data-wrapper="AppButton">circle3</a>
+		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4" data-wrapper="AppButton">circle4</a>
+		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5" data-wrapper="AppButton">circle5</a>
+		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6" data-wrapper="AppButton">circle6</a>
+		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6/circle7" data-wrapper="AppButton">circle7</a>
+		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6/circle7/circle8" data-wrapper="AppButton">circle8</a>
+	</p>
+	<p>
+		<a href="{{router.fragment}}circles/square1" data-wrapper="AppButton">square1</a>
+		<a href="{{router.fragment}}circles/square1/square2" data-wrapper="AppButton">square2</a>
+		<a href="{{router.fragment}}circles/square1/square2/square3" data-wrapper="AppButton">square3</a>
+		<a href="{{router.fragment}}circles/square1/square2/square3/square4" data-wrapper="AppButton">square4</a>
+		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5" data-wrapper="AppButton">square5</a>
+		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6" data-wrapper="AppButton">square6</a>
+		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6/square7" data-wrapper="AppButton">square7</a>
+		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6/square7/square8" data-wrapper="AppButton">square8</a>
+	</p>
+	<p>
+		<a href="index.html" data-wrapper="AppButton">home</a>
+	</p>
+	<p>
+		<a href="?circles/rectangle" data-wrapper="AppButton">rectangle</a>
+	</p>
+	<p>
+		<a href="?circle3" data-wrapper="AppButton">circle3</a>
+	</p>
+	<div class="rectangle" data-wrapper="Rectangle"></div>
+	<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="tsunami.templates.breadcrumbButton"></ul>
+	<div class="branchesLength">
+		<span data-wrapper="tsunami.DataBind" data-model="router.branches.length"></span>
+		<span> </span>
+		<span data-wrapper="tsunami.Noun" data-singular="branch" data-plural="branches" data-model="router.branches.length"></span>
+		<span> in the router</span>
+	</div>
+	<div>
+		<span>There's </span>
+		<span data-wrapper="tsunami.Switch" data-model="router.branches.length">
+			<span class="case" data-value="0">no branch</span>
+			<span class="case" data-value="1">1 branch</span>
+			<span class="case" data-value="2">2 branches</span>
+			<span class="default">more than 2 branches</span>
+		</span>
+		<span> in the router</span>
+	</div>
+	<br/>
+	<div>
+		model.myNumber = <span data-wrapper="tsunami.DataBind" data-model="model.myNumber"></span>
+		<br/>
+		<input type="number" data-wrapper="tsunami.InputNumber" data-model="model.myNumber">
+		<br/>
+		<button class="myNumberSetter">set myNumber to 100</button>
+	</div>
+	<br/>
+	<div>
+		model.myRange = <span data-wrapper="tsunami.DataBind" data-model="model.myRange"></span>
+		<br/>
+		<input type="range" data-wrapper="tsunami.InputNumber" data-model="model.myRange" min="0" max="50" value="20">
+		<br/>
+		<button class="myRangeSetter">set myRange value to 10</button>
+	</div>
+	<br/>
+	<div>
+		model.myCheckbox = <span data-wrapper="tsunami.DataBind" data-model="model.myCheckbox"></span>
+		<br/>
+		<input type="checkbox" data-wrapper="tsunami.InputCheckbox" data-model="model.myCheckbox" checked> checkbox
+		<br/>
+		<button class="myCheckboxSetter">toggle myCheckbox</button>
+	</div>
+	<br/>
+	<div>
+		model.myRadio = <span data-wrapper="tsunami.DataBind" data-model="model.myRadio"></span>
+		<br/>
+		<span data-wrapper="tsunami.List" data-provider="model.myArray" data-template="tsunami.templates.radio"></span>
+		<button class="myRadioSetter">set myRadio to {{window.model.myArray.value.[3].value}}</button>
+	</div>
+	<br/>
+	<div>
+		model.myString = <span data-wrapper="tsunami.DataBind" data-model="model.myString"></span>
+		<br/>
+		<input class="myStringInput" type="text" data-wrapper="tsunami.InputText" data-model="model.myString">
+		<br/>
+		<button class="myStringSetter">set myString value</button>
+	</div>
+	<br/>
+	<div>
+		model.mySelectValue = <span data-wrapper="tsunami.DataBind" data-model="model.mySelectValue"></span>
+		<br/>
+		<select data-wrapper="tsunami.Select" data-model="model.mySelectValue" data-provider="model.myArray" data-template="tsunami.templates.selectOption"></select>
+		<br/>
+		<button class="mySelectValueSetter">set mySelectValue to saab</button>
+	</div>
+</script>

@@ -1,0 +1,150 @@
+
+.size1 {
+	font-size: 20rem;
+	background-color: #000000;
+}
+.size2 {
+	font-size: 18rem;
+	background-color: #222233;
+}
+.size3 {
+	font-size: 16rem;
+	background-color: #444466;
+}
+.size4 {
+	font-size: 14rem;
+	background-color: #666699;
+}
+.size5 {
+	font-size: 12rem;
+	background-color: #8888CC;
+}
+.size6 {
+	font-size: 10rem;
+	background-color: #AAAAFF;
+}
+.size7 {
+	font-size: 8rem;
+	background-color: #CCCCFF;
+}
+.size8 {
+	font-size: 6rem;
+	background-color: #EEEEFF;
+}
+
+.shape {
+	position: absolute;
+
+	margin-left: 0em;
+	margin-top: 0em;
+	width: 0em;
+	height: 0em;
+
+	left: 50%;
+	top: 50%;
+
+	z-index: 100;
+
+	/*
+	-ms-transform: scale(0, 0);
+	-webkit-transform: scale(0, 0);
+	transform: scale(0, 0);
+	*/
+
+	-webkit-transition: All 0.5s ease 0s;
+	-moz-transition: All 0.5s ease 0s;
+	-o-transition: All 0.5s ease 0s;
+	-ms-transition: All 0.5s ease 0s;
+	transition: All 0.5s ease 0s;
+}
+
+.shape.visible {
+	width: 1em;
+	height: 1em;
+	margin-left: -0.5em;
+	margin-top: -0.5em;
+
+	/*
+	-ms-transform: scale(1, 1);
+	-webkit-transform: scale(1, 1);
+	transform: scale(1, 1);
+	*/
+}
+
+.shape img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.circle {
+	border-radius: 0.5em;
+	overflow: hidden;
+	/*background-color: transparent;*/
+}
+
+.rectangle {
+	position: relative;
+	width: 100px;
+	height: 50px;
+	background-color: #ff0000;
+}
+
+
+
+.anim {
+	-webkit-animation: flash 1s ease 3;
+	-moz-animation: flash 1s ease 3;
+	-ms-animation: flash 1s ease 3;
+	-o-animation: flash 1s ease 3;
+	animation: flash 1s ease 3;
+}
+
+/* animation */
+@-webkit-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@-moz-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@-ms-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@-o-keyframes flash {
+	50% { opacity: 0; }
+}
+
+@keyframes flash {
+	50% { opacity: 0; }
+}
+
+.breadcrumbs {
+	margin: 0.5em 0;
+}
+
+.breadcrumbs li {
+	display: inline-block;
+	margin: 0.5em;
+}
+
+.breadcrumbs li:first-child {
+	margin-left: 0;
+}
+
+.breadcrumbs li:last-child {
+	margin-right: 0;
+}
+
+.breadcrumbs a {
+	color: #808080;
+}
+
+.branchesLength {
+}
+

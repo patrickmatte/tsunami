@@ -6,8 +6,10 @@
 	<link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
 <body>
-	<div class="preloader" wrapper="Preloader">
-		<div class="progressbar" wrapper="tsunami.DisplayObject"></div>
+	<a href="?circles" data-wrapper="AppButton">circles</a>
+	<a href="?animation" data-wrapper="AppButton">animation</a>
+	<div class="preloader" data-wrapper="Preloader">
+		<div class="progressbar" data-wrapper="tsunami.DisplayObject"></div>
 	</div>
 	<script src="../../src/tsunami/utils/Polyfills.js"></script>
 	<script src="../../src/tsunami/EventDispatcher.js"></script>
@@ -36,6 +38,7 @@
 	<script src="../../src/tsunami/wrappers/InputNumber.js"></script>
 	<script src="../../src/tsunami/wrappers/InputRadio.js"></script>
 	<script src="../../src/tsunami/wrappers/InputCheckbox.js"></script>
+	<script src="../../src/tsunami/wrappers/Select.js"></script>
 	<script src="../../src/tsunami/animation/Easing.js"></script>
 	<script src="../../src/tsunami/animation/Tween.js"></script>
 	<script src="../../src/tsunami/animation/TimeTween.js"></script>
@@ -48,6 +51,7 @@
 	<script src="../../src/tsunami/History.js"></script>
 	<script src="../../src/tsunami/Router.js"></script>
 	<script src="assets/mustache.min.js"></script>
+	<script src="assets/handlebars-v4.0.5.js"></script>
 	<script src="assets/index.js"></script>
 </body>
 </html>
