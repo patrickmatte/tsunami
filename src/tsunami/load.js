@@ -156,7 +156,7 @@ tsunami.load.htmlTemplates = function(url) {
 			if (tsunami.mustacheParse) {
 				template = tsunami.mustacheParse(template);
 			}
-			tsunami.templates[script.className] = template;
+			tsunami.templates[script.id] = template;
 		}
 		return tsunami.templates;
 	});

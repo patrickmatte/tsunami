@@ -5,8 +5,8 @@ tsunami = this.tsunami || {};
 	tsunami.InputNumber = function(o) {
 
 		o.construct = function() {
-			this.modelChangeHandler = this.modelChange.bind(this);
-			this.inputHandler = this.inputEvent.bind(this);
+			this.modelChangeBind = this.modelChange.bind(this);
+			this.inputBind = this.input.bind(this);
 
 			var modelPath = this.getAttribute("data-model");
 			var model;
@@ -34,16 +34,16 @@ tsunami = this.tsunami || {};
 		o.setModel = function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.removeEventListener("input", this.inputHandler);
-					this._model.removeEventListener("change", this.modelChangeHandler);
+					this.removeEventListener("input", this.inputBind);
+					this._model.removeEventListener("change", this.modelChangeBind);
 				}
 			}
 			this._model = value;
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.addEventListener("input", this.inputHandler);
-					this._model.addEventListener("change", this.modelChangeHandler);
-					this.modelChangeHandler();
+					this.addEventListener("input", this.inputBind);
+					this._model.addEventListener("change", this.modelChangeBind);
+					this.modelChangeBind();
 				} else {
 					this.value = this._model;
 				}
@@ -56,10 +56,14 @@ tsunami = this.tsunami || {};
 			this.value = this._model.value;
 		};
 
-		o.inputEvent = function(e) {
-			this._model.removeEventListener("change", this.modelChangeHandler);
+		o.input = function(e) {
+			this._model.removeEventListener("change", this.modelChangeBind);
 			this._model.value = this.value;
-			this._model.addEventListener("change", this.modelChangeHandler);
+			this._model.addEventListener("change", this.modelChangeBind);
+		};
+
+		o.destroy = function() {
+			this.model = null;
 		};
 
 		o.construct();

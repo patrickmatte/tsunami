@@ -5,7 +5,7 @@ tsunami = this.tsunami || {};
 	tsunami.List = function(o) {
 
 		o.construct = function() {
-			this.providerChangeHandler = this.providerChange.bind(this);
+			this.providerChangeBind = this.providerChange.bind(this);
 			this.elements = [];
 
 			var templatePath = this.getAttribute("data-template");
@@ -18,7 +18,7 @@ tsunami = this.tsunami || {};
 			if (providerPath) {
 				provider = eval(providerPath);
 			}
-			if (provider && this.template) {
+			if (provider) {
 				this.provider = provider;
 			}
 		};
@@ -39,18 +39,18 @@ tsunami = this.tsunami || {};
 		o.setProvider = function(value) {
 			if (this._provider) {
 				if (this._provider instanceof tsunami.Array) {
-					this._provider.removeEventListener("add", this.providerChangeHandler);
-					this._provider.removeEventListener("remove", this.providerChangeHandler);
-					this._provider.removeEventListener("change", this.providerChangeHandler);
+					//this._provider.removeEventListener("add", this.providerChangeBind);
+					//this._provider.removeEventListener("remove", this.providerChangeBind);
+					this._provider.removeEventListener("change", this.providerChangeBind);
 				}
 			}
 			this._removeElements();
 			this._provider = value;
 			if (this._provider) {
 				if (this._provider instanceof tsunami.Array) {
-					this._provider.addEventListener("add", this.providerChangeHandler);
-					this._provider.addEventListener("remove", this.providerChangeHandler);
-					this._provider.addEventListener("change", this.providerChangeHandler);
+					//this._provider.addEventListener("add", this.providerChangeBind);
+					//this._provider.addEventListener("remove", this.providerChangeBind);
+					this._provider.addEventListener("change", this.providerChangeBind);
 					this._addElements(this._provider.value);
 				} else {
 					this._addElements(this._provider);
@@ -86,6 +86,10 @@ tsunami = this.tsunami || {};
 		o.providerChange = function(event) {
 			this._removeElements();
 			this._addElements(this._provider.value);
+		};
+
+		o.destroy = function() {
+			this.provider = [];
 		};
 
 		o.construct();

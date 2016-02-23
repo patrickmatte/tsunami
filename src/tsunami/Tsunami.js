@@ -113,6 +113,20 @@ tsunami.insertBefore = function(text, referenceNode, scope) {
 	return children;
 };
 
+tsunami.remove = function(elements) {
+	for (var i = 0; i < elements.length; i++) {
+		var element = elements[i];
+		element.parentNode.removeChild(element);
+		if (element.destroy) {
+			try {
+				element.destroy();
+			} catch(e) {
+				console.log("error on destroy", element);
+			}
+		}
+	}
+};
+
 tsunami.append = function(text, parent, scope) {
 	var children = tsunami.createHTML(text, scope);
 	for (var i = 0; i < children.length; i++) {

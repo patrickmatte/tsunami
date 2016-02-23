@@ -3,7 +3,7 @@
 	tsunami.Switch = function(o) {
 
 		o.construct = function() {
-			this.changeHandler = this.modelChange.bind(this);
+			this.modelChangeHandler = this.modelChange.bind(this);
 
 			this.caseElements = {};
 
@@ -47,15 +47,14 @@
 		o.setModel = function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this._model.removeEventListener("change", this.changeHandler);
+					this._model.removeEventListener("change", this.modelChangeHandler);
 				}
 			}
 			this._model = value;
-
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this._model.addEventListener("change", this.changeHandler);
-					this.changeHandler();
+					this._model.addEventListener("change", this.modelChangeHandler);
+					this.modelChangeHandler();
 				} else {
 					this.switchValue(this._model);
 				}
@@ -86,6 +85,10 @@
 			if (element) {
 				this.appendChild(element);
 			}
+		};
+
+		o.destroy = function() {
+			this.model = null;
 		};
 
 		o.construct();

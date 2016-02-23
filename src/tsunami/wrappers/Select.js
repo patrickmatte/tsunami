@@ -8,7 +8,7 @@ tsunami = this.tsunami || {};
 
 		o.construct = function() {
 			this.modelChangeHandler = this.modelChange.bind(this);
-			this.inputHandler = this.inputEvent.bind(this);
+			this.inputHandler = this.input.bind(this);
 
 			var modelPath = this.getAttribute("data-model");
 			var model;
@@ -58,10 +58,17 @@ tsunami = this.tsunami || {};
 			this.value = this._model.value;
 		};
 
-		o.inputEvent = function(e) {
+		o.input = function(e) {
 			this._model.removeEventListener("change", this.modelChangeHandler);
 			this._model.value = this.value;
 			this._model.addEventListener("change", this.modelChangeHandler);
+		};
+
+		o.destroyList = o.destroy;
+
+		o.destroy = function() {
+			this.destroyList();
+			this.model = null;
 		};
 
 		o.construct();

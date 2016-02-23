@@ -1,19 +1,19 @@
 Preloader = function(o) {
-	/*
-	 o.show = function() {
-	 console.log("Preloader.show");
-	 var transition = tsunami.promise.transition(this);
-	 this.classList.add("visible");
-	 return transition;
-	 };
+/*
+	o.show = function() {
+	console.log("Preloader.show");
+	var transition = tsunami.promise.transition(this);
+	this.classList.add("visible");
+	return transition;
+	};
 
-	 o.hide = function() {
-	 console.log("Preloader.hide");
-	 var transition = tsunami.promise.transition(this);
-	 this.classList.remove("visible");
-	 return transition;
-	 };
-	 */
+	o.hide = function() {
+	console.log("Preloader.hide");
+	var transition = tsunami.promise.transition(this);
+	this.classList.remove("visible");
+	return transition;
+	};
+*/
 	o.show = function() {
 		this.classList.add("visible");
 	};
@@ -46,21 +46,20 @@ AppButton = function(o) {
 
 model = {
 	myString:new tsunami.String("test"),
-	myRadio:new tsunami.String(""),
 	myCheckbox:new tsunami.Boolean(true),
 	myNumber:new tsunami.Number(5),
 	myRange:new tsunami.Number(25),
-	myArray:new tsunami.Array(
+	carMakers:new tsunami.Array(
 		{value:"volvo", title:"Volvo"},
 		{value:"saab", title:"Saab"},
 		{value:"mercedes", title:"Mercedes"},
 		{value:"audi", title:"Audi"}
 	),
-	mySelectValue:new tsunami.String()
+	myCarMaker:new tsunami.String()
 };
 
-model.myRadio.value = model.myArray.item(2).value;
-model.mySelectValue.value = model.myArray.item(2).value;
+model.myCarMaker.value = model.carMakers.value[2].value;
+model.defaultCarMaker = model.carMakers.value[3].value;
 
 Mustache.escape = function(string) {
 	return string;
@@ -93,6 +92,7 @@ router.redirect("circle3", "circles/circle1/circle2/circle3");
 router.fragment = "?";
 router.root = new tsunami.Branch("root");
 router.root.branches.push(new tsunami.BranchModule("circles", "assets/circles.js", "Circles"));
+router.root.branches.push(new tsunami.BranchModule("forms", "assets/forms.js", "Forms"));
 router.setHistory(tsunami.history);
 router.addEventListener("locationChange", function(e) {
 	//console.log("router locationChange", e.location);
