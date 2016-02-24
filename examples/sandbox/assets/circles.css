@@ -1,38 +1,50 @@
-
-.size1 {
+.shapes {
+	margin-left: 100px;
+	opacity: 0;
+	-webkit-transition: All 0.5s ease 0s;
+	-moz-transition: All 0.5s ease 0s;
+	-o-transition: All 0.5s ease 0s;
+	-ms-transition: All 0.5s ease 0s;
+	transition: All 0.5s ease 0s;
+}
+.shapes.visible {
+	margin-left: 0;
+	opacity:1;
+}
+.shapes .size1 {
 	font-size: 20rem;
 	background-color: #000000;
 }
-.size2 {
+.shapes .size2 {
 	font-size: 18rem;
 	background-color: #222233;
 }
-.size3 {
+.shapes .size3 {
 	font-size: 16rem;
 	background-color: #444466;
 }
-.size4 {
+.shapes .size4 {
 	font-size: 14rem;
 	background-color: #666699;
 }
-.size5 {
+.shapes .size5 {
 	font-size: 12rem;
 	background-color: #8888CC;
 }
-.size6 {
+.shapes .size6 {
 	font-size: 10rem;
 	background-color: #AAAAFF;
 }
-.size7 {
+.shapes .size7 {
 	font-size: 8rem;
 	background-color: #CCCCFF;
 }
-.size8 {
+.shapes .size8 {
 	font-size: 6rem;
 	background-color: #EEEEFF;
 }
 
-.shape {
+.shapes .shape {
 	position: absolute;
 
 	margin-left: 0em;
@@ -58,7 +70,7 @@
 	transition: All 0.5s ease 0s;
 }
 
-.shape.visible {
+.shapes .shape.visible {
 	width: 1em;
 	height: 1em;
 	margin-left: -0.5em;
@@ -71,7 +83,7 @@
 	*/
 }
 
-.shape img {
+.shapes .shape img {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -80,13 +92,13 @@
 	transform: translateX(-50%) translateY(-50%);
 }
 
-.circle {
+.shapes .circle {
 	border-radius: 0.5em;
 	overflow: hidden;
 	/*background-color: transparent;*/
 }
 
-.rectangle {
+.shapes .rectangle {
 	position: relative;
 	width: 100px;
 	height: 50px;
@@ -95,7 +107,7 @@
 
 
 
-.anim {
+.shapes .anim {
 	-webkit-animation: flash 1s ease 3;
 	-moz-animation: flash 1s ease 3;
 	-ms-animation: flash 1s ease 3;
@@ -124,27 +136,28 @@
 	50% { opacity: 0; }
 }
 
-.breadcrumbs {
+.shapes .breadcrumbs {
 	margin: 0.5em 0;
 }
 
-.breadcrumbs li {
+.shapes .breadcrumbs li {
 	display: inline-block;
 	margin: 0.5em;
 }
 
-.breadcrumbs li:first-child {
+.shapes .breadcrumbs li:first-child {
 	margin-left: 0;
 }
 
-.breadcrumbs li:last-child {
+.shapes .breadcrumbs li:last-child {
 	margin-right: 0;
 }
 
-.breadcrumbs a {
+.shapes .breadcrumbs a {
 	color: #808080;
 }
 
-.branchesLength {
+.shapes .branchesLength {
+
 }
 

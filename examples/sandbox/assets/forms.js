@@ -51,10 +51,23 @@ Forms = function() {
 		document.querySelector(".mySelectValueSetter").addEventListener("click", function() {
 			window.model.myCarMaker.value = "audi";
 		});
+
+		var element = document.querySelector("div.forms");
+		var transition = tsunami.promise.transition(element, ["opacity"]);
+		element.classList.add("visible");
+		return transition;
 	};
 
 	o.hide = function() {
-		tsunami.removeElements(this.elements);
+		var element = document.querySelector("div.forms");
+		var transition = tsunami.promise.transition(element, ["opacity"]);
+		element.classList.remove("visible");
+
+		return transition.then(this.hideComplete.bind(this));
+	};
+
+	o.hideComplete = function() {
+		tsunami.remove(this.elements);
 		this.elements = null;
 	};
 

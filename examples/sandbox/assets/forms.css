@@ -1,4 +1,19 @@
-button {
+.forms {
+	margin-left: 100px;
+	opacity: 0;
+	-webkit-transition: All 0.5s ease 0s;
+	-moz-transition: All 0.5s ease 0s;
+	-o-transition: All 0.5s ease 0s;
+	-ms-transition: All 0.5s ease 0s;
+	transition: All 0.5s ease 0s;
+}
+
+.forms.visible {
+	margin-left: 0;
+	opacity:1;
+}
+
+.forms button {
 	padding: 0.5em;
 	margin: 0.5em;
 }

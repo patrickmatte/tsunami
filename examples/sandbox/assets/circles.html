@@ -2,14 +2,16 @@
 	<li><a href="{{model.path}}" data-wrapper="AppButton">{{model.id}}</a></li>
 </script>
 <script id="circles" type="text/template">
-	<div class="circle1 shape size1 circle" data-wrapper="ShapeImage">
-		<div class="circle2 shape size2 circle" data-wrapper="ShapeImage">
-			<div class="circle3 shape size3 circle" data-wrapper="ShapeImage">
-				<div class="circle4 shape size4 circle" data-wrapper="ShapeImage">
-					<div class="circle5 shape size5 circle" data-wrapper="ShapeImage">
-						<div class="circle6 shape size6 circle" data-wrapper="ShapeImage">
-							<div class="circle7 shape size7 circle" data-wrapper="ShapeImage">
-								<div class="circle8 shape size8 circle" data-wrapper="ShapeImage">
+	<div class="shapes" data-wrapper="tsunami.DisplayObject">
+		<div class="circle1 shape size1 circle" data-wrapper="ShapeImage">
+			<div class="circle2 shape size2 circle" data-wrapper="ShapeImage">
+				<div class="circle3 shape size3 circle" data-wrapper="ShapeImage">
+					<div class="circle4 shape size4 circle" data-wrapper="ShapeImage">
+						<div class="circle5 shape size5 circle" data-wrapper="ShapeImage">
+							<div class="circle6 shape size6 circle" data-wrapper="ShapeImage">
+								<div class="circle7 shape size7 circle" data-wrapper="ShapeImage">
+									<div class="circle8 shape size8 circle" data-wrapper="ShapeImage">
+									</div>
 								</div>
 							</div>
 						</div>
@@ -17,15 +19,15 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="square1 shape size1" data-wrapper="Shape">
-		<div class="square2 shape size2" data-wrapper="Shape">
-			<div class="square3 shape size3" data-wrapper="Shape">
-				<div class="square4 shape size4" data-wrapper="Shape">
-					<div class="square5 shape size5" data-wrapper="Shape">
-						<div class="square6 shape size6" data-wrapper="Shape">
-							<div class="square7 shape size7" data-wrapper="Shape">
-								<div class="square8 shape size8" data-wrapper="Shape">
+		<div class="square1 shape size1" data-wrapper="Shape">
+			<div class="square2 shape size2" data-wrapper="Shape">
+				<div class="square3 shape size3" data-wrapper="Shape">
+					<div class="square4 shape size4" data-wrapper="Shape">
+						<div class="square5 shape size5" data-wrapper="Shape">
+							<div class="square6 shape size6" data-wrapper="Shape">
+								<div class="square7 shape size7" data-wrapper="Shape">
+									<div class="square8 shape size8" data-wrapper="Shape">
+									</div>
 								</div>
 							</div>
 						</div>
@@ -33,52 +35,52 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<p>
-		<a href="{{router.path}}{{router.fragment}}circles/circle1" data-wrapper="AppButton">circle1</a>
-		<a href="{{router.fragment}}circles/circle1/circle2" data-wrapper="AppButton">circle2</a>
-		<a href="{{router.fragment}}circles/circle1/circle2/circle3" data-wrapper="AppButton">circle3</a>
-		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4" data-wrapper="AppButton">circle4</a>
-		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5" data-wrapper="AppButton">circle5</a>
-		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6" data-wrapper="AppButton">circle6</a>
-		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6/circle7" data-wrapper="AppButton">circle7</a>
-		<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6/circle7/circle8" data-wrapper="AppButton">circle8</a>
-	</p>
-	<p>
-		<a href="{{router.fragment}}circles/square1" data-wrapper="AppButton">square1</a>
-		<a href="{{router.fragment}}circles/square1/square2" data-wrapper="AppButton">square2</a>
-		<a href="{{router.fragment}}circles/square1/square2/square3" data-wrapper="AppButton">square3</a>
-		<a href="{{router.fragment}}circles/square1/square2/square3/square4" data-wrapper="AppButton">square4</a>
-		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5" data-wrapper="AppButton">square5</a>
-		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6" data-wrapper="AppButton">square6</a>
-		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6/square7" data-wrapper="AppButton">square7</a>
-		<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6/square7/square8" data-wrapper="AppButton">square8</a>
-	</p>
-	<p>
-		<a href="{{router.fragment}}" data-wrapper="AppButton">home</a>
-	</p>
-	<p>
-		<a href="?circles/rectangle" data-wrapper="AppButton">rectangle</a>
-	</p>
-	<p>
-		<a href="?circle3" data-wrapper="AppButton">circle3</a>
-	</p>
-	<div class="rectangle" data-wrapper="Rectangle"></div>
-	<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="tsunami.templates.breadcrumbButton"></ul>
-	<div class="branchesLength">
-		<span data-wrapper="tsunami.DataBind" data-model="router.branches.length"></span>
-		<span> </span>
-		<span data-wrapper="tsunami.Noun" data-singular="branch" data-plural="branches" data-model="router.branches.length"></span>
-		<span> in the router</span>
-	</div>
-	<div>
-		<span>There's </span>
-		<span data-wrapper="tsunami.Switch" data-model="router.branches.length">
-			<span class="case" data-value="0">no branch</span>
-			<span class="case" data-value="1">1 branch</span>
-			<span class="case" data-value="2">2 branches</span>
-			<span class="default">more than 2 branches</span>
-		</span>
-		<span> in the router</span>
+		<p>
+			<a href="{{router.path}}{{router.fragment}}circles/circle1" data-wrapper="AppButton">circle1</a>
+			<a href="{{router.fragment}}circles/circle1/circle2" data-wrapper="AppButton">circle2</a>
+			<a href="{{router.fragment}}circles/circle1/circle2/circle3" data-wrapper="AppButton">circle3</a>
+			<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4" data-wrapper="AppButton">circle4</a>
+			<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5" data-wrapper="AppButton">circle5</a>
+			<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6" data-wrapper="AppButton">circle6</a>
+			<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6/circle7" data-wrapper="AppButton">circle7</a>
+			<a href="{{router.fragment}}circles/circle1/circle2/circle3/circle4/circle5/circle6/circle7/circle8" data-wrapper="AppButton">circle8</a>
+		</p>
+		<p>
+			<a href="{{router.fragment}}circles/square1" data-wrapper="AppButton">square1</a>
+			<a href="{{router.fragment}}circles/square1/square2" data-wrapper="AppButton">square2</a>
+			<a href="{{router.fragment}}circles/square1/square2/square3" data-wrapper="AppButton">square3</a>
+			<a href="{{router.fragment}}circles/square1/square2/square3/square4" data-wrapper="AppButton">square4</a>
+			<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5" data-wrapper="AppButton">square5</a>
+			<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6" data-wrapper="AppButton">square6</a>
+			<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6/square7" data-wrapper="AppButton">square7</a>
+			<a href="{{router.fragment}}circles/square1/square2/square3/square4/square5/square6/square7/square8" data-wrapper="AppButton">square8</a>
+		</p>
+		<p>
+			<a href="{{router.fragment}}" data-wrapper="AppButton">home</a>
+		</p>
+		<p>
+			<a href="?circles/rectangle" data-wrapper="AppButton">rectangle</a>
+		</p>
+		<p>
+			<a href="?circle3" data-wrapper="AppButton">circle3</a>
+		</p>
+		<div class="rectangle" data-wrapper="Rectangle"></div>
+		<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="tsunami.templates.breadcrumbButton"></ul>
+		<div class="branchesLength">
+			<span data-wrapper="tsunami.DataBind" data-model="router.branches.length"></span>
+			<span> </span>
+			<span data-wrapper="tsunami.Noun" data-singular="branch" data-plural="branches" data-model="router.branches.length"></span>
+			<span> in the router</span>
+		</div>
+		<div>
+			<span>There's </span>
+			<span data-wrapper="tsunami.Switch" data-model="router.branches.length">
+				<span class="case" data-value="0">no branch</span>
+				<span class="case" data-value="1">1 branch</span>
+				<span class="case" data-value="2">2 branches</span>
+				<span class="default">more than 2 branches</span>
+			</span>
+			<span> in the router</span>
+		</div>
 	</div>
 </script>

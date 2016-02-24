@@ -2,7 +2,7 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.List = function(o) {
+	tsunami.List = function(o, scope) {
 
 		o.construct = function() {
 			this.providerChangeBind = this.providerChange.bind(this);
@@ -72,7 +72,7 @@ tsunami = this.tsunami || {};
 		o._addElements = function(array) {
 			for (var i = 0; i < array.length; i++) {
 				var model = array[i];
-				var elements = tsunami.append(this.template, this, {index:i, model:model, window:window});
+				var elements = tsunami.append(this.template, this, {model:model, index:i, length:array.length, window:window});
 				this.elements = this.elements.concat(elements);
 				/*
 				for (var j = 0; j < elements.length; j++) {

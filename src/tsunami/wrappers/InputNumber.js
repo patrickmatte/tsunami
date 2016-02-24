@@ -2,11 +2,13 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.InputNumber = function(o) {
+	tsunami.InputNumber = function(o, scope) {
 
 		o.construct = function() {
 			this.modelChangeBind = this.modelChange.bind(this);
 			this.inputBind = this.input.bind(this);
+
+			console.log("scope", scope);
 
 			var modelPath = this.getAttribute("data-model");
 			var model;

@@ -24,8 +24,8 @@ Preloader = function(o) {
 
 	o.setProgress = function(value) {
 		var progressbar = this.querySelector(".progressbar");
-		progressbar.setScaleX(value);
-		progressbar.updateTransform();
+		progressbar.styler.scaleX = value;
+		progressbar.styler.updateTransform();
 	};
 
 	o.setProgress(0);
@@ -84,7 +84,7 @@ tsunami.mustacheRender = function(template, scope) {
 };
 
 router = new tsunami.Router();
-tsunami.applyWrapperAttribute(document.body, "data-wrapper");
+tsunami.applyWrapperAttribute(document.body, "data-wrapper", this);
 router.path = location.origin + location.pathname;
 router.redirect("", "circles");
 router.redirect("circles", "circles/circle1/circle2");

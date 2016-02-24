@@ -45,7 +45,7 @@ tsunami.evalProperty = function(path, object) {
 
 tsunami.mustacheRender = null;
 
-tsunami.applyWrapperAttribute = function(element, attributeName) {
+tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
 	var objects = tsunami.getAllObjects(element);
 	for (var i = objects.length - 1; i > -1; i--) {
 		var object = objects[i];
@@ -60,9 +60,9 @@ tsunami.applyWrapperAttribute = function(element, attributeName) {
 					var className = classNames[k];
 					if (className) {
 						var method;
-						method = eval(className);
+						method = tsunami.evalProperty(className, window);
 						if (method) {
-							method(object);
+							method(object, scope);
 						} else {
 							console.log ("Warning! ", className + " is an undefined method.");
 						}
@@ -108,7 +108,7 @@ tsunami.insertBefore = function(text, referenceNode, scope) {
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.insertBefore(child, referenceNode);
-		tsunami.applyWrapperAttribute(child, "data-wrapper");
+		tsunami.applyWrapperAttribute(child, "data-wrapper", scope);
 	}
 	return children;
 };
@@ -132,7 +132,7 @@ tsunami.append = function(text, parent, scope) {
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.appendChild(child);
-		tsunami.applyWrapperAttribute(child, "data-wrapper");
+		tsunami.applyWrapperAttribute(child, "data-wrapper", scope);
 	}
 	return children;
 };

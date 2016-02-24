@@ -27,16 +27,26 @@ Circles = function() {
 		this.window = window;
 
 		this.elements = tsunami.insertBefore(this.templates.circles, this.querySelector(".preloader"), this);
-
 		return tsunami.promise.timeout(0.001);
 	};
 
 	o.show = function() {
-
+		var element = document.querySelector("div.shapes");
+		var transition = tsunami.promise.transition(element, ["opacity"]);
+		element.classList.add("visible");
+		return transition;
 	};
 
 	o.hide = function() {
-		tsunami.removeElements(this.elements);
+		var element = document.querySelector("div.shapes");
+		var transition = tsunami.promise.transition(element, ["opacity"]);
+		element.classList.remove("visible");
+
+		return transition.then(this.hideComplete.bind(this));
+	};
+
+	o.hideComplete = function() {
+		tsunami.remove(this.elements);
 		this.elements = null;
 	};
 
