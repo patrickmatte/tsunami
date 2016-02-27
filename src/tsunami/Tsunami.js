@@ -43,7 +43,7 @@ tsunami.evalProperty = function(path, scope) {
 	return scope;
 };
 
-tsunami.mustacheRender = null;
+tsunami.renderTemplate = null;
 
 tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
 	var objects = tsunami.getAllObjects(element);
@@ -87,11 +87,11 @@ tsunami.applyWrapper = function(element, method) {
 
 tsunami.createHTML = function(text, scope) {
 	var factory = document.createElement("div");
-	if (tsunami.mustacheRender) {
+	if (tsunami.renderTemplate) {
 		if (!scope) {
 			scope = window;
 		}
-		text = tsunami.mustacheRender(text, scope);
+		text = tsunami.renderTemplate(text, scope);
 	}
 	factory.innerHTML = text;
 	var children = [];

@@ -5,12 +5,14 @@
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
-<body>
+<script id="root-template" type="text/template">
 	<nav>
-		<a href="?circles" data-wrapper="AppButton">circles</a>
-		<a href="?forms" data-wrapper="AppButton">forms</a>
-		<a href="?animation" data-wrapper="AppButton">animation</a>
+		<a href="{{router.fragment}}circles" data-wrapper="AppButton">circles</a>
+		<a href="{{router.fragment}}forms" data-wrapper="AppButton">forms</a>
+		<a href="{{router.fragment}}animation" data-wrapper="AppButton">animation</a>
 	</nav>
+</script>
+<body>
 	<div class="preloader" data-wrapper="Preloader">
 		<div class="progressbar" data-wrapper="tsunami.DisplayObject"></div>
 	</div>

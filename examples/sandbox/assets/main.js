@@ -59,6 +59,12 @@
 		this.constructBranch("root", branches);
 	};
 
+	p.load = function() {
+		var text = document.querySelector("#root-template").text;
+		var template = tsunami.compileTemplate(text);
+		tsunami.insertBefore(template, document.querySelector(".preloader"), this);
+	};
+
 }());
 
 Preloader = function(o) {
@@ -121,12 +127,12 @@ tsunami.mustacheRender = function(text, scope) {
 	return Mustache.render(text, scope);
 };
 */
-tsunami.mustacheParse = function(text) {
+tsunami.compileTemplate = function(text) {
 	var template = Handlebars.compile(text);
 	return template;
 };
 
-tsunami.mustacheRender = function(template, scope) {
+tsunami.renderTemplate = function(template, scope) {
 	return template(scope);
 };
 

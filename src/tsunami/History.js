@@ -103,8 +103,15 @@ tsunami = this.tsunami || {};
 		if (!this.hasPushed) {
 			return;
 		}
-		this.state = event.state;
-		this.dispatchEvent({type:"popstate", state:event.state});
+		var state = event.state;
+		console.log("state", state);
+		if (state == null) {
+			console.log("set the state");
+			state = {path:window.location.href};
+		}
+		this.state = state;
+		console.log("state", state);
+		this.dispatchEvent({type:"popstate", state:state});
 	};
 
 	p._hashChangeHandler = function(e) {

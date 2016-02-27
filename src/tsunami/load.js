@@ -152,8 +152,8 @@ tsunami.load.htmlTemplates = function(url) {
 		for (var i = 0; i < scripts.length; i++) {
 			var script = scripts.item(i);
 			var template = script.text;
-			if (tsunami.mustacheParse) {
-				template = tsunami.mustacheParse(template);
+			if (tsunami.compileTemplate) {
+				template = tsunami.compileTemplate(template);
 			}
 			templates[script.id] = template;
 		}
