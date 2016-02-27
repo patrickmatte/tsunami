@@ -1,4 +1,4 @@
-tsunami.Button = function(o) {
+tsunami.Button = function(o, scope) {
 
 	o.construct = function() {
 		this.onRelease = function(){};
@@ -57,19 +57,19 @@ tsunami.Button = function(o) {
 
 };
 
-tsunami.RouterButton = function(o) {
+tsunami.RouterButton = function(o, scope) {
 
-	tsunami.Button(o);
+	tsunami.Button(o, scope);
 
 	o.construct = function() {
 		var router = o.getAttribute("data-router");
 		if (router) {
-			o.router = eval(router);
+			o.router = tsunami.evalProperty(router, scope);
 		}
 
 		var pushState = o.getAttribute("data-pushstate");
 		if (pushState) {
-			o.pushState = eval(pushState);
+			o.pushState = tsunami.evalProperty(pushState, scope);
 		}
 
 	};

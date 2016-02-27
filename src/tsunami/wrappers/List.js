@@ -4,19 +4,22 @@ tsunami = this.tsunami || {};
 
 	tsunami.List = function(o, scope) {
 
+		o.scope = scope;
+
 		o.construct = function() {
+
 			this.providerChangeBind = this.providerChange.bind(this);
 			this.elements = [];
 
 			var templatePath = this.getAttribute("data-template");
 			if (templatePath) {
-				this.template = tsunami.evalProperty(templatePath, window);
+				this.template = tsunami.evalProperty(templatePath, scope);
 			}
 
 			var providerPath = this.getAttribute("data-provider");
 			var provider;
 			if (providerPath) {
-				provider = eval(providerPath);
+				provider = tsunami.evalProperty(providerPath, scope);
 			}
 			if (provider) {
 				this.provider = provider;
@@ -72,7 +75,7 @@ tsunami = this.tsunami || {};
 		o._addElements = function(array) {
 			for (var i = 0; i < array.length; i++) {
 				var model = array[i];
-				var elements = tsunami.append(this.template, this, {model:model, index:i, length:array.length, window:window});
+				var elements = tsunami.append(this.template, this, {model:model, index:i, length:array.length, window:window, scope:this.scope});
 				this.elements = this.elements.concat(elements);
 				/*
 				for (var j = 0; j < elements.length; j++) {

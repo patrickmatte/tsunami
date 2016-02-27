@@ -147,18 +147,17 @@ tsunami.load.htmlTemplates = function(url) {
 		var container = document.createElement("div");
 		container.innerHTML = xhr.response;
 		var scripts = container.querySelectorAll("script");
-		if (!tsunami.templates) {
-			tsunami.templates = {};
-		}
+		var templates = {};
+
 		for (var i = 0; i < scripts.length; i++) {
 			var script = scripts.item(i);
 			var template = script.text;
 			if (tsunami.mustacheParse) {
 				template = tsunami.mustacheParse(template);
 			}
-			tsunami.templates[script.id] = template;
+			templates[script.id] = template;
 		}
-		return tsunami.templates;
+		return templates;
 	});
 
 	Object.defineProperty(promise2, "progress", {

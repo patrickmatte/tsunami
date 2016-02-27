@@ -1,6 +1,6 @@
 (function() {
 
-	tsunami.DisplayObject = function(o) {
+	tsunami.DisplayObject = function(o, scope) {
 
 		tsunami.Element(o);
 

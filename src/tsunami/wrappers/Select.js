@@ -2,9 +2,9 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Select = function(o) {
+	tsunami.Select = function(o, scope) {
 
-		tsunami.List(o);
+		tsunami.List(o, scope);
 
 		o.construct = function() {
 			this.modelChangeHandler = this.modelChange.bind(this);
@@ -13,7 +13,7 @@ tsunami = this.tsunami || {};
 			var modelPath = this.getAttribute("data-model");
 			var model;
 			if (modelPath) {
-				model = tsunami.evalProperty(modelPath, window);
+				model = tsunami.evalProperty(modelPath, scope);
 			}
 			if (model) {
 				this.model = model;

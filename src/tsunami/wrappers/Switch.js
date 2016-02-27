@@ -1,6 +1,6 @@
 (function() {
 
-	tsunami.Switch = function(o) {
+	tsunami.Switch = function(o, scope) {
 
 		o.construct = function() {
 			this.modelChangeHandler = this.modelChange.bind(this);
@@ -24,7 +24,7 @@
 			var modelPath = this.getAttribute("data-model");
 			var model;
 			if (modelPath) {
-				model = tsunami.evalProperty(modelPath, window);
+				model = tsunami.evalProperty(modelPath, scope);
 			}
 			if (model) {
 				this.model = model;

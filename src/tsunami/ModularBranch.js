@@ -2,140 +2,116 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.ModularBranch = function(id, imagePaths, scriptPaths, stylePaths, templatePaths, containerSelector) {
+	tsunami.ModularBranch = function(id, imagePaths, scriptPaths, stylePaths, templatePaths, template, parentNode, referenceNode) {
+		this.construct(id, imagePaths, scriptPaths, stylePaths, templatePaths, template, parentNode, referenceNode);
+	};
 
-		var o = new tsunami.Branch(id);
+	var p = tsunami.ModularBranch.prototype = new tsunami.Branch();
 
-		o.containerSelector = containerSelector;
-		if (!targetSelector) {
-			targetSelector = containerSelector + " #" + id;
+	p.construct = function(id, images, templates, styles, scripts, template, parentNode, referenceNode) {
+		this.id = id;
+		this.images = images;
+		this.templates = templates;
+		this.scripts = scripts;
+		this.styles = styles;
+		this.template = template;
+		this.parentNode = parentNode;
+		this.referenceNode = referenceNode;
+	};
+
+	p.load = function(assetList) {
+		var imageAssets = new tsunami.AssetList();
+		assetList.add(imageAssets);
+		var imagePromises = [];
+		for (var i = 0; i < this.images.length; i++) {
+			var image = this.images[i];
+			var imagePromise = tsunami.load.image(image);
+			imageAssets.add(imagePromise);
+			imagePromises.push(imagePromise);
 		}
-		o.targetSelector = targetSelector;
-		o.htmlPaths = htmlPaths;
-		o.scriptPaths = scriptPaths;
-		o.stylePaths = stylePaths;
-		o.imagePaths = imagePaths;
+		var imagesPromise = Promise.all(imagePromises);
 
-		o.load = function() {
-			var series = new tsunami.Series();
+		var templateAssets = new tsunami.AssetList();
+		assetList.add(templateAssets);
+		var templatePromises = [];
+		for (var i = 0; i < this.templates.length; i++) {
+			var template = this.templates[i];
+			var templatePromise = tsunami.load.htmlTemplates(template);
+			templateAssets.add(templatePromise);
+			templatePromises.push(templatePromise);
+		}
+		var templatesPromises = Promise.all(templatePromises);
 
-			var parallel = new tsunami.Parallel();
-			series.addTask(parallel);
-
-			this.styles = [];
-			if (this.stylePaths) {
-				for (var i = 0; i < this.stylePaths.length; i++) {
-					var stylePath = this.stylePaths[i];
-					var css = new tsunami.CSS(stylePath);
-					parallel.addTask(css);
-					this.styles.push(css);
+		var styleAssets = new tsunami.AssetList();
+		assetList.add(styleAssets);
+		var styles = this.styles.slice();
+		var stylesPromise = new Promise(function(resolve, reject) {
+			var styleSheets = [];
+			var loadStyle = function() {
+				if (styles.length > 0) {
+					var style = styles.shift();
+					var stylePromise = tsunami.load.styleSheet(style);
+					styleAssets.add(stylePromise);
+					stylePromise.then(function(styleSheet) {
+						styleSheets.push(styleSheet);
+						loadStyle();
+					});
+				} else {
+					resolve(styleSheets);
 				}
-			}
+			};
+			loadStyle();
+		});
 
-			this.scripts = [];
-			var scriptSeries = new tsunami.Series();
-			parallel.addTask(scriptSeries);
-			if (this.scriptPaths) {
-				for (var i = 0; i < this.scriptPaths.length; i++) {
-					var scriptPath = this.scriptPaths[i];
-					var script = new tsunami.Script(scriptPath);
-					scriptSeries.addTask(script);
-					this.scripts.push(script);
+		var scriptAssets = new tsunami.AssetList();
+		assetList.add(scriptAssets);
+		var scripts = this.scripts.slice();
+		var scriptsPromise = new Promise(function(resolve, reject) {
+			var scriptElements = [];
+			var loadScript = function() {
+				if (scripts.length > 0) {
+					var script = scripts.shift();
+					var scriptPromise = tsunami.load.script(script);
+					scriptAssets.add(scriptPromise);
+					scriptPromise.then(function(scriptElement) {
+						scriptElements.push(scriptElement);
+						loadScript();
+					});
+				} else {
+					resolve(scriptElements);
 				}
-			}
+			};
+			loadScript();
+		});
 
-			if (this.imagePaths) {
-				for (var i = 0; i < this.imagePaths.length; i++) {
-					parallel.addTask(new tsunami.Image(this.imagePaths[i]));
-				}
-			}
+		var promise = Promise.all([imagesPromise, templatesPromises, stylesPromise, scriptsPromise]);
+		var promise2 = promise.then(this.loadComplete.bind(this));
+		return promise2;
+	};
 
-			this.htmls = [];
-			if (this.htmlPaths) {
-				for (var i = 0; i < this.htmlPaths.length; i++) {
-					var htmlPath = this.htmlPaths[i];
-					var html = new tsunami.HTML(this.containerSelector, htmlPath);
-					series.addTask(html);
-					this.htmls.push(html);
-				}
-			}
+	p.loadComplete = function(args){
+		console.log("loadComplete", args);
+		this.imageElements = args[0];
+		this.templateElements = args[1];
+		this.styleElements = args[2];
+		this.scriptElements = args[3];
+	};
 
-			series.addTask(new tsunami.Method(this.loadTarget.bind(this), [series]));
-			return series;
-		};
+	p.show = function() {
+		for (var i = 0; i < this.imageElements.length; i++) {
+			document.body.appendChild(this.imageElements[i]);
+		}
+	};
 
-		o.loadTarget = function(taskManager) {
-			var target = document.querySelector(this.targetSelector);
-			if (target) {
-				target.parent = this.parent;
-				target.router = this.router;
-				target.root = this.root;
-				if (target.load) {
-					taskManager.addTask(target.load());
-				}
+	p.getBranch = function(id) {
+		var branch;
+		var target = document.querySelector(this.targetSelector);
+		if (target) {
+			if (target.getBranch) {
+				branch = target.getBranch(id);
 			}
-		};
-
-		o.show = function() {
-			var target = document.querySelector(this.targetSelector);
-			if (target) {
-				if (target.show) {
-					return target.show();
-				}
-			}
-		};
-
-		o.hide = function() {
-			var series = new tsunami.Series();
-			var target = document.querySelector(this.targetSelector);
-			if (target) {
-				if (target.hide) {
-					series.addTask(target.hide());
-				}
-			}
-			series.addTask(new tsunami.Method(this.hideComplete.bind(this)));
-			return series;
-		};
-
-		o.hideComplete = function() {
-			for (var i = 0; i < this.htmls.length; i++) {
-				var html = this.htmls[i];
-				html.remove();
-			}
-			for (var j = 0; j < this.scripts.length; j++) {
-				var script = this.scripts[j];
-				script.remove();
-			}
-			for (var j = 0; j < this.styles.length; j++) {
-				var style = this.styles[j];
-				style.remove();
-			}
-		};
-
-		o.getBranch = function(id) {
-			var branch;
-			var target = document.querySelector(this.targetSelector);
-			if (target) {
-				if (target.getBranch) {
-					branch = target.getBranch(id);
-				}
-			}
-			return branch;
-		};
-
-		o.getDefaultBranch = function() {
-			var branch;
-			var target = document.querySelector(this.targetSelector);
-			if (target) {
-				if (target.getDefaultBranch) {
-					branch = target.getDefaultBranch();
-				}
-			}
-			return branch;
-		};
-
-		return o;
-
+		}
+		return branch;
 	};
 
 }());

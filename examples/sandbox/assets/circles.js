@@ -24,6 +24,9 @@ Circles = function() {
 		this.templates = arguments[1];
 		this.styleSheet = arguments[2];
 
+
+		ShapeImage.urls = this.root.model.images.slice();
+
 		this.window = window;
 
 		this.elements = tsunami.insertBefore(this.templates.circles, this.querySelector(".preloader"), this);

@@ -1,56 +1,56 @@
-<script id="select" type="text/template">
+<script id="selectOption" type="text/template">
 	<option value="{{model.value}}">{{model.title}}</option>
 </script>
 <script id="radio" type="text/template">
-	<input type="radio" name="carmaker" value="{{model.value}}" data-wrapper="tsunami.InputRadio" data-model="model.myCarMaker"> {{model.title}}<br/>
+	<input type="radio" name="carmaker" value="{{model.value}}" data-wrapper="tsunami.InputRadio" data-model="scope.root.model.myCarMaker"> {{model.title}}<br/>
 </script>
 <script id="forms" type="text/template">
 	<div class="forms" data-wrapper="tsunami.DisplayObject">
 		<div>
-			model.myString = <span data-wrapper="tsunami.DataBind" data-model="model.myString"></span>
+			model.myString = <span data-wrapper="tsunami.DataBind" data-model="root.model.myString"></span>
 			<br/>
-			<input class="myStringInput" type="text" data-wrapper="tsunami.InputText" data-model="model.myString">
+			<input class="myStringInput" type="text" data-wrapper="tsunami.InputText" data-model="root.model.myString">
 			<br/>
 			<button class="myStringSetter">set myString value</button>
 		</div>
 		<br/>
 		<div>
-			model.myNumber = <span data-wrapper="tsunami.DataBind" data-model="model.myNumber"></span>
+			model.myNumber = <span data-wrapper="tsunami.DataBind" data-model="root.model.myNumber"></span>
 			<br/>
-			<input type="number" data-wrapper="tsunami.InputNumber" data-model="model.myNumber">
+			<input type="number" data-wrapper="tsunami.InputNumber" data-model="root.model.myNumber">
 			<br/>
 			<button class="myNumberSetter">set myNumber to 100</button>
 		</div>
 		<br/>
 		<div>
-			model.myRange = <span data-wrapper="tsunami.DataBind" data-model="model.myRange"></span>
+			model.myRange = <span data-wrapper="tsunami.DataBind" data-model="root.model.myRange"></span>
 			<br/>
-			<input type="range" data-wrapper="tsunami.InputNumber" data-model="model.myRange" min="0" max="50" value="20">
+			<input type="range" data-wrapper="tsunami.InputNumber" data-model="root.model.myRange" min="0" max="50" value="20">
 			<br/>
 			<button class="myRangeSetter">set myRange value to 10</button>
 		</div>
 		<br/>
 		<div>
-			model.myCheckbox = <span data-wrapper="tsunami.DataBind" data-model="model.myCheckbox"></span>
+			model.myCheckbox = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCheckbox"></span>
 			<br/>
-			<input type="checkbox" data-wrapper="tsunami.InputCheckbox" data-model="model.myCheckbox" checked> checkbox
+			<input type="checkbox" data-wrapper="tsunami.InputCheckbox" data-model="root.model.myCheckbox" checked> checkbox
 			<br/>
 			<button class="myCheckboxSetter">toggle myCheckbox</button>
 		</div>
 		<br/>
 		<div>
-			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="model.myCarMaker"></span>
+			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
-			<span data-wrapper="tsunami.List" data-provider="model.carMakers" data-template="tsunami.templates.radio"></span>
-			<button class="myRadioSetter">set myCarMaker to {{window.model.defaultCarMaker}}</button>
+			<span data-wrapper="tsunami.List" data-provider="root.model.carMakers" data-template="templates.radio"></span>
+			<button class="myRadioSetter">set myCarMaker to {{root.model.defaultCarMaker}}</button>
 		</div>
 		<br/>
 		<div>
-			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="model.myCarMaker"></span>
+			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
-			<select data-wrapper="tsunami.Select" data-model="model.myCarMaker" data-provider="model.carMakers" data-template="tsunami.templates.select"></select>
+			<select data-wrapper="tsunami.Select" data-model="root.model.myCarMaker" data-provider="root.model.carMakers" data-template="templates.selectOption"></select>
 			<br/>
-			<button class="mySelectValueSetter">set myCarMaker to {{window.model.defaultCarMaker}}</button>
+			<button class="mySelectValueSetter">set myCarMaker to {{root.model.defaultCarMaker}}</button>
 		</div>
 	</div>
 </script>

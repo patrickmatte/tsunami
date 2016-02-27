@@ -16,11 +16,9 @@ Forms = function() {
 		return promise.then(this.templatesLoaded.bind(this));
 	};
 
-	o.templatesLoaded = function(arguments) {
-		this.templates = arguments[0];
-		this.styleSheet = arguments[1];
-
-		this.window = window;
+	o.templatesLoaded = function(args) {
+		this.templates = args[0];
+		this.styleSheet = args[1];
 
 		this.elements = tsunami.insertBefore(this.templates.forms, this.querySelector(".preloader"), this);
 
@@ -28,28 +26,29 @@ Forms = function() {
 	};
 
 	o.show = function() {
+		var model = this.root.model;
 		document.querySelector(".myStringSetter").addEventListener("click", function() {
-			window.model.myString.value = "yo";
+			model.myString.value = "yo";
 		});
 
 		document.querySelector(".myNumberSetter").addEventListener("click", function() {
-			window.model.myNumber.value = 100;
+			model.myNumber.value = 100;
 		});
 
 		document.querySelector(".myRangeSetter").addEventListener("click", function() {
-			window.model.myRange.value = 10;
+			model.myRange.value = 10;
 		});
 
 		document.querySelector(".myCheckboxSetter").addEventListener("click", function() {
-			window.model.myCheckbox.value = !window.model.myCheckbox.value;
+			model.myCheckbox.value = !model.myCheckbox.value;
 		});
 
 		document.querySelector(".myRadioSetter").addEventListener("click", function() {
-			window.model.myCarMaker.value = "audi";
+			model.myCarMaker.value = "audi";
 		});
 
 		document.querySelector(".mySelectValueSetter").addEventListener("click", function() {
-			window.model.myCarMaker.value = "audi";
+			model.myCarMaker.value = "audi";
 		});
 
 		var element = document.querySelector("div.forms");

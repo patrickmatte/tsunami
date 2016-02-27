@@ -1,24 +1,10 @@
 (function() {
 
-	tsunami.Style = function(element) {
+	tsunami.Style = function(o) {
 
-		this.element = element;
+		this.element = o;
 
-		this.units = {
-			marginTop:"px",
-			marginBottom:"px",
-			marginRight:"px",
-			marginLeft:"px",
-			width:"px",
-			height:"px",
-			left:"px",
-			top:"px",
-			right:"px",
-			bottom:"px",
-			translateX:"px",
-			translateY:"px",
-			translateZ:"px"
-		};
+		this.units = new tsunami.StyleUnits();
 
 		this._transform = "";
 	};
@@ -274,6 +260,22 @@
 
 	p.getTransform = function() {
 		return this._transform;
+	};
+
+	tsunami.StyleUnits = function() {
+		this.marginTop = "px";
+		this.marginBottom = "px";
+		this.marginRight = "px";
+		this.marginLeft = "px";
+		this.width = "px";
+		this.height = "px";
+		this.left = "px";
+		this.top = "px";
+		this.right = "px";
+		this.bottom = "px";
+		this.translateX = "px";
+		this.translateY = "px";
+		this.translateZ = "px";
 	};
 
 }());

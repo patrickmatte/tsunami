@@ -367,6 +367,8 @@ tsunami = this.tsunami || {};
 	};
 
 	p.updateProgress = function() {
+		//console.log(this.id, "this.taskName", this.taskName, "progress", this.assetList.progress, this.assetList.assets.length);
+
 		this.progress = this.assetList.progress;
 	};
 

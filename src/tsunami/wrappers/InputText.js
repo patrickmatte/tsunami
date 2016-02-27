@@ -2,7 +2,7 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.InputText = function(o) {
+	tsunami.InputText = function(o, scope) {
 
 		o.construct = function() {
 			this.modelChangeBind = this.modelChange.bind(this);
@@ -11,7 +11,7 @@ tsunami = this.tsunami || {};
 			var modelPath = this.getAttribute("data-model");
 			var model;
 			if (modelPath) {
-				model = tsunami.evalProperty(modelPath, window);
+				model = tsunami.evalProperty(modelPath, scope);
 			}
 			if (model) {
 				this.model = model;

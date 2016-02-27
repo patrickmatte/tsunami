@@ -31,16 +31,16 @@ if (tsunami.isMobile.any) {
 tsunami.events.complete = "complete";
 tsunami.events.change = "change";
 
-tsunami.evalProperty = function(path, object) {
-	if (!object) {
-		object = window;
+tsunami.evalProperty = function(path, scope) {
+	if (!scope) {
+		scope = window;
 	}
 	var array = path.split(".");
 	while(array.length > 0) {
 		var name = array.shift();
-		object = object[name];
+		scope = scope[name];
 	}
-	return object;
+	return scope;
 };
 
 tsunami.mustacheRender = null;
@@ -62,7 +62,7 @@ tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
 						var method;
 						method = tsunami.evalProperty(className, window);
 						if (method) {
-							method(object, scope);
+							var obj = method(object, scope);
 						} else {
 							console.log ("Warning! ", className + " is an undefined method.");
 						}
