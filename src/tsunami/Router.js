@@ -100,7 +100,7 @@ tsunami = this.tsunami || {};
 		}
 		return newPath;
 	};
-	
+
 	p._getBranchPath = function(branch) {
 		var pathArray = [];
 		if (branch) {

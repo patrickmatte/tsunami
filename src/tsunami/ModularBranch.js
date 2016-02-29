@@ -2,8 +2,8 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.ModularBranch = function(id, imagePaths, scriptPaths, stylePaths, templatePaths, template, parentNode, referenceNode) {
-		this.construct(id, imagePaths, scriptPaths, stylePaths, templatePaths, template, parentNode, referenceNode);
+	tsunami.ModularBranch = function(id, images, templates, styles, scripts, template, parentNode, referenceNode) {
+		this.construct(id, images, templates, styles, scripts, template, parentNode, referenceNode);
 	};
 
 	var p = tsunami.ModularBranch.prototype = new tsunami.Branch();
@@ -90,7 +90,6 @@ tsunami = this.tsunami || {};
 	};
 
 	p.loadComplete = function(args){
-		console.log("loadComplete", args);
 		this.imageElements = args[0];
 		this.templateElements = args[1];
 		this.styleElements = args[2];

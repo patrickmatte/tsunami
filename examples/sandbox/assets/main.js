@@ -1,10 +1,12 @@
+sandbox = {};
+
 (function () {
 
-	Root = function() {
+	sandbox.Root = function() {
 		this.construct();
 	};
 
-	var p = Root.prototype = new tsunami.Branch();
+	var p = sandbox.Root.prototype = new tsunami.Branch();
 
 	p.constructBranch = p.construct;
 
@@ -25,6 +27,7 @@
 		};
 		this.model.myCarMaker.value = this.model.carMakers.value[2].value;
 		this.model.defaultCarMaker = this.model.carMakers.value[3].value;
+		/*
 		this.model.images = [
 			"http://valleysinthevinyl.com/packs-preview/VV_CoolBlueTextures/01.jpg",
 			"http://demilked.uuuploads.com/free-grunge-backgrounds-textures/free-grunge-textures-backgrounds-26.jpg",
@@ -32,6 +35,15 @@
 			"http://m.rgbimg.com/cache1nuEGw/users/i/ia/iammi-z/600/meWsdaE.jpg",
 			"http://img09.deviantart.net/d705/i/2009/338/5/e/scratched_up_blue_texture_by_beckas.jpg",
 			"http://orig06.deviantart.net/84f4/f/2009/327/b/1/blue_texture_1_by_authenticitys.jpg"
+		];
+		*/
+		this.model.images = [
+			"assets/images/01.jpg",
+			"assets/images/free-grunge-textures-backgrounds-26.jpg",
+			"assets/images/colored_vintage_paper_texture_04_dark_blue_preview.jpg",
+			"assets/images/meWsdaE.jpg",
+			"assets/images/scratched_up_blue_texture_by_beckas.jpg",
+			"assets/images/blue_texture_1_by_authenticitys.jpg"
 		];
 
 		var branches = [
@@ -67,7 +79,7 @@
 
 }());
 
-Preloader = function(o) {
+sandbox.Preloader = function(o) {
 /*
 	o.show = function() {
 	console.log("Preloader.show");
@@ -103,7 +115,7 @@ Preloader = function(o) {
 
 };
 
-AppButton = function(o) {
+sandbox.Button = function(o) {
 
 	o.router = window.router;
 	o.pushState = true;
@@ -112,7 +124,6 @@ AppButton = function(o) {
 
 	return o;
 };
-
 
 Mustache.escape = function(string) {
 	return string;
@@ -137,20 +148,19 @@ tsunami.renderTemplate = function(template, scope) {
 };
 
 router = new tsunami.Router();
-tsunami.applyWrapperAttribute(document.body, "data-wrapper", this);
 router.path = location.origin + location.pathname;
+router.fragment = "?";
+router.root = new sandbox.Root();
+router.preloader = document.querySelector(".preloader");
 router.redirect("", "circles");
 router.redirect("circles", "circles/circle1/circle2");
 router.redirect("circle3", "circles/circle1/circle2/circle3");
-router.fragment = "?";
-router.root = new Root();
 router.addEventListener("locationChange", function(e) {
 	//console.log("router locationChange", e.location);
 });
 router.addEventListener("complete", function() {
 	console.log("router complete", router.getLocation());
 });
-router.preloader = document.querySelector(".preloader");
-
+tsunami.applyWrapperAttribute(document.body, "data-wrapper", this);
 router.history = new tsunami.History(router.path, router.fragment, tsunami.HistoryFallback.HASH);
 router.history.start();
