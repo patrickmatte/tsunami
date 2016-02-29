@@ -50,8 +50,16 @@ tsunami = this.tsunami || {};
 		}
 	};
 
+	Object.defineProperty(p, 'history', {
+		get: function() {
+			return this.getHistory();
+		},
+		set: function(value) {
+			this.setHistory(value);
+		}
+	});
+
 	p.popStateHandler = function(event) {
-		//console.log("popStateHandler", event.state);
 		if (event.state) {
 			var path = event.state.path;
 			this.setLocation(path, false);
@@ -76,7 +84,7 @@ tsunami = this.tsunami || {};
 		if (path.indexOf("&" != -1)) {
 			path = path.split("&")[0];
 		}
-		path = this.applyRedirect(path);
+		path = this._applyRedirect(path);
 
 		this._gotoLocation(path);
 		if (this._history && pushState) {
@@ -84,15 +92,15 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	p.applyRedirect = function(path) {
+	p._applyRedirect = function(path) {
 		var redirect = this.redirects[path];
 		var newPath = redirect || path;
 		if (newPath != path) {
-			newPath = this.applyRedirect(newPath);
+			newPath = this._applyRedirect(newPath);
 		}
 		return newPath;
 	};
-
+	
 	p._getBranchPath = function(branch) {
 		var pathArray = [];
 		if (branch) {

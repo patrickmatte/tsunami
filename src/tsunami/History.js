@@ -7,20 +7,24 @@ tsunami = this.tsunami || {};
 		RELOAD:"reload"
 	};
 
-	tsunami.History = function() {
-		this.construct();
+	tsunami.History = function(base, fragment, fallback) {
+		this.construct(base, fragment, fallback);
 	};
-	
+
 	var p = tsunami.History.prototype = new tsunami.EventDispatcher();
+
+	p.constructor = tsunami.History;
 
 	p.constructEventDispatcher = p.construct;
 
-	p.construct = function() {
+	p.construct = function(base, fragment, fallback) {
 		this.constructEventDispatcher();
 
-		this.hasPushed = false;
+		this.base = base;
+		this.fragment = fragment;
+		this.fallback = fallback;
 
-		this.fragment = "";
+		this.hasPushed = false;
 		
 		this.hash = "#!";
 
@@ -31,45 +35,39 @@ tsunami = this.tsunami || {};
 
 		if (this.historyIsAvailable) {
 			window.onpopstate = this._popStateHandler.bind(this);
-		} else if (this.fallback == "hashChange") {
+		} else if (this.fallback == tsunami.HistoryFallback.HASH) {
 			window.onhashchange = this._hashChangeHandler.bind(this);
 		}
 	};
 
-	p.start = function(base, fragment) {
-		this.base = base;
-		this.fragment = fragment;
-
+	p.start = function() {
 		this.state = {};
 		if (location.hash.indexOf(this.hash) != -1) {
-			this.state.path = base + fragment + window.location.hash.split(this.hash)[1];
+			this.state.path = this.base + this.fragment + window.location.hash.split(this.hash)[1];
 			if (this.state.path != base && this.historyIsAvailable) {
 				history.replaceState(this.state, "", this.state.path);
 			}
 		} else {
 			this.state.path = window.location.href;
-			if (this.state.path != base) {
+			if (this.state.path != this.base) {
 				if (!this.historyIsAvailable) {
 					if (this.fallback == tsunami.HistoryFallback.HASH) {
 						if (!location.hash) {
-							var deeplink = this.state.path.split(base)[1];
+							var deeplink = this.state.path.split(this.base)[1];
+							deeplink = deeplink.split(this.fragment)[1];
 							this._updateOnHashChange = false;
-							console.log("1");
-							location.replace(base + this.hash + deeplink);
+							location.replace(this.base + this.hash + deeplink);
 						}
 					} else if(this.fallback == tsunami.HistoryFallback.RELOAD) {
 						if (location.hash) {
-							console.log("2");
-							location.replace(base + fragment + this.state.path);
+							location.replace(this.base + this.fragment + this.state.path);
 						}
 					}
 				} else {
-					//console.log("3");
 					//this.replaceState({path:this.state.path}, "", this.state.path);
 				}
 			}
 		}
-		//console.log("4");
 		this.dispatchEvent({type:"popstate", state:{path:this.state.path}});
 	};
 
@@ -101,16 +99,13 @@ tsunami = this.tsunami || {};
 
 	p._popStateHandler = function(event) {
 		if (!this.hasPushed) {
-			return;
+			//return;
 		}
 		var state = event.state;
-		console.log("state", state);
 		if (state == null) {
-			console.log("set the state");
 			state = {path:window.location.href};
 		}
 		this.state = state;
-		console.log("state", state);
 		this.dispatchEvent({type:"popstate", state:state});
 	};
 
@@ -123,7 +118,5 @@ tsunami = this.tsunami || {};
 			this._updateOnHashChange = true;
 		}
 	};
-
-	tsunami.history = new tsunami.History();
 
 }());

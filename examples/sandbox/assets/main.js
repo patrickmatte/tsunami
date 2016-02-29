@@ -144,7 +144,6 @@ router.redirect("circles", "circles/circle1/circle2");
 router.redirect("circle3", "circles/circle1/circle2/circle3");
 router.fragment = "?";
 router.root = new Root();
-router.setHistory(tsunami.history);
 router.addEventListener("locationChange", function(e) {
 	//console.log("router locationChange", e.location);
 });
@@ -152,5 +151,6 @@ router.addEventListener("complete", function() {
 	console.log("router complete", router.getLocation());
 });
 router.preloader = document.querySelector(".preloader");
-tsunami.history.fallback = tsunami.HistoryFallback.HASH;
-tsunami.history.start(router.path, router.fragment);
+
+router.history = new tsunami.History(router.path, router.fragment, tsunami.HistoryFallback.HASH);
+router.history.start();
