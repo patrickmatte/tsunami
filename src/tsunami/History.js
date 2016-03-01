@@ -8,24 +8,14 @@ tsunami = this.tsunami || {};
 	};
 
 	tsunami.History = function(base, fragment, fallback) {
-		this.construct(base, fragment, fallback);
-	};
-
-	var p = tsunami.History.prototype = new tsunami.EventDispatcher();
-
-	p.constructor = tsunami.History;
-
-	p.constructEventDispatcher = p.construct;
-
-	p.construct = function(base, fragment, fallback) {
-		this.constructEventDispatcher();
+		tsunami.EventDispatcher.call(this);
 
 		this.base = base;
 		this.fragment = fragment;
 		this.fallback = fallback;
 
 		this.hasPushed = false;
-		
+
 		this.hash = "#!";
 
 		this.state = null;
@@ -39,6 +29,10 @@ tsunami = this.tsunami || {};
 			window.onhashchange = this._hashChangeHandler.bind(this);
 		}
 	};
+
+	var p = tsunami.History.prototype = Object.create(tsunami.EventDispatcher.prototype);
+
+	p.constructor = tsunami.History;
 
 	p.start = function() {
 		this.state = {};

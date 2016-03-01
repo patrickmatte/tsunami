@@ -3,6 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Timeline = function(changeHandler, completeHandler) {
+		tsunami.EventDispatcher.call(this);
 
 		this.changeHandler = changeHandler;
 		this.completeHandler = completeHandler;
@@ -22,7 +23,7 @@ tsunami = this.tsunami || {};
 		this.tickHandler = this.tick.bind(this);
 	};
 
-	var p = tsunami.Timeline.prototype = new tsunami.EventDispatcher();
+	var p = tsunami.Timeline.prototype = Object.create(tsunami.EventDispatcher.prototype);
 
 	p.start = function() {
 		this.clockStartTime = tsunami.clock.time;

@@ -2,20 +2,16 @@ tsunami = this.tsunami || {};
 
 (function () {
 
-	tsunami.BranchModule = function(id, scriptPath, branchClass) {
-		this.construct(id, scriptPath, branchClass);
-	};
-
-	var p = tsunami.BranchModule.prototype = new tsunami.Branch();
-
-	p.constructBranch = p.construct;
-
-	p.construct = function(id, scriptPath, branchMethod) {
-		this.constructBranch(id);
+	tsunami.BranchModule = function(id, scriptPath, branchMethod) {
+		tsunami.Branch.call(this, id);
 		this.id = id;
 		this.scriptPath = scriptPath;
 		this.branchMethod = branchMethod;
 	};
+
+	var p = tsunami.BranchModule.prototype = Object.create(tsunami.Branch.prototype);
+
+	p.constructor = tsunami.BranchModule;
 
 	p.load = function(assetList) {
 		this.assetList = assetList;

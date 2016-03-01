@@ -3,20 +3,14 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Number = function(value) {
-		this.construct(value);
-	};
-
-	var p = tsunami.Number.prototype = new tsunami.Model();
-
-	p.constructor = tsunami.Number;
-
-	p.constructModel = p.construct;
-
-	p.construct = function(value) {
-		this.constructModel();
+		tsunami.Model.call(this);
 
 		this.value = value;
 	};
+
+	var p = tsunami.Number.prototype = Object.create(tsunami.Model.prototype);
+
+	p.constructor = tsunami.Number;
 
 	Object.defineProperty(p, 'value', {
 		get: function() {
@@ -33,7 +27,7 @@ tsunami = this.tsunami || {};
 
 	p.setValue = function(value) {
 		if (value != this._value) {
-			this._value = value;
+			this._value = eval(value);
 			this.dispatchEvent({type:"change", value:this._value});
 		}
 	};

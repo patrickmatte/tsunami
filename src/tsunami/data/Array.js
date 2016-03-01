@@ -3,21 +3,16 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Array = function() {
-		this.construct(arguments);
-	};
+		tsunami.Model.call(this);
 
-	var p = tsunami.Array.prototype = new tsunami.Model();
-
-	p.constructor = tsunami.Array;
-
-	p.constructModel = p.construct;
-
-	p.construct = function(array) {
-		this.constructModel();
 		this.length = new tsunami.Number(NaN);
 		this._value = [];
-		this.push.apply(this, array);
+		this.push.apply(this, arguments);
 	};
+
+	var p = tsunami.Array.prototype = Object.create(tsunami.Model.prototype);
+
+	p.constructor = tsunami.Array;
 
 	p.item = function(index) {
 		return this._value[index];

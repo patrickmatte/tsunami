@@ -3,7 +3,7 @@ tsunami.utils = tsunami.utils || {};
 
 (function() {
 
-	tsunami.utils.NumberUtil = function() {}
+	tsunami.utils.NumberUtil = function() {};
 
 	var c = tsunami.utils.NumberUtil;
 

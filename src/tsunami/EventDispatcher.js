@@ -3,15 +3,11 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.EventDispatcher = function() {
-		this.construct();
-	};
-
-	var p = tsunami.EventDispatcher.prototype;
-
-	p.construct = function() {
 		this.listeners = [];
 		this._debug = false;
 	};
+
+	var p = tsunami.EventDispatcher.prototype;
 
 	p.addEventListener = function(type, func) {
 		this.listeners.push({type:type, func:func});

@@ -3,15 +3,11 @@ tsunami = this.tsunami || {};
 (function () {
 
 	tsunami.Branch = function(id, branches) {
-		this.construct(id, branches);
-	};
-
-	var p = tsunami.Branch.prototype;
-
-	p.construct = function(id, branches) {
 		this.id = id;
 		this.branches = branches || [];
 	};
+
+	var p = tsunami.Branch.prototype;
 
 	p.getBranch = function(id) {
 		for (var i = 0; i < this.branches.length; i++) {

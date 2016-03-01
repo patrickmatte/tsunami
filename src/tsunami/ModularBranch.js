@@ -3,13 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.ModularBranch = function(id, images, templates, styles, scripts, template, parentNode, referenceNode) {
-		this.construct(id, images, templates, styles, scripts, template, parentNode, referenceNode);
-	};
-
-	var p = tsunami.ModularBranch.prototype = new tsunami.Branch();
-
-	p.construct = function(id, images, templates, styles, scripts, template, parentNode, referenceNode) {
-		this.id = id;
+		tsunami.Branch.call(this, id);
 		this.images = images;
 		this.templates = templates;
 		this.scripts = scripts;
@@ -18,6 +12,8 @@ tsunami = this.tsunami || {};
 		this.parentNode = parentNode;
 		this.referenceNode = referenceNode;
 	};
+
+	var p = tsunami.ModularBranch.prototype = Object.create(tsunami.Branch.prototype);
 
 	p.load = function(assetList) {
 		var imageAssets = new tsunami.AssetList();

@@ -3,20 +3,13 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Boolean = function(value) {
-		this.construct(value);
-	};
-
-	var p = tsunami.Boolean.prototype = new tsunami.Model();
-
-	p.constructor = tsunami.Boolean;
-
-	p.constructModel = p.construct;
-
-	p.construct = function(value) {
-		this.constructModel();
-
+		tsunami.Model.call(this);
 		this.value = value;
 	};
+
+	var p = tsunami.Boolean.prototype = Object.create(tsunami.Model.prototype);
+
+	p.constructor = tsunami.Boolean;
 
 	Object.defineProperty(p, 'value', {
 		get: function() {

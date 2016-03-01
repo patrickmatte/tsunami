@@ -4,17 +4,13 @@ tsunami.geom = tsunami.geom || {};
 (function() {
 
 	tsunami.geom.Rectangle = function(x, y, width, height) {
-		this.constructor(x, y, width, height);
-	};
-	
-	var p = tsunami.geom.Rectangle.prototype;
-	
-	p.constructor = function(x, y, width, height) {
 		this.x = (isNaN(x))?0:x;
 		this.y = (isNaN(y))?0:y;
 		this.width = (isNaN(width))?0:width;
 		this.height = (isNaN(height))?0:height;
 	};
+	
+	var p = tsunami.geom.Rectangle.prototype;
 
     p.containsPoint = function(point) {
 		var hit = (point.x >= this.x && point.x <= this.x + this.width && point.y >= this.y && point.y <= this.y + this.height)?true:false;

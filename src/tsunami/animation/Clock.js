@@ -1,21 +1,16 @@
 (function() {
 
 	tsunami.Clock = function() {
-		this.construct();
-	};
-
-	var p = tsunami.Clock.prototype = new tsunami.EventDispatcher();
-
-	tsunami.Clock.TICK = "frame";
-	tsunami.Clock.FPS = "fps";
-
-	p.constructEventDispatcher = p.construct;
-
-	p.construct = function() {
+		tsunami.EventDispatcher.call(this);
 		this.index = 0;
 		this.seconds = 0;
 		this.allFrames = 0;
 	};
+
+	var p = tsunami.Clock.prototype = Object.create(tsunami.EventDispatcher.prototype);
+
+	tsunami.Clock.TICK = "frame";
+	tsunami.Clock.FPS = "fps";
 
 	p.start = function() {
 		this.isRunning = true;

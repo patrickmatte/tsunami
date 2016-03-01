@@ -3,27 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Tween = function(startFrame, duration, target, properties, setters, easing, changeHandler, completeHandler) {
-		this.construct(startFrame, duration, target, properties, setters, easing, changeHandler, completeHandler);
-	};
-
-	var p = tsunami.Tween.prototype = new tsunami.EventDispatcher();
-
-	var c = tsunami.Tween;
-
-	c.COMPLETE = "complete";
-
-	c.CHANGE = "change";
-
-	c.clock = new tsunami.EventDispatcher();
-
-	c.clock.tick = function() {
-		tsunami.Tween.clock.dispatchEvent({type:"tick"});
-	};
-
-	p.constructTask = p.construct;
-
-	p.construct = function(startFrame, duration, target, properties, setters, easing, changeHandler, completeHandler) {
-		this.constructTask();
+		tsunami.EventDispatcher.call(this);
 		this.startFrame = startFrame;
 		this.duration = duration;
 		this.target = target;
@@ -36,6 +16,20 @@ tsunami = this.tsunami || {};
 		this.currentFrameTarget = this.startFrame;
 		this.updateEase = 0.1;
 		this.tickHandler = this.tick.bind(this);
+	};
+
+	var p = tsunami.Tween.prototype = Object.create(tsunami.EventDispatcher.prototype);
+
+	var c = tsunami.Tween;
+
+	c.COMPLETE = "complete";
+
+	c.CHANGE = "change";
+
+	c.clock = new tsunami.EventDispatcher();
+
+	c.clock.tick = function() {
+		tsunami.Tween.clock.dispatchEvent({type:"tick"});
 	};
 
 	p.start = function() {

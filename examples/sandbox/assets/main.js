@@ -3,14 +3,7 @@ sandbox = {};
 (function () {
 
 	sandbox.Root = function() {
-		this.construct();
-	};
-
-	var p = sandbox.Root.prototype = new tsunami.Branch();
-
-	p.constructBranch = p.construct;
-
-	p.construct = function() {
+		tsunami.Branch.call(this, "root");
 
 		this.model = {
 			myString:new tsunami.String("test"),
@@ -27,16 +20,19 @@ sandbox = {};
 		};
 		this.model.myCarMaker.value = this.model.carMakers.value[2].value;
 		this.model.defaultCarMaker = this.model.carMakers.value[3].value;
+		var numbers = new tsunami.Array(this.model.myNumber, this.model.myRange);
+		this.model.myNumbersAverage = new tsunami.AverageNumber(numbers);
+
 		/*
-		this.model.images = [
-			"http://valleysinthevinyl.com/packs-preview/VV_CoolBlueTextures/01.jpg",
-			"http://demilked.uuuploads.com/free-grunge-backgrounds-textures/free-grunge-textures-backgrounds-26.jpg",
-			"http://cdn.designinstruct.com/files/234-colored_vintage_paper_textures/colored_vintage_paper_texture_04_dark_blue_preview.jpg",
-			"http://m.rgbimg.com/cache1nuEGw/users/i/ia/iammi-z/600/meWsdaE.jpg",
-			"http://img09.deviantart.net/d705/i/2009/338/5/e/scratched_up_blue_texture_by_beckas.jpg",
-			"http://orig06.deviantart.net/84f4/f/2009/327/b/1/blue_texture_1_by_authenticitys.jpg"
-		];
-		*/
+		 this.model.images = [
+		 "http://valleysinthevinyl.com/packs-preview/VV_CoolBlueTextures/01.jpg",
+		 "http://demilked.uuuploads.com/free-grunge-backgrounds-textures/free-grunge-textures-backgrounds-26.jpg",
+		 "http://cdn.designinstruct.com/files/234-colored_vintage_paper_textures/colored_vintage_paper_texture_04_dark_blue_preview.jpg",
+		 "http://m.rgbimg.com/cache1nuEGw/users/i/ia/iammi-z/600/meWsdaE.jpg",
+		 "http://img09.deviantart.net/d705/i/2009/338/5/e/scratched_up_blue_texture_by_beckas.jpg",
+		 "http://orig06.deviantart.net/84f4/f/2009/327/b/1/blue_texture_1_by_authenticitys.jpg"
+		 ];
+		 */
 		this.model.images = [
 			"assets/images/01.jpg",
 			"assets/images/free-grunge-textures-backgrounds-26.jpg",
@@ -46,7 +42,7 @@ sandbox = {};
 			"assets/images/blue_texture_1_by_authenticitys.jpg"
 		];
 
-		var branches = [
+		this.branches = [
 			new tsunami.BranchModule("circles", "assets/circles.js", "Circles"),
 			new tsunami.BranchModule("forms", "assets/forms.js", "Forms"),
 			new tsunami.ModularBranch("animation",
@@ -67,9 +63,9 @@ sandbox = {};
 					"assets/forms.js"
 				])
 		];
-
-		this.constructBranch("root", branches);
 	};
+
+	var p = sandbox.Root.prototype = Object.create(tsunami.Branch.prototype);
 
 	p.load = function() {
 		var text = document.querySelector("#root-template").text;

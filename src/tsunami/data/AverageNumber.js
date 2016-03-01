@@ -2,25 +2,21 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.AverageNumber = function() {
-		this.construct(arguments);
-	};
-
-	var p = tsunami.AverageNumber.prototype = new tsunami.Model();
-
-	p.constructor = tsunami.AverageNumber;
-
-	p.constructModel = p.construct;
-
-	p.construct = function(array) {
-		this.constructModel();
+	tsunami.AverageNumber = function(numbers) {
+		tsunami.Model.call(this);
 		this.numberChangeBind = this.numberChangeHandler.bind(this);
 		this._currentNumbers = [];
-		this.average = NaN;
-		this.numbers = new tsunami.Array();
+		if (!numbers) {
+			numbers = new tsunami.Array();
+		}
+		this.numbers = numbers;
 		this.numbers.addEventListener("change", this.arrayChange.bind(this));
-		this.numbers.setValue(array);
+		this.arrayChange();
 	};
+
+	var p = tsunami.AverageNumber.prototype = Object.create(tsunami.Model.prototype);
+
+	p.constructor = tsunami.AverageNumber;
 
 	Object.defineProperty(p, 'value', {
 		get: function() {

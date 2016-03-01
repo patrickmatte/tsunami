@@ -2,7 +2,7 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.ArrayUtil = function() {}
+	tsunami.ArrayUtil = function() {};
 	
 	var c = tsunami.ArrayUtil;
 	

@@ -3,17 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Router = function(root) {
-		this.construct(root);
-	};
-
-	var p = tsunami.Router.prototype = new tsunami.EventDispatcher();
-
-	p.constructor = tsunami.Router;
-
-	p.constructEventDispatcher = p.construct;
-
-	p.construct = function(root) {
-		this.constructEventDispatcher();
+		tsunami.EventDispatcher.call(this);
 
 		this._overrideLocation = null;
 		this.branches = new tsunami.Array();
@@ -36,26 +26,22 @@ tsunami = this.tsunami || {};
 		this.defaultLocation = "";
 	};
 
-	p.getHistory = function() {
-		return this._history;
-	};
+	var p = tsunami.Router.prototype = Object.create(tsunami.EventDispatcher.prototype);
 
-	p.setHistory = function(value) {
-		if (this._history) {
-			this._history.removeEventListener("popstate", this.popStateHandlerMethod);
-		}
-		this._history = value;
-		if (this._history) {
-			this._history.addEventListener("popstate", this.popStateHandlerMethod);
-		}
-	};
+	p.constructor = tsunami.Router;
 
 	Object.defineProperty(p, 'history', {
 		get: function() {
-			return this.getHistory();
+			return this._history;
 		},
 		set: function(value) {
-			this.setHistory(value);
+			if (this._history) {
+				this._history.removeEventListener("popstate", this.popStateHandlerMethod);
+			}
+			this._history = value;
+			if (this._history) {
+				this._history.addEventListener("popstate", this.popStateHandlerMethod);
+			}
 		}
 	});
 

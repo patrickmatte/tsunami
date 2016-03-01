@@ -1,6 +1,6 @@
 (function() {
 
-	tsunami.CanvasUtil = function() {}
+	tsunami.CanvasUtil = function() {};
 	
 	var c = tsunami.CanvasUtil;
 	
@@ -18,7 +18,7 @@
 			}
 			y += pattern.height;
 		}
-	}
+	};
 	
 	c.cloneImage = function(image, scaleX, scaleY, canvas) {
 		if (isNaN(scaleX)) {

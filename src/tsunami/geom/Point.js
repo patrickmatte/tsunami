@@ -4,16 +4,12 @@ tsunami.geom = tsunami.geom || {};
 (function() {
 
 	tsunami.geom.Point = function(x, y) {
-		this.constructor(x, y);
+		this.x = (isNaN(x))?0:x;
+		this.y = (isNaN(y))?0:y;
 	};
 
     var c = tsunami.geom.Point;
     var p = tsunami.geom.Point.prototype;
-
-    p.constructor = function(x, y) {
-		this.x = (isNaN(x))?0:x;
-		this.y = (isNaN(y))?0:y;
-	};
 	
 	p.clone = function() {
 		return new tsunami.geom.Point(this.x, this.y);
