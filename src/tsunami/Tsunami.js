@@ -45,13 +45,39 @@ tsunami.evalProperty = function(path, scope) {
 
 tsunami.renderTemplate = null;
 
+tsunami.applyControllers = function(element, scope) {
+	var elements = tsunami.getAllObjects(element);
+	for (var i = elements.length - 1; i > -1; i--) {
+		var element = elements[i];
+		if (element.getAttribute) {
+			var className = element.getAttribute("data-controller");
+			if (className) {
+				var classReference = tsunami.evalProperty(className, window);
+				if (classReference) {
+					var controller = new classReference();
+					element.controller = controller;
+					if (controller.parseElement) {
+						controller.parseElement(element, scope);
+					} else {
+						console.log ("Warning! ", className + " doesn't implement the parseHTML method");
+					}
+				} else {
+					console.log ("Warning! ", className + " is an undefined reference.");
+				}
+			}
+		}
+	}
+};
+
 tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
 	var objects = tsunami.getAllObjects(element);
 	for (var i = objects.length - 1; i > -1; i--) {
 		var object = objects[i];
+		/*
 		if (tsunami.Element) {
 			tsunami.Element(object);
 		}
+		*/
 		if (object.getAttribute) {
 			var attribute = object.getAttribute(attributeName);
 			if (attribute) {
@@ -109,6 +135,7 @@ tsunami.insertBefore = function(text, referenceNode, scope) {
 		var child = children[i];
 		parent.insertBefore(child, referenceNode);
 		tsunami.applyWrapperAttribute(child, "data-wrapper", scope);
+		tsunami.applyControllers(child, scope);
 	}
 	return children;
 };

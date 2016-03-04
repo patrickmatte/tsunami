@@ -7,6 +7,7 @@ sandbox = {};
 
 		this.model = {
 			myString:new tsunami.String("test"),
+			navModel:"test",
 			myCheckbox:new tsunami.Boolean(true),
 			myNumber:new tsunami.Number(5),
 			myRange:new tsunami.Number(25),
@@ -22,7 +23,6 @@ sandbox = {};
 		this.model.defaultCarMaker = this.model.carMakers.value[3].value;
 		var numbers = new tsunami.Array(this.model.myNumber, this.model.myRange);
 		this.model.myNumbersAverage = new tsunami.AverageNumber(numbers);
-
 		/*
 		 this.model.images = [
 		 "http://valleysinthevinyl.com/packs-preview/VV_CoolBlueTextures/01.jpg",
@@ -41,7 +41,6 @@ sandbox = {};
 			"assets/images/scratched_up_blue_texture_by_beckas.jpg",
 			"assets/images/blue_texture_1_by_authenticitys.jpg"
 		];
-
 		this.branches = [
 			new tsunami.BranchModule("circles", "assets/circles.js", "Circles"),
 			new tsunami.BranchModule("forms", "assets/forms.js", "Forms"),
@@ -75,41 +74,85 @@ sandbox = {};
 
 }());
 
-sandbox.Preloader = function(o) {
-/*
-	o.show = function() {
-	console.log("Preloader.show");
-	var transition = tsunami.promise.transition(this);
-	this.classList.add("visible");
-	return transition;
+
+(function () {
+
+	sandbox.Nav = function(element, model) {
+		this.element = element;
+		this.model = model;
 	};
 
-	o.hide = function() {
-	console.log("Preloader.hide");
-	var transition = tsunami.promise.transition(this);
-	this.classList.remove("visible");
-	return transition;
+	var p = sandbox.Nav.prototype;
+
+	Object.defineProperty(p, 'model', {
+		get: function() {
+			return this._model;
+		},
+		set: function(value) {
+			this._model = value;
+		}
+	});
+
+	p.parseElement = function(element, scope) {
+		this.element = element;
+		var modelPath = element.getAttribute("data-model");
+		if (modelPath) {
+			this.model = tsunami.evalProperty(modelPath, scope);
+		}
 	};
-*/
-	o.show = function() {
+
+}());
+
+(function () {
+
+	sandbox.Preloader = function(element) {
+		console.log("sandbox.Preloader");
+		/*
+		o.show = function() {
+		console.log("Preloader.show");
+		var transition = tsunami.promise.transition(this);
 		this.classList.add("visible");
-	};
+		return transition;
+		};
 
-	o.hide = function() {
+		o.hide = function() {
+		console.log("Preloader.hide");
+		var transition = tsunami.promise.transition(this);
 		this.classList.remove("visible");
+		return transition;
+		};
+		*/
+
+		this.setProgress(0);
 	};
 
-	o.setProgress = function(value) {
-		var progressbar = this.querySelector(".progressbar");
-		progressbar.styler.scaleX = value;
-		progressbar.styler.updateTransform();
+	var p = sandbox.Preloader.prototype;
+
+	p.show = function() {
+		console.log("Preloader.show");
+		this.element.classList.add("visible");
 	};
 
-	o.setProgress(0);
+	p.hide = function() {
+		console.log("Preloader.hide");
+		this.element.classList.remove("visible");
+	};
 
-	return o;
+	p.setProgress = function(value) {
+		console.log("Preloader.setProgress", value);
+		if (this.element) {
+			var progressbar = this.element.querySelector(".progressbar").controller;
+			progressbar.style.scaleX = value;
+			progressbar.style.updateTransform();
+		}
+	};
 
-};
+	p.parseElement = function(element, scope) {
+		this.element = element;
+		console.log("sandbox.Preloader.parseElement", this);
+	};
+
+}());
 
 sandbox.Button = function(o) {
 
@@ -143,11 +186,13 @@ tsunami.renderTemplate = function(template, scope) {
 	return template(scope);
 };
 
+tsunami.applyControllers(document.body, this);
+
 router = new tsunami.Router();
 router.path = location.origin + location.pathname;
 router.fragment = "?";
 router.root = new sandbox.Root();
-router.preloader = document.querySelector(".preloader");
+router.preloader = document.querySelector(".preloader").controller;
 router.redirect("", "circles");
 router.redirect("circles", "circles/circle1/circle2");
 router.redirect("circle3", "circles/circle1/circle2/circle3");

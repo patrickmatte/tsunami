@@ -6,15 +6,15 @@
 	<link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
 <script id="root-template" type="text/template">
-	<nav>
+	<nav data-controller="sandbox.Nav" data-model="model.navModel">
 		<a href="{{router.fragment}}circles" data-wrapper="sandbox.Button">circles</a>
 		<a href="{{router.fragment}}forms" data-wrapper="sandbox.Button">forms</a>
 		<a href="{{router.fragment}}animation" data-wrapper="sandbox.Button">animation</a>
 	</nav>
 </script>
 <body>
-	<div class="preloader" data-wrapper="sandbox.Preloader">
-		<div class="progressbar" data-wrapper="tsunami.DisplayObject"></div>
+	<div class="preloader" data-controller="sandbox.Preloader">
+		<div class="progressbar" data-controller="tsunami.DisplayObject"></div>
 	</div>
 	<script src="../../src/tsunami/utils/Polyfills.js"></script>
 	<script src="../../src/tsunami/EventDispatcher.js"></script>
@@ -29,7 +29,6 @@
 	<script src="../../src/tsunami/data/String.js"></script>
 	<script src="../../src/tsunami/data/Boolean.js"></script>
 	<script src="../../src/tsunami/data/Array.js"></script>
-	<script src="../../src/tsunami/data/Range.js"></script>
 	<script src="../../src/tsunami/data/AverageNumber.js"></script>
 	<script src="../../src/tsunami/wrappers/Element.js"></script>
 	<script src="../../src/tsunami/wrappers/Style.js"></script>

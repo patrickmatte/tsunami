@@ -1,13 +1,15 @@
 (function() {
 
-	tsunami.DisplayObject = function(o, scope) {
-
-		tsunami.Element(o);
-
-		o.styler = new tsunami.Style(o);
-
-		return o;
-
+	tsunami.DisplayObject = function(element) {
+		this.style = new tsunami.Style(element);
 	};
+
+	var p = tsunami.DisplayObject.prototype;
+
+	p.parseElement = function(element, scope) {
+		this.element = element;
+		this.style.element = element;
+	};
+
 
 }());
