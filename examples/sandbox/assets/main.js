@@ -106,22 +106,7 @@ sandbox = {};
 (function () {
 
 	sandbox.Preloader = function(element) {
-		console.log("sandbox.Preloader");
-		/*
-		o.show = function() {
-		console.log("Preloader.show");
-		var transition = tsunami.promise.transition(this);
-		this.classList.add("visible");
-		return transition;
-		};
-
-		o.hide = function() {
-		console.log("Preloader.hide");
-		var transition = tsunami.promise.transition(this);
-		this.classList.remove("visible");
-		return transition;
-		};
-		*/
+		this.element = element;
 
 		this.setProgress(0);
 	};
@@ -129,17 +114,19 @@ sandbox = {};
 	var p = sandbox.Preloader.prototype;
 
 	p.show = function() {
-		console.log("Preloader.show");
+		//var transition = tsunami.promise.transition(this.element, ["opacity"]);
 		this.element.classList.add("visible");
+		//return transition;
+
 	};
 
 	p.hide = function() {
-		console.log("Preloader.hide");
+		//var transition = tsunami.promise.transition(this.element, ["opacity"]);
 		this.element.classList.remove("visible");
+		//return transition;
 	};
 
 	p.setProgress = function(value) {
-		console.log("Preloader.setProgress", value);
 		if (this.element) {
 			var progressbar = this.element.querySelector(".progressbar").controller;
 			progressbar.style.scaleX = value;
@@ -149,7 +136,6 @@ sandbox = {};
 
 	p.parseElement = function(element, scope) {
 		this.element = element;
-		console.log("sandbox.Preloader.parseElement", this);
 	};
 
 }());
@@ -162,6 +148,7 @@ sandbox.Button = function(o) {
 	tsunami.RouterButton(o);
 
 	return o;
+
 };
 
 Mustache.escape = function(string) {
