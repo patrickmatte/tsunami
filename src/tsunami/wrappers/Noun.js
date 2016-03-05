@@ -1,35 +1,28 @@
 (function() {
 
-	tsunami.Noun = function(o, scope) {
+	tsunami.Noun = function(element, scope) {
+		tsunami.DisplayObject.call(this, element, scope);
 
-		o.construct = function() {
-			this.modelChangeBind = this.modelChange.bind(this);
-			this.plural = this.getAttribute("data-plural");
-			this.singular = this.getAttribute("data-singular");
-			var modelPath = this.getAttribute("data-model");
-			var model;
-			if (modelPath) {
-				model = tsunami.evalProperty(modelPath, scope);
-			}
-			if (model) {
-				this.model = model;
-			}
-		};
+		this.modelChangeBind = this.modelChange.bind(this);
 
-		Object.defineProperty(o, 'model', {
-			get: function() {
-				return this.getModel();
-			},
-			set: function(value) {
-				this.setModel(value);
-			}
-		});
+		this.plural = this.element.getAttribute("data-plural");
+		this.singular = this.element.getAttribute("data-singular");
 
-		o.getModel = function() {
+		var modelPath = this.element.getAttribute("data-model");
+		if (modelPath) {
+			this.model = tsunami.evalProperty(modelPath, scope);
+		}
+	};
+
+	var p = tsunami.Noun.prototype = Object.create(tsunami.DisplayObject.prototype);
+
+	p.constructor = tsunami.Noun;
+
+	Object.defineProperty(p, 'model', {
+		get: function() {
 			return this._model;
-		};
-
-		o.setModel = function(value) {
+		},
+		set: function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Number) {
 					this._model.removeEventListener("change", this.modelChangeBind);
@@ -42,30 +35,26 @@
 					this.modelChangeBind();
 				} else {
 					if (this._model > 1){
-						this.innerHTML = this.plural;
+						this.element.innerHTML = this.plural;
 					} else {
-						this.innerHTML = this.singular;
+						this.element.innerHTML = this.singular;
 					}
 				}
 			}
-		};
+		}
+	});
 
-		o.modelChange = function(event) {
-			if (this._model.value > 1){
-				this.innerHTML = this.plural;
-			} else {
-				this.innerHTML = this.singular;
-			}
-		};
+	p.modelChange = function(event) {
+		if (this._model.value > 1){
+			this.element.innerHTML = this.plural;
+		} else {
+			this.element.innerHTML = this.singular;
+		}
+	};
 
-		o.destroy = function() {
-			this.model = null;
-		};
-
-		o.construct();
-
-		return o;
-
+	p.destroy = function() {
+		this.model = null;
+		tsunami.DisplayObject.destroy.call(this);
 	};
 
 }());

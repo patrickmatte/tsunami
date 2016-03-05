@@ -165,8 +165,7 @@ tsunami.mustacheRender = function(text, scope) {
 };
 */
 tsunami.compileTemplate = function(text) {
-	var template = Handlebars.compile(text);
-	return template;
+	return Handlebars.compile(text);
 };
 
 tsunami.renderTemplate = function(template, scope) {

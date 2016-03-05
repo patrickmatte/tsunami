@@ -2,44 +2,33 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.List = function(o, scope) {
+	tsunami.List = function(element, scope) {
+		tsunami.DisplayObject.call(this, element, scope);
 
-		o.scope = scope;
+		this.scope = scope;
+		this.providerChangeBind = this.providerChange.bind(this);
+		this.children = [];
 
-		o.construct = function() {
+		var templatePath = this.element.getAttribute("data-template");
+		if (templatePath) {
+			this.template = tsunami.evalProperty(templatePath, scope);
+		}
 
-			this.providerChangeBind = this.providerChange.bind(this);
-			this.elements = [];
+		var providerPath = this.element.getAttribute("data-provider");
+		if (providerPath) {
+			this.dataProvider = tsunami.evalProperty(providerPath, scope);
+		}
+	};
 
-			var templatePath = this.getAttribute("data-template");
-			if (templatePath) {
-				this.template = tsunami.evalProperty(templatePath, scope);
-			}
+	var p = tsunami.List.prototype = Object.create(tsunami.DisplayObject.prototype);
 
-			var providerPath = this.getAttribute("data-provider");
-			var provider;
-			if (providerPath) {
-				provider = tsunami.evalProperty(providerPath, scope);
-			}
-			if (provider) {
-				this.provider = provider;
-			}
-		};
+	p.constructor = tsunami.List;
 
-		Object.defineProperty(o, 'provider', {
-			get: function() {
-				return this.getProvider();
-			},
-			set: function(value) {
-				this.setProvider(value);
-			}
-		});
-
-		o.getProvider = function() {
+	Object.defineProperty(p, 'dataProvider', {
+		get: function() {
 			return this._provider;
-		};
-
-		o.setProvider = function(value) {
+		},
+		set: function(value) {
 			if (this._provider) {
 				if (this._provider instanceof tsunami.Array) {
 					//this._provider.removeEventListener("add", this.providerChangeBind);
@@ -59,46 +48,42 @@ tsunami = this.tsunami || {};
 					this._addElements(this._provider);
 				}
 			}
-		};
+		}
+	});
 
-		o._removeElements = function() {
-			for (var i = 0; i < this.elements.length; i++) {
-				var oldElement = this.elements[i];
-				oldElement.model = null;
-				if (oldElement.parentNode) {
-					oldElement.parentNode.removeChild(oldElement);
-				}
+	p._removeElements = function() {
+		for (var i = 0; i < this.children.length; i++) {
+			var oldElement = this.children[i];
+			oldElement.model = null;
+			if (oldElement.parentNode) {
+				oldElement.parentNode.removeChild(oldElement);
 			}
-			this.elements = [];
-		};
+		}
+		this.children = [];
+	};
 
-		o._addElements = function(array) {
-			for (var i = 0; i < array.length; i++) {
-				var model = array[i];
-				var elements = tsunami.append(this.template, this, {model:model, index:i, length:array.length, window:window, scope:this.scope});
-				this.elements = this.elements.concat(elements);
-				/*
-				for (var j = 0; j < elements.length; j++) {
-					var element = elements[j];
-					this.elements.push(element);
-				}
-				*/
-			}
-		};
+	p._addElements = function(array) {
+		for (var i = 0; i < array.length; i++) {
+			var model = array[i];
+			var elements = tsunami.append(this.template, this.element, {model:model, index:i, length:array.length, window:window, scope:this.scope});
+			this.children = this.children.concat(elements);
+			/*
+			 for (var j = 0; j < elements.length; j++) {
+			 var element = elements[j];
+			 this.children.push(element);
+			 }
+			 */
+		}
+	};
 
-		o.providerChange = function(event) {
-			this._removeElements();
-			this._addElements(this._provider.value);
-		};
+	p.providerChange = function(event) {
+		this._removeElements();
+		this._addElements(this._provider.value);
+	};
 
-		o.destroy = function() {
-			this.provider = [];
-		};
-
-		o.construct();
-
-		return o;
-
+	p.destroy = function() {
+		this.dataProvider = [];
+		tsunami.DisplayObject.destroy.call(this);
 	};
 
 }());

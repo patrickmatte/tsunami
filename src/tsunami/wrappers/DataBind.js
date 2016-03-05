@@ -4,15 +4,12 @@ tsunami = this.tsunami || {};
 
 	tsunami.DataBind = function(element, scope) {
 		tsunami.DisplayObject.call(this, element, scope);
+
 		this.modelChangeBind = this.modelChange.bind(this);
 
-		var modelPath = element.getAttribute("data-model");
-		var model;
+		var modelPath = this.element.getAttribute("data-model");
 		if (modelPath) {
-			model = tsunami.evalProperty(modelPath, scope);
-		}
-		if (model) {
-			this.model = model;
+			this.model = tsunami.evalProperty(modelPath, scope);
 		}
 	};
 
@@ -53,7 +50,7 @@ tsunami = this.tsunami || {};
 
 	p.destroy = function() {
 		this.model = null;
-		this.element = null;
+		tsunami.DisplayObject.destroy.call(this);
 	};
 
 }());

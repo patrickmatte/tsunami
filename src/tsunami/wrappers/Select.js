@@ -2,80 +2,63 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Select = function(o, scope) {
+	tsunami.Select = function(element, scope) {
+		tsunami.List.call(this, element, scope);
 
-		tsunami.List(o, scope);
+		this.modelChangeHandler = this.modelChange.bind(this);
+		this.inputHandler = this.input.bind(this);
 
-		o.construct = function() {
-			this.modelChangeHandler = this.modelChange.bind(this);
-			this.inputHandler = this.input.bind(this);
+		var modelPath = this.element.getAttribute("data-model");
+		if (modelPath) {
+			this.model = tsunami.evalProperty(modelPath, scope);
+		}
 
-			var modelPath = this.getAttribute("data-model");
-			var model;
-			if (modelPath) {
-				model = tsunami.evalProperty(modelPath, scope);
-			}
-			if (model) {
-				this.model = model;
-			}
-		};
+	};
 
-		Object.defineProperty(o, 'model', {
-			get: function() {
-				return this.getModel();
-			},
-			set: function(value) {
-				this.setModel(value);
-			}
-		});
+	var p = tsunami.Select.prototype = Object.create(tsunami.List.prototype);
 
-		o.getModel = function() {
-			return this._model;
-		};
+	p.constructor = tsunami.Select;
 
-		o.setModel = function(value) {
+	Object.defineProperty(p, 'model', {
+		get: function() {
+			return Object.getOwnPropertyDescriptor(tsunami.List.prototype, 'model').get.call(this);
+		},
+		set: function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.removeEventListener("input", this.inputHandler);
+					this.element.removeEventListener("input", this.inputHandler);
 					this._model.removeEventListener("change", this.modelChangeHandler);
 				}
 			}
 			this._model = value;
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.addEventListener("input", this.inputHandler);
+					this.element.addEventListener("input", this.inputHandler);
 					this._model.addEventListener("change", this.modelChangeHandler);
 					this.modelChangeHandler();
 				} else {
-					this.value = this._model;
+					this.element.value = this._model;
 				}
 			} else {
-				this.value = "";
+				this.element.value = "";
 			}
-		};
+		}
+	});
 
-		o.modelChange = function(event) {
-			this.value = this._model.value;
-		};
+	p.modelChange = function(event) {
+		this.element.value = this._model.value;
+	};
 
-		o.input = function(e) {
-			this._model.removeEventListener("change", this.modelChangeHandler);
-			this._model.value = this.value;
-			this._model.addEventListener("change", this.modelChangeHandler);
-		};
+	p.input = function(e) {
+		this._model.removeEventListener("change", this.modelChangeHandler);
+		this._model.value = this.element.value;
+		this._model.addEventListener("change", this.modelChangeHandler);
+	};
 
-		o.destroyList = o.destroy;
-
-		o.destroy = function() {
-			this.destroyList();
-			this.model = null;
-		};
-
-		o.construct();
-
-		return o;
-
-	}
+	p.destroy = function() {
+		this.model = null;
+		tsunami.List.prototype.destroy.call(this);
+	};
 
 }());
 

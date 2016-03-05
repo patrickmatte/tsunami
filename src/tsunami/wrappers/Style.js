@@ -262,6 +262,10 @@
 		return this._transform;
 	};
 
+	p.destroy = function() {
+		this.element = null;
+	};
+
 	tsunami.StyleUnits = function() {
 		this.marginTop = "px";
 		this.marginBottom = "px";

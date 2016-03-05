@@ -2,75 +2,64 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.InputRadio = function(o, scope) {
+	tsunami.InputRadio = function(element, scope) {
+		tsunami.DisplayObject.call(this, element, scope);
 
-		o.construct = function() {
-			this.modelChangeBind = this.modelChange.bind(this);
-			this.changeBind = this.change.bind(this);
+		this.modelChangeBind = this.modelChange.bind(this);
+		this.changeBind = this.change.bind(this);
 
-			var modelPath = this.getAttribute("data-model");
-			var model;
-			if (modelPath) {
-				model = tsunami.evalProperty(modelPath, scope);
-			}
-			if (model) {
-				this.model = model;
-			}
-		};
+		var modelPath = this.element.getAttribute("data-model");
+		if (modelPath) {
+			this.model = tsunami.evalProperty(modelPath, scope);
+		}
+	};
 
-		Object.defineProperty(o, 'model', {
-			get: function() {
-				return this.getModel();
-			},
-			set: function(value) {
-				this.setModel(value);
-			}
-		});
+	var p = tsunami.InputRadio.prototype = Object.create(tsunami.DisplayObject.prototype);
 
-		o.getModel = function() {
+	p.constructor = tsunami.InputCheckbox;
+
+	Object.defineProperty(p, 'model', {
+		get: function() {
 			return this._model;
-		};
-
-		o.setModel = function(value) {
+		},
+		set: function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.removeEventListener("change", this.changeBind);
+					this.element.removeEventListener("change", this.changeBind);
 					this._model.removeEventListener("change", this.modelChangeBind);
 				}
 			}
 			this._model = value;
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.addEventListener("change", this.changeBind);
+					this.element.addEventListener("change", this.changeBind);
 					this._model.addEventListener("change", this.modelChangeBind);
 					this.modelChangeBind();
 				} else {
-					this.checked = (this._model == this.value);
+					this.element.checked = (this._model == this.element.value);
 				}
 			} else {
-				this.checked = false;
+				this.element.checked = false;
 			}
-		};
+		}
+	});
 
-		o.modelChange = function(event) {
-			this.checked = (this._model.value == this.value);
-		};
+	p.modelChange = function(event) {
+		this.element.checked = (this._model.value == this.element.value);
+	};
 
-		o.change = function(e) {
-			this._model.removeEventListener("change", this.modelChangeBind);
-			this._model.value = this.value;
-			this._model.addEventListener("change", this.modelChangeBind);
-		};
+	p.change = function(e) {
+		this._model.removeEventListener("change", this.modelChangeBind);
+		this._model.value = this.element.value;
+		this._model.addEventListener("change", this.modelChangeBind);
+	};
 
-		o.destroy = function() {
-			this.model = null;
-		};
+	p.destroy = function() {
+		this.model = null;
+		tsunami.DisplayObject.destroy.call(this);
+	};
 
-		o.construct();
 
-		return o;
-
-	}
 
 }());
 

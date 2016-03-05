@@ -65,20 +65,20 @@
 			<a href="?circle3" data-wrapper="sandbox.Button">circle3</a>
 		</p>
 		<div class="rectangle" data-wrapper="Rectangle"></div>
-		<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumbButton"></ul>
+		<ul class="breadcrumbs" data-controller="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumbButton"></ul>
 		<div class="branchesLength">
 			<span data-controller="tsunami.DataBind" data-model="router.branches.length"></span>
 			<span> </span>
-			<span data-wrapper="tsunami.Noun" data-singular="branch" data-plural="branches" data-model="router.branches.length"></span>
+			<span data-controller="tsunami.Noun" data-singular="branch" data-plural="branches" data-model="router.branches.length"></span>
 			<span> in the router</span>
 		</div>
 		<div>
 			<span>There's </span>
-			<span data-wrapper="tsunami.Switch" data-model="router.branches.length">
+			<span data-controller="tsunami.Switch" data-model="router.branches.length">
 				<span class="case" data-value="0">no branch</span>
-				<span class="case" data-value="1">1 branch</span>
-				<span class="case" data-value="2">2 branches</span>
-				<span class="default">more than 2 branches</span>
+				<span class="case" data-value="1">one branch</span>
+				<span class="case" data-value="2">two branches</span>
+				<span class="default">more than two branches</span>
 			</span>
 			<span> in the router</span>
 		</div>

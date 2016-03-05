@@ -2,14 +2,14 @@
 	<option value="{{model.value}}">{{model.title}}</option>
 </script>
 <script id="radio" type="text/template">
-	<input type="radio" name="carmaker" value="{{model.value}}" data-wrapper="tsunami.InputRadio" data-model="scope.root.model.myCarMaker"> {{model.title}}<br/>
+	<input type="radio" name="carmaker" value="{{model.value}}" data-controller="tsunami.InputRadio" data-model="scope.root.model.myCarMaker"> {{model.title}}<br/>
 </script>
 <script id="forms" type="text/template">
 	<div class="forms">
 		<div>
 			model.myString = <span data-controller="tsunami.DataBind" data-model="root.model.myString"></span>
 			<br/>
-			<input class="myStringInput" type="text" data-wrapper="tsunami.InputText" data-model="root.model.myString">
+			<input class="myStringInput" type="text" data-controller="tsunami.InputText" data-model="root.model.myString">
 			<br/>
 			<button class="myStringSetter">set myString value</button>
 		</div>
@@ -17,7 +17,7 @@
 		<div>
 			model.myNumber = <span data-controller="tsunami.DataBind" data-model="root.model.myNumber"></span>
 			<br/>
-			<input type="number" data-wrapper="tsunami.InputNumber" data-model="root.model.myNumber">
+			<input type="number" data-controller="tsunami.InputNumber" data-model="root.model.myNumber">
 			<br/>
 			<button class="myNumberSetter">set myNumber to 100</button>
 		</div>
@@ -25,7 +25,7 @@
 		<div>
 			model.myRange = <span data-controller="tsunami.DataBind" data-model="root.model.myRange"></span>
 			<br/>
-			<input type="range" data-wrapper="tsunami.InputNumber" data-model="root.model.myRange" min="0" max="50" value="20">
+			<input type="range" data-controller="tsunami.InputNumber" data-model="root.model.myRange" min="0" max="50" value="20">
 			<br/>
 			<button class="myRangeSetter">set myRange value to 10</button>
 		</div>
@@ -37,7 +37,7 @@
 		<div>
 			model.myCheckbox = <span data-controller="tsunami.DataBind" data-model="root.model.myCheckbox"></span>
 			<br/>
-			<input type="checkbox" data-wrapper="tsunami.InputCheckbox" data-model="root.model.myCheckbox" checked> checkbox
+			<input type="checkbox" checked data-controller="tsunami.InputCheckbox" data-model="root.model.myCheckbox"> checkbox
 			<br/>
 			<button class="myCheckboxSetter">toggle myCheckbox</button>
 		</div>
@@ -45,14 +45,14 @@
 		<div>
 			model.myCarMaker = <span data-controller="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
-			<span data-wrapper="tsunami.List" data-provider="root.model.carMakers" data-template="templates.radio"></span>
+			<span data-controller="tsunami.List" data-provider="root.model.carMakers" data-template="templates.radio"></span>
 			<button class="myRadioSetter">set myCarMaker to {{root.model.defaultCarMaker}}</button>
 		</div>
 		<br/>
 		<div>
 			model.myCarMaker = <span data-controller="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
-			<select data-wrapper="tsunami.Select" data-model="root.model.myCarMaker" data-provider="root.model.carMakers" data-template="templates.selectOption"></select>
+			<select data-controller="tsunami.Select" data-model="root.model.myCarMaker" data-provider="root.model.carMakers" data-template="templates.selectOption"></select>
 			<br/>
 			<button class="mySelectValueSetter">set myCarMaker to {{root.model.defaultCarMaker}}</button>
 		</div>
