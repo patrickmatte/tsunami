@@ -7,7 +7,7 @@
 <script id="forms" type="text/template">
 	<div class="forms">
 		<div>
-			model.myString = <span data-wrapper="tsunami.DataBind" data-model="root.model.myString"></span>
+			model.myString = <span data-controller="tsunami.DataBind" data-model="root.model.myString"></span>
 			<br/>
 			<input class="myStringInput" type="text" data-wrapper="tsunami.InputText" data-model="root.model.myString">
 			<br/>
@@ -15,7 +15,7 @@
 		</div>
 		<br/>
 		<div>
-			model.myNumber = <span data-wrapper="tsunami.DataBind" data-model="root.model.myNumber"></span>
+			model.myNumber = <span data-controller="tsunami.DataBind" data-model="root.model.myNumber"></span>
 			<br/>
 			<input type="number" data-wrapper="tsunami.InputNumber" data-model="root.model.myNumber">
 			<br/>
@@ -23,7 +23,7 @@
 		</div>
 		<br/>
 		<div>
-			model.myRange = <span data-wrapper="tsunami.DataBind" data-model="root.model.myRange"></span>
+			model.myRange = <span data-controller="tsunami.DataBind" data-model="root.model.myRange"></span>
 			<br/>
 			<input type="range" data-wrapper="tsunami.InputNumber" data-model="root.model.myRange" min="0" max="50" value="20">
 			<br/>
@@ -31,11 +31,11 @@
 		</div>
 		<br/>
 		<div>
-		model.myNumbersAverage = <span data-wrapper="tsunami.DataBind" data-model="root.model.myNumbersAverage"></span>
+		model.myNumbersAverage = <span data-controller="tsunami.DataBind" data-model="root.model.myNumbersAverage"></span>
 		</div>
 		<br/>
 		<div>
-			model.myCheckbox = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCheckbox"></span>
+			model.myCheckbox = <span data-controller="tsunami.DataBind" data-model="root.model.myCheckbox"></span>
 			<br/>
 			<input type="checkbox" data-wrapper="tsunami.InputCheckbox" data-model="root.model.myCheckbox" checked> checkbox
 			<br/>
@@ -43,14 +43,14 @@
 		</div>
 		<br/>
 		<div>
-			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
+			model.myCarMaker = <span data-controller="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
 			<span data-wrapper="tsunami.List" data-provider="root.model.carMakers" data-template="templates.radio"></span>
 			<button class="myRadioSetter">set myCarMaker to {{root.model.defaultCarMaker}}</button>
 		</div>
 		<br/>
 		<div>
-			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
+			model.myCarMaker = <span data-controller="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
 			<select data-wrapper="tsunami.Select" data-model="root.model.myCarMaker" data-provider="root.model.carMakers" data-template="templates.selectOption"></select>
 			<br/>

@@ -140,6 +140,17 @@ tsunami.insertBefore = function(text, referenceNode, scope) {
 	return children;
 };
 
+tsunami.append = function(text, parent, scope) {
+	var children = tsunami.createHTML(text, scope);
+	for (var i = 0; i < children.length; i++) {
+		var child = children[i];
+		parent.appendChild(child);
+		tsunami.applyWrapperAttribute(child, "data-wrapper", scope);
+		tsunami.applyControllers(child, scope);
+	}
+	return children;
+};
+
 tsunami.remove = function(elements) {
 	for (var i = 0; i < elements.length; i++) {
 		var element = elements[i];
@@ -152,16 +163,6 @@ tsunami.remove = function(elements) {
 			}
 		}
 	}
-};
-
-tsunami.append = function(text, parent, scope) {
-	var children = tsunami.createHTML(text, scope);
-	for (var i = 0; i < children.length; i++) {
-		var child = children[i];
-		parent.appendChild(child);
-		tsunami.applyWrapperAttribute(child, "data-wrapper", scope);
-	}
-	return children;
 };
 
 tsunami.getAllObjects = function(element, array) {
