@@ -2,20 +2,10 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.DataBind = function(element, model) {
-		tsunami.DisplayObject.call(this, element);
+	tsunami.DataBind = function(element, scope) {
+		tsunami.DisplayObject.call(this, element, scope);
 		this.modelChangeBind = this.modelChange.bind(this);
 
-		this.element = element;
-		this.model = model;
-	};
-
-	var p = tsunami.DataBind.prototype = Object.create(tsunami.DisplayObject.prototype);
-
-	p.constructor = tsunami.DataBind;
-
-	p.parseElement = function(element, scope) {
-		tsunami.DisplayObject.prototype.parseElement.call(this, element, scope);
 		var modelPath = element.getAttribute("data-model");
 		var model;
 		if (modelPath) {
@@ -25,6 +15,10 @@ tsunami = this.tsunami || {};
 			this.model = model;
 		}
 	};
+
+	var p = tsunami.DataBind.prototype = Object.create(tsunami.DisplayObject.prototype);
+
+	p.constructor = tsunami.DataBind;
 
 	Object.defineProperty(p, 'model', {
 		get: function() {

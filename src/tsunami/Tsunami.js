@@ -54,13 +54,8 @@ tsunami.applyControllers = function(element, scope) {
 			if (className) {
 				var classReference = tsunami.evalProperty(className, window);
 				if (classReference) {
-					var controller = new classReference();
+					var controller = new classReference(element, scope);
 					element.controller = controller;
-					if (controller.parseElement) {
-						controller.parseElement(element, scope);
-					} else {
-						console.log ("Warning! ", className + " doesn't implement the parseHTML method");
-					}
 				} else {
 					console.log ("Warning! ", className + " is an undefined reference.");
 				}
