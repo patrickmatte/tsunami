@@ -1,29 +1,35 @@
-tsunami.Button = function(o, scope) {
+(function() {
 
-	o.construct = function() {
+	tsunami.Button = function(element, scope) {
+		tsunami.DisplayObject.call(this, element, scope);
+
 		this.onRelease = function(){};
 
 		if (tsunami.isMobile.any) {
-			this.ontouchend = this.clickHandler.bind(this);
-			this.onclick = this.cancelClick.bind(this);
+			this.element.ontouchend = this.clickHandler.bind(this);
+			this.element.onclick = this.cancelClick.bind(this);
 		} else {
-			this.onclick = this.clickHandler.bind(this);
+			this.element.onclick = this.clickHandler.bind(this);
 		}
 	};
 
-	o.dontClickAfterDrag = function() {
-		this.touchMoveHandler = this.touchMove.bind(this);
-		this.ontouchstart = this.touchStart.bind(this);
+	var p = tsunami.Button.prototype = Object.create(tsunami.DisplayObject.prototype);
+
+	p.constructor = tsunami.Button;
+
+	p.dontClickAfterDrag = function() {
+		this.element.touchMoveHandler = this.touchMove.bind(this);
+		this.element.ontouchstart = this.touchStart.bind(this);
 	};
 
-	o.touchStart = function(event) {
+	p.touchStart = function(event) {
 		var mouse = event.touches[0];
 		this.touchStartPoint = new tsunami.geom.Point(mouse.pageX, mouse.pageY);
 		document.removeEventListener("touchmove", this.touchMoveHandler);
 		document.addEventListener("touchmove", this.touchMoveHandler);
 	};
 
-	o.touchMove = function(event) {
+	p.touchMove = function(event) {
 		var mouse = event.touches[0];
 		var touchMovePoint = new tsunami.geom.Point(mouse.pageX, mouse.pageY);
 
@@ -33,11 +39,11 @@ tsunami.Button = function(o, scope) {
 		}
 	};
 
-	o.cancelClick = function(event) {
+	p.cancelClick = function(event) {
 		event.preventDefault();
 	};
 
-	o.clickHandler = function(event) {
+	p.clickHandler = function(event) {
 		event.preventDefault();
 		document.removeEventListener("touchmove", this.touchMoveHandler);
 		if (this.invalidTouchend) {
@@ -47,37 +53,36 @@ tsunami.Button = function(o, scope) {
 		this.onReleaseEvent(event);
 	};
 
-	o.onReleaseEvent = function(event) {
+	p.onReleaseEvent = function(event) {
 		this.onRelease(event);
 	};
 
-	o.construct();
+}());
 
-	return o;
+(function() {
 
-};
+	tsunami.RouterButton = function(element, scope) {
 
-tsunami.RouterButton = function(o, scope) {
+		tsunami.Button.call(this, element, scope);
 
-	tsunami.Button(o, scope);
-
-	o.construct = function() {
-		var router = o.getAttribute("data-router");
+		var router = element.getAttribute("data-router");
 		if (router) {
-			o.router = tsunami.evalProperty(router, scope);
+			this.router = tsunami.evalProperty(router, scope);
 		}
 
-		var pushState = o.getAttribute("data-pushstate");
+		var pushState = element.getAttribute("data-pushstate");
 		if (pushState) {
-			o.pushState = tsunami.evalProperty(pushState, scope);
+			this.pushState = tsunami.evalProperty(pushState, scope);
 		}
 
 	};
 
-	o.onReleaseEventButton = o.onReleaseEvent;
+	var p = tsunami.RouterButton.prototype = Object.create(tsunami.Button.prototype);
 
-	o.onReleaseEvent = function(event) {
-		this.onReleaseEventButton(event);
+	p.constructor = tsunami.RouterButton;
+
+	p.onReleaseEvent = function(event) {
+		tsunami.Button.prototype.onReleaseEvent.call(this, event);
 
 		if (this.router) {
 			var path = this.getPath();
@@ -89,12 +94,8 @@ tsunami.RouterButton = function(o, scope) {
 		}
 	};
 
-	o.getPath = function() {
-		return this.href;
+	p.getPath = function() {
+		return this.element.href;
 	};
 
-	o.construct();
-
-	return o;
-
-};
+}());

@@ -140,16 +140,20 @@ sandbox = {};
 
 }());
 
-sandbox.Button = function(o) {
+(function () {
 
-	o.router = window.router;
-	o.pushState = true;
+	sandbox.Button = function(element, scope) {
+		tsunami.RouterButton.call(this, element, scope);
 
-	tsunami.RouterButton(o);
+		this.router = window.router;
+		this.pushState = true;
+	};
 
-	return o;
+	var p = sandbox.Button.prototype = Object.create(tsunami.RouterButton.prototype);
 
-};
+	p.constructor = sandbox.Button;
+
+}());
 
 Mustache.escape = function(string) {
 	return string;
