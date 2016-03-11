@@ -1,11 +1,12 @@
-tsunami = this.tsunami || {};
-
 (function() {
 
-	tsunami.DataBind = function(element, scope) {
+	tsunami.Noun = function(element, scope) {
 		tsunami.DisplayObject.call(this, element, scope);
 
 		this.modelChangeBind = this.modelChange.bind(this);
+
+		this.plural = this.element.getAttribute("data-plural");
+		this.singular = this.element.getAttribute("data-singular");
 
 		var modelPath = this.element.getAttribute("data-model");
 		if (modelPath) {
@@ -13,9 +14,9 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.DataBind.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.Noun.prototype = Object.create(tsunami.DisplayObject.prototype);
 
-	p.constructor = tsunami.DataBind;
+	p.constructor = tsunami.Noun;
 
 	Object.defineProperty(p, 'model', {
 		get: function() {
@@ -23,34 +24,37 @@ tsunami = this.tsunami || {};
 		},
 		set: function(value) {
 			if (this._model) {
-				if (this._model instanceof tsunami.Model) {
+				if (this._model instanceof tsunami.Number) {
 					this._model.removeEventListener("change", this.modelChangeBind);
 				}
 			}
 			this._model = value;
-			if (!this.element) {
-				return;
-			}
 			if (this._model) {
-				if (this._model instanceof tsunami.Model) {
+				if (this._model instanceof tsunami.Number) {
 					this._model.addEventListener("change", this.modelChangeBind);
 					this.modelChangeBind();
 				} else {
-					this.element.innerHTML = this._model;
+					if (this._model > 1){
+						this.element.innerHTML = this.plural;
+					} else {
+						this.element.innerHTML = this.singular;
+					}
 				}
-			} else {
-				this.element.innerHTML = "";
 			}
 		}
 	});
 
 	p.modelChange = function(event) {
-		this.element.innerHTML = this._model.value;
+		if (this._model.value > 1){
+			this.element.innerHTML = this.plural;
+		} else {
+			this.element.innerHTML = this.singular;
+		}
 	};
 
 	p.destroy = function() {
 		this.model = null;
-		tsunami.DisplayObject.destroy.call(this);
+		tsunami.DisplayObject.prototype.destroy.call(this);
 	};
 
 }());

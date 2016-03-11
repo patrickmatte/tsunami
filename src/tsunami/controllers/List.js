@@ -83,7 +83,7 @@ tsunami = this.tsunami || {};
 
 	p.destroy = function() {
 		this.dataProvider = [];
-		tsunami.DisplayObject.destroy.call(this);
+		tsunami.DisplayObject.prototype.destroy.call(this);
 	};
 
 }());

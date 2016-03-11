@@ -45,22 +45,49 @@ tsunami.evalProperty = function(path, scope) {
 
 tsunami.renderTemplate = null;
 
+tsunami.Directive = function(id, method) {
+	this.id = id;
+	this.method = method;
+};
+
+tsunami.directives = [];
+
+tsunami.applyDirectives = function(element, scope) {
+	var elements = tsunami.getAllObjects(element);
+	for (var i = elements.length - 1; i > -1; i--) {
+		var element = elements[i];
+		for (var j = 0; j < tsunami.directives.length; j++) {
+			var directive = tsunami.directives[j].method;
+			directive(element, scope);
+		}
+	}
+};
+
+tsunami.createController = function(element, scope) {
+	element.scope = scope;
+	var classReference = tsunami.DisplayObject;
+	if (element.getAttribute) {
+		var className = element.getAttribute("data-controller");
+		if (className) {
+			classReference = tsunami.evalProperty(className, window);
+		}
+	}
+	if (classReference) {
+		var controller = new classReference(element, scope);
+		element.controller = controller;
+	} else {
+		console.log ("Warning! '", className + "' is an undefined class reference.");
+	}
+};
+
+tsunami.directives.push(new tsunami.Directive("createController", tsunami.createController));
+
+/*
 tsunami.applyControllers = function(element, scope) {
 	var elements = tsunami.getAllObjects(element);
 	for (var i = elements.length - 1; i > -1; i--) {
 		var element = elements[i];
-		if (element.getAttribute) {
-			var className = element.getAttribute("data-controller");
-			if (className) {
-				var classReference = tsunami.evalProperty(className, window);
-				if (classReference) {
-					var controller = new classReference(element, scope);
-					element.controller = controller;
-				} else {
-					console.log ("Warning! ", className + " is an undefined reference.");
-				}
-			}
-		}
+		tsunami.createController(element, scope);
 	}
 };
 
@@ -68,11 +95,6 @@ tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
 	var objects = tsunami.getAllObjects(element);
 	for (var i = objects.length - 1; i > -1; i--) {
 		var object = objects[i];
-		/*
-		if (tsunami.Element) {
-			tsunami.Element(object);
-		}
-		*/
 		if (object.getAttribute) {
 			var attribute = object.getAttribute(attributeName);
 			if (attribute) {
@@ -105,7 +127,7 @@ tsunami.applyWrapper = function(element, method) {
 	}
 	method(element);
 };
-
+ */
 tsunami.createHTML = function(text, scope) {
 	var factory = document.createElement("div");
 	if (tsunami.renderTemplate) {
@@ -129,8 +151,7 @@ tsunami.insertBefore = function(text, referenceNode, scope) {
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.insertBefore(child, referenceNode);
-		tsunami.applyWrapperAttribute(child, "data-wrapper", scope);
-		tsunami.applyControllers(child, scope);
+		tsunami.applyDirectives(child, scope);
 	}
 	return children;
 };
@@ -140,8 +161,7 @@ tsunami.append = function(text, parent, scope) {
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.appendChild(child);
-		tsunami.applyWrapperAttribute(child, "data-wrapper", scope);
-		tsunami.applyControllers(child, scope);
+		tsunami.applyDirectives(child, scope);
 	}
 	return children;
 };

@@ -2,20 +2,19 @@ tsunami = this.tsunami || {};
 
 (function () {
 
-	tsunami.BranchModule = function(id, scriptPath, branchMethod) {
-		tsunami.Branch.call(this, id);
-		this.id = id;
-		this.scriptPath = scriptPath;
-		this.branchMethod = branchMethod;
+	tsunami.BranchImport = function(element, scope) {
+		tsunami.Branch.call(this, element, scope);
+		this.branchSource = this.element.getAttribute("data-branch-source");
+		this.branchClass = this.element.getAttribute("data-branch-class");
 	};
 
-	var p = tsunami.BranchModule.prototype = Object.create(tsunami.Branch.prototype);
+	var p = tsunami.BranchImport.prototype = Object.create(tsunami.Branch.prototype);
 
-	p.constructor = tsunami.BranchModule;
+	p.constructor = tsunami.BranchImport;
 
 	p.load = function(assetList) {
 		this.assetList = assetList;
-		var scriptPromise = tsunami.load.script(this.scriptPath);
+		var scriptPromise = tsunami.load.script(this.branchSource);
 		assetList.add(scriptPromise);
 
 		var promise = scriptPromise.then(this.scriptLoaded.bind(this));
@@ -25,8 +24,8 @@ tsunami = this.tsunami || {};
 	p.scriptLoaded = function(script) {
 		this.script = script;
 
-		var method = tsunami.evalProperty(this.branchMethod, window);
-		this.branch = method();
+		var method = tsunami.evalProperty(this.branchClass, window);
+		this.branch = new method(this.element, this.scope);
 		this.branch.root = this.root;
 		this.branch.router = this.router;
 		this.branch.path = this.path;

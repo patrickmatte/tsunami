@@ -2,11 +2,10 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.InputNumber = function(element, scope) {
+	tsunami.DataBind = function(element, scope) {
 		tsunami.DisplayObject.call(this, element, scope);
 
 		this.modelChangeBind = this.modelChange.bind(this);
-		this.inputBind = this.input.bind(this);
 
 		var modelPath = this.element.getAttribute("data-model");
 		if (modelPath) {
@@ -14,9 +13,9 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.InputNumber.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.DataBind.prototype = Object.create(tsunami.DisplayObject.prototype);
 
-	p.constructor = tsunami.InputNumber;
+	p.constructor = tsunami.DataBind;
 
 	Object.defineProperty(p, 'model', {
 		get: function() {
@@ -25,37 +24,34 @@ tsunami = this.tsunami || {};
 		set: function(value) {
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.element.removeEventListener("input", this.inputBind);
 					this._model.removeEventListener("change", this.modelChangeBind);
 				}
 			}
 			this._model = value;
+			if (!this.element) {
+				return;
+			}
 			if (this._model) {
 				if (this._model instanceof tsunami.Model) {
-					this.element.addEventListener("input", this.inputBind);
 					this._model.addEventListener("change", this.modelChangeBind);
 					this.modelChangeBind();
 				} else {
-					this.element.value = this._model;
+					this.element.innerHTML = this._model;
 				}
 			} else {
+				this.element.innerHTML = "";
 			}
 		}
 	});
 
 	p.modelChange = function(event) {
-		this.element.value = this._model.value;
-	};
-
-	p.input = function(e) {
-		this._model.removeEventListener("change", this.modelChangeBind);
-		this._model.value = this.element.value;
-		this._model.addEventListener("change", this.modelChangeBind);
+		this.element.innerHTML = this._model.value;
 	};
 
 	p.destroy = function() {
 		this.model = null;
-		tsunami.DisplayObject.destroy.call(this);
+		tsunami.DisplayObject.prototype.destroy.call(this);
 	};
 
 }());
+

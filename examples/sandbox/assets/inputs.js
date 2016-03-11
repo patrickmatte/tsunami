@@ -1,14 +1,18 @@
-Forms = function() {
+(function () {
 
-	var o = document.body;
+	sandbox.Inputs = function(element, scope) {
+		tsunami.Branch.call(this, element, scope);
+	};
 
-	tsunami.BranchWrapper(o);
+	var p = sandbox.Inputs.prototype = Object.create(tsunami.Branch.prototype);
 
-	o.load = function(assetList) {
-		var styleSheet = tsunami.load.styleSheet("assets/forms.css");
+	p.constructor = sandbox.Inputs;
+
+	p.load = function(assetList) {
+		var styleSheet = tsunami.load.styleSheet("assets/inputs.css");
 		assetList.add(styleSheet);
 
-		var templates = tsunami.load.htmlTemplates("assets/forms.html");
+		var templates = tsunami.load.htmlTemplates("assets/inputs.html");
 		assetList.add(templates);
 
 		var promise = Promise.all([templates, styleSheet]);
@@ -16,16 +20,14 @@ Forms = function() {
 		return promise.then(this.templatesLoaded.bind(this));
 	};
 
-	o.templatesLoaded = function(args) {
+	p.templatesLoaded = function(args) {
 		this.templates = args[0];
 		this.styleSheet = args[1];
 
-		this.elements = tsunami.insertBefore(this.templates.forms, this.querySelector(".preloader"), this);
-
-		return tsunami.promise.timeout(0.001);
+		this.elements = tsunami.append(this.templates.inputs, this.element, this);
 	};
 
-	o.show = function() {
+	p.show = function() {
 		var model = this.root.model;
 		document.querySelector(".myStringSetter").addEventListener("click", function() {
 			model.myString.value = "yo";
@@ -51,26 +53,20 @@ Forms = function() {
 			model.myCarMaker.value = "audi";
 		});
 
-		var element = document.querySelector("div.forms");
-		var transition = tsunami.promise.transition(element, ["opacity"]);
-		element.classList.add("visible");
+		var transition = tsunami.promise.transition(this.element, ["opacity"]);
+		this.element.classList.add("visible");
 		return transition;
 	};
 
-	o.hide = function() {
-		var element = document.querySelector("div.forms");
-		var transition = tsunami.promise.transition(element, ["opacity"]);
-		element.classList.remove("visible");
-
+	p.hide = function() {
+		var transition = tsunami.promise.transition(this.element, ["opacity"]);
+		this.element.classList.remove("visible");
 		return transition.then(this.hideComplete.bind(this));
 	};
 
-	o.hideComplete = function() {
+	p.hideComplete = function() {
 		tsunami.remove(this.elements);
 		this.elements = null;
 	};
 
-	return o;
-
-};
-
+}());

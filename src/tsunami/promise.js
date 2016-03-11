@@ -82,7 +82,7 @@ tsunami.promise.animation = function(dispatcher, animationName) {
 	return promise;
 };
 
-tsunami.promise.timeout = function(seconds) {
+tsunami.promise.timeout = function(milliseconds) {
 
 	var promise = new Promise(function(resolve, reject){
 
@@ -90,7 +90,7 @@ tsunami.promise.timeout = function(seconds) {
 			resolve();
 		};
 
-		setTimeout(timeoutComplete, seconds * 1000);
+		setTimeout(timeoutComplete, milliseconds);
 
 	});
 

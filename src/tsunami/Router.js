@@ -338,7 +338,7 @@ tsunami = this.tsunami || {};
 			this.branch = this.parent.getBranch(this.id);
 			if (!this.branch) {
 				this.branch = {};
-				console.log("No branch " + this.id + " in " + this.parent.id);
+				console.log("No branch '" + this.id + "' in '" + this.parent.id + "'");
 			}
 			this.branch.root = this.root;
 			this.branch.router = this.router;
@@ -381,10 +381,10 @@ tsunami = this.tsunami || {};
 			if (this.branch.getBranch) {
 				branch = this.branch.getBranch(id);
 			} else {
-				console.log("The getBranch method isn't implemented by " + this.id);
+				console.log("The getBranch method isn't implemented by '" + this.id + "'");
 			}
 		} else {
-			console.log("No branch with id " + this.id);
+			console.log("No branch '" + this.id + "'");
 		}
 		return branch;
 	};

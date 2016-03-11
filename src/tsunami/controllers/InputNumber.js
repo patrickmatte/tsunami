@@ -2,7 +2,7 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.InputText = function(element, scope) {
+	tsunami.InputNumber = function(element, scope) {
 		tsunami.DisplayObject.call(this, element, scope);
 
 		this.modelChangeBind = this.modelChange.bind(this);
@@ -14,9 +14,9 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.InputText.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.InputNumber.prototype = Object.create(tsunami.DisplayObject.prototype);
 
-	p.constructor = tsunami.InputText;
+	p.constructor = tsunami.InputNumber;
 
 	Object.defineProperty(p, 'model', {
 		get: function() {
@@ -55,7 +55,7 @@ tsunami = this.tsunami || {};
 
 	p.destroy = function() {
 		this.model = null;
-		tsunami.DisplayObject.destroy.call(this);
+		tsunami.DisplayObject.prototype.destroy.call(this);
 	};
 
 }());

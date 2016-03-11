@@ -82,7 +82,7 @@
 
 	p.destroy = function() {
 		this.model = null;
-		tsunami.DisplayObject.destroy.call(this);
+		tsunami.DisplayObject.prototype.destroy.call(this);
 	};
 
 }());

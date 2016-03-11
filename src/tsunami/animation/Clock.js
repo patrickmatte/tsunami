@@ -1,3 +1,5 @@
+tsunami = this.tsunami || {};
+
 (function() {
 
 	tsunami.Clock = function() {
@@ -41,8 +43,4 @@
 	};
 
 }());
-
-
-
-
 

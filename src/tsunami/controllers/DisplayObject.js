@@ -3,6 +3,7 @@
 	tsunami.DisplayObject = function(element, scope) {
 		tsunami.EventDispatcher.call(this);
 		this.element = element;
+		this.scope = scope;
 		this.style = new tsunami.Style(element);
 	};
 
@@ -13,6 +14,7 @@
 	p.destroy = function() {
 		this.style.destroy();
 		this.element = null;
+		this.scope = null;
 		tsunami.EventDispatcher.prototype.destroy.call(this);
 	};
 

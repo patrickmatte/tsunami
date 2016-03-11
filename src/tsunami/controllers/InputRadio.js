@@ -2,7 +2,7 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.InputCheckbox = function(element, scope) {
+	tsunami.InputRadio = function(element, scope) {
 		tsunami.DisplayObject.call(this, element, scope);
 
 		this.modelChangeBind = this.modelChange.bind(this);
@@ -14,7 +14,7 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.InputCheckbox.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.InputRadio.prototype = Object.create(tsunami.DisplayObject.prototype);
 
 	p.constructor = tsunami.InputCheckbox;
 
@@ -36,7 +36,7 @@ tsunami = this.tsunami || {};
 					this._model.addEventListener("change", this.modelChangeBind);
 					this.modelChangeBind();
 				} else {
-					this.element.checked = this._model;
+					this.element.checked = (this._model == this.element.value);
 				}
 			} else {
 				this.element.checked = false;
@@ -45,19 +45,21 @@ tsunami = this.tsunami || {};
 	});
 
 	p.modelChange = function(event) {
-		this.element.checked = this._model.value;
+		this.element.checked = (this._model.value == this.element.value);
 	};
 
 	p.change = function(e) {
 		this._model.removeEventListener("change", this.modelChangeBind);
-		this._model.value = this.element.checked;
+		this._model.value = this.element.value;
 		this._model.addEventListener("change", this.modelChangeBind);
 	};
 
 	p.destroy = function() {
 		this.model = null;
-		tsunami.DisplayObject.destroy.call(this);
+		tsunami.DisplayObject.prototype.destroy.call(this);
 	};
+
+
 
 }());
 
