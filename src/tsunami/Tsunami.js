@@ -128,6 +128,7 @@ tsunami.applyWrapper = function(element, method) {
 	method(element);
 };
  */
+
 tsunami.createHTML = function(text, scope) {
 	var factory = document.createElement("div");
 	if (tsunami.renderTemplate) {
@@ -166,17 +167,30 @@ tsunami.append = function(text, parent, scope) {
 	return children;
 };
 
-tsunami.remove = function(elements) {
+tsunami.destroyElement = function(element) {
+	if (element.destroy) {
+		try {
+			element.destroy();
+		} catch(e) {
+		}
+	}
+};
+
+tsunami.destroyElements = function(elements) {
 	for (var i = 0; i < elements.length; i++) {
 		var element = elements[i];
-		element.parentNode.removeChild(element);
-		if (element.destroy) {
-			try {
-				element.destroy();
-			} catch(e) {
-				console.log("error on destroy", element);
-			}
-		}
+		tsunami.destroyElement(element);
+	}
+};
+
+tsunami.removeElement = function(element) {
+	element.parentNode.removeChild(element);
+};
+
+tsunami.removeElements = function(elements) {
+	for (var i = 0; i < elements.length; i++) {
+		var element = elements[i];
+		tsunami.removeElement(element);
 	}
 };
 

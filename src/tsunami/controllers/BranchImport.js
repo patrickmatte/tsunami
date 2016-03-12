@@ -4,8 +4,14 @@ tsunami = this.tsunami || {};
 
 	tsunami.BranchImport = function(element, scope) {
 		tsunami.Branch.call(this, element, scope);
-		this.branchSource = this.element.getAttribute("data-branch-source");
-		this.branchClass = this.element.getAttribute("data-branch-class");
+		var branchSource = this.element.getAttribute("data-source");
+		if (branchSource) {
+			this.branchSource = branchSource;
+		}
+		var branchClass = this.element.getAttribute("data-class");
+		if (branchClass) {
+			this.branchClass = branchClass;
+		}
 	};
 
 	var p = tsunami.BranchImport.prototype = Object.create(tsunami.Branch.prototype);

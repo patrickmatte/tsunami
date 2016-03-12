@@ -46,7 +46,10 @@
 	};
 
 	p.hideComplete = function() {
-		tsunami.remove(this.elements);
+		tsunami.destroyElements(this.elements);
+		tsunami.removeElements(this.elements);
+		tsunami.removeElement(this.script);
+		tsunami.removeElement(this.styleSheet);
 		this.script = null;
 		this.templates = null;
 		this.styleSheet = null;

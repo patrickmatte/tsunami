@@ -2,15 +2,15 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.ModularBranch = function(id, images, templates, styles, scripts, template, parentNode, referenceNode) {
-		tsunami.Branch.call(this, id);
-		this.images = images;
-		this.templates = templates;
-		this.scripts = scripts;
-		this.styles = styles;
-		this.template = template;
-		this.parentNode = parentNode;
-		this.referenceNode = referenceNode;
+	tsunami.ModularBranch = function(element, scope) {
+		tsunami.Branch.call(element, scope);
+		this.assets = {
+			images:[],
+			templates:[],
+			scripts:[],
+			styles:[],
+			models:[]
+		}
 	};
 
 	var p = tsunami.ModularBranch.prototype = Object.create(tsunami.Branch.prototype);
@@ -19,8 +19,8 @@ tsunami = this.tsunami || {};
 		var imageAssets = new tsunami.AssetList();
 		assetList.add(imageAssets);
 		var imagePromises = [];
-		for (var i = 0; i < this.images.length; i++) {
-			var image = this.images[i];
+		for (var i = 0; i < this.assets.images.length; i++) {
+			var image = this.assets[i];
 			var imagePromise = tsunami.load.image(image);
 			imageAssets.add(imagePromise);
 			imagePromises.push(imagePromise);
@@ -30,8 +30,8 @@ tsunami = this.tsunami || {};
 		var templateAssets = new tsunami.AssetList();
 		assetList.add(templateAssets);
 		var templatePromises = [];
-		for (var i = 0; i < this.templates.length; i++) {
-			var template = this.templates[i];
+		for (var i = 0; i < this.assets.templates.length; i++) {
+			var template = this.assets.templates[i];
 			var templatePromise = tsunami.load.htmlTemplates(template);
 			templateAssets.add(templatePromise);
 			templatePromises.push(templatePromise);
@@ -40,20 +40,20 @@ tsunami = this.tsunami || {};
 
 		var styleAssets = new tsunami.AssetList();
 		assetList.add(styleAssets);
-		var styles = this.styles.slice();
+		var styles = this.assets.styles.slice();
 		var stylesPromise = new Promise(function(resolve, reject) {
-			var styleSheets = [];
+			var styles = [];
 			var loadStyle = function() {
 				if (styles.length > 0) {
 					var style = styles.shift();
 					var stylePromise = tsunami.load.styleSheet(style);
 					styleAssets.add(stylePromise);
 					stylePromise.then(function(styleSheet) {
-						styleSheets.push(styleSheet);
+						styles.push(styleSheet);
 						loadStyle();
 					});
 				} else {
-					resolve(styleSheets);
+					resolve(styles);
 				}
 			};
 			loadStyle();
@@ -61,20 +61,20 @@ tsunami = this.tsunami || {};
 
 		var scriptAssets = new tsunami.AssetList();
 		assetList.add(scriptAssets);
-		var scripts = this.scripts.slice();
+		var scripts = this.assets.scripts.slice();
 		var scriptsPromise = new Promise(function(resolve, reject) {
-			var scriptElements = [];
+			var scripts = [];
 			var loadScript = function() {
 				if (scripts.length > 0) {
 					var script = scripts.shift();
 					var scriptPromise = tsunami.load.script(script);
 					scriptAssets.add(scriptPromise);
 					scriptPromise.then(function(scriptElement) {
-						scriptElements.push(scriptElement);
+						scripts.push(scriptElement);
 						loadScript();
 					});
 				} else {
-					resolve(scriptElements);
+					resolve(scripts);
 				}
 			};
 			loadScript();
@@ -86,27 +86,10 @@ tsunami = this.tsunami || {};
 	};
 
 	p.loadComplete = function(args){
-		this.imageElements = args[0];
-		this.templateElements = args[1];
-		this.styleElements = args[2];
-		this.scriptElements = args[3];
-	};
-
-	p.show = function() {
-		for (var i = 0; i < this.imageElements.length; i++) {
-			document.body.appendChild(this.imageElements[i]);
-		}
-	};
-
-	p.getBranch = function(id) {
-		var branch;
-		var target = document.querySelector(this.targetSelector);
-		if (target) {
-			if (target.getBranch) {
-				branch = target.getBranch(id);
-			}
-		}
-		return branch;
+		this.images = args[0];
+		this.templates = args[1];
+		this.styles = args[2];
+		this.scripts = args[3];
 	};
 
 }());
