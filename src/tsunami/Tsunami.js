@@ -32,38 +32,39 @@ tsunami.events.complete = "complete";
 tsunami.events.change = "change";
 
 tsunami.evalProperty = function(path, scope) {
-	if (!scope) {
-		scope = window;
-	}
 	var array = path.split(".");
 	while(array.length > 0) {
 		var name = array.shift();
-		scope = scope[name];
+		var arr = name.split("[");
+		for (var i = 0; i < arr.length; i++) {
+			var prop = arr[i].split("]")[0];
+			scope = scope[prop];
+		}
 	}
 	return scope;
 };
 
 tsunami.renderTemplate = null;
 
-tsunami.Directive = function(id, method) {
-	this.id = id;
+tsunami.Command = function(name, method) {
+	this.name = name;
 	this.method = method;
 };
 
-tsunami.directives = [];
-
-tsunami.applyDirectives = function(element, scope) {
+tsunami.applyCommands = function(element, scope) {
 	var elements = tsunami.getAllObjects(element);
 	for (var i = elements.length - 1; i > -1; i--) {
 		var element = elements[i];
-		for (var j = 0; j < tsunami.directives.length; j++) {
-			var directive = tsunami.directives[j].method;
-			directive(element, scope);
+		for (var j = 0; j < tsunami.commands.length; j++) {
+			var command = tsunami.commands[j].method;
+			command(element, scope);
 		}
 	}
 };
 
-tsunami.createController = function(element, scope) {
+tsunami.commands = [];
+
+tsunami.commands.push(new tsunami.Command("data-controller", function(element, scope) {
 	element.scope = scope;
 	var classReference = tsunami.DisplayObject;
 	if (element.getAttribute) {
@@ -78,18 +79,17 @@ tsunami.createController = function(element, scope) {
 	} else {
 		console.log ("Warning! '", className + "' is an undefined class reference.");
 	}
-};
+}));
 
-tsunami.directives.push(new tsunami.Directive("createController", tsunami.createController));
+tsunami.commands.push(new tsunami.Command("data-include", function(element, scope) {
+	var include = element.getAttribute("data-include");
+	if (include) {
+		var text = tsunami.evalProperty(include, scope);
+		tsunami.append(text, element, scope);
+	}
+}));
 
 /*
-tsunami.applyControllers = function(element, scope) {
-	var elements = tsunami.getAllObjects(element);
-	for (var i = elements.length - 1; i > -1; i--) {
-		var element = elements[i];
-		tsunami.createController(element, scope);
-	}
-};
 
 tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
 	var objects = tsunami.getAllObjects(element);
@@ -129,13 +129,13 @@ tsunami.applyWrapper = function(element, method) {
 };
  */
 
-tsunami.createHTML = function(text, scope) {
+tsunami.createHTML = function(template, scope) {
 	var factory = document.createElement("div");
 	if (tsunami.renderTemplate) {
 		if (!scope) {
 			scope = window;
 		}
-		text = tsunami.renderTemplate(text, scope);
+		text = tsunami.renderTemplate(template, scope);
 	}
 	factory.innerHTML = text;
 	var children = [];
@@ -146,23 +146,23 @@ tsunami.createHTML = function(text, scope) {
 	return children;
 };
 
-tsunami.insertBefore = function(text, referenceNode, scope) {
-	var children = tsunami.createHTML(text, scope);
+tsunami.insertBefore = function(template, referenceNode, scope) {
+	var children = tsunami.createHTML(template, scope);
 	var parent = referenceNode.parentNode;
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.insertBefore(child, referenceNode);
-		tsunami.applyDirectives(child, scope);
+		tsunami.applyCommands(child, scope);
 	}
 	return children;
 };
 
-tsunami.append = function(text, parent, scope) {
-	var children = tsunami.createHTML(text, scope);
+tsunami.append = function(template, parent, scope) {
+	var children = tsunami.createHTML(template, scope);
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.appendChild(child);
-		tsunami.applyDirectives(child, scope);
+		tsunami.applyCommands(child, scope);
 	}
 	return children;
 };
@@ -198,14 +198,18 @@ tsunami.getAllObjects = function(element, array) {
 	if (!array) {
 		array = [];
 	}
-	array.push(element);
-
-	var children = element.childNodes;
-	for (var i = 0; i < children.length; i++) {
-		var child = children.item(i);
-		if (child.nodeName != "#text") {
-			tsunami.getAllObjects(child, array);
-		}
+	switch(element.nodeName) {
+		case "#text":
+		case "BR":
+		break;
+		default:
+			array.push(element);
+			var children = element.childNodes;
+			for (var i = 0; i < children.length; i++) {
+				var child = children.item(i);
+				tsunami.getAllObjects(child, array);
+			}
+		break;
 	}
 	return array;
 };

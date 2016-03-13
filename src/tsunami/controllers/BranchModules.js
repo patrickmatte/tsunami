@@ -2,8 +2,8 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.ModularBranch = function(element, scope) {
-		tsunami.Branch.call(element, scope);
+	tsunami.BranchModules = function(element, scope) {
+		tsunami.Branch.call(this, element, scope);
 		this.assets = {
 			images:[],
 			templates:[],
@@ -13,7 +13,7 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.ModularBranch.prototype = Object.create(tsunami.Branch.prototype);
+	var p = tsunami.BranchModules.prototype = Object.create(tsunami.Branch.prototype);
 
 	p.load = function(assetList) {
 		var imageAssets = new tsunami.AssetList();
@@ -32,7 +32,7 @@ tsunami = this.tsunami || {};
 		var templatePromises = [];
 		for (var i = 0; i < this.assets.templates.length; i++) {
 			var template = this.assets.templates[i];
-			var templatePromise = tsunami.load.htmlTemplates(template);
+			var templatePromise = tsunami.load.templates(template);
 			templateAssets.add(templatePromise);
 			templatePromises.push(templatePromise);
 		}
@@ -42,18 +42,18 @@ tsunami = this.tsunami || {};
 		assetList.add(styleAssets);
 		var styles = this.assets.styles.slice();
 		var stylesPromise = new Promise(function(resolve, reject) {
-			var styles = [];
+			var elements = [];
 			var loadStyle = function() {
 				if (styles.length > 0) {
 					var style = styles.shift();
-					var stylePromise = tsunami.load.styleSheet(style);
+					var stylePromise = tsunami.load.style(style);
 					styleAssets.add(stylePromise);
-					stylePromise.then(function(styleSheet) {
-						styles.push(styleSheet);
+					stylePromise.then(function(element) {
+						elements.push(element);
 						loadStyle();
 					});
 				} else {
-					resolve(styles);
+					resolve(elements);
 				}
 			};
 			loadStyle();
@@ -63,18 +63,18 @@ tsunami = this.tsunami || {};
 		assetList.add(scriptAssets);
 		var scripts = this.assets.scripts.slice();
 		var scriptsPromise = new Promise(function(resolve, reject) {
-			var scripts = [];
+			var elements = [];
 			var loadScript = function() {
 				if (scripts.length > 0) {
 					var script = scripts.shift();
 					var scriptPromise = tsunami.load.script(script);
 					scriptAssets.add(scriptPromise);
-					scriptPromise.then(function(scriptElement) {
-						scripts.push(scriptElement);
+					scriptPromise.then(function(element) {
+						elements.push(element);
 						loadScript();
 					});
 				} else {
-					resolve(scripts);
+					resolve(elements);
 				}
 			};
 			loadScript();
@@ -85,11 +85,11 @@ tsunami = this.tsunami || {};
 		return promise2;
 	};
 
-	p.loadComplete = function(args){
-		this.images = args[0];
-		this.templates = args[1];
-		this.styles = args[2];
-		this.scripts = args[3];
+	p.loadComplete = function(assets){
+		this.images = assets[0];
+		this.templates = assets[1];
+		this.styles = assets[2];
+		this.scripts = assets[3];
 	};
 
 }());

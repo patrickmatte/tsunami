@@ -24,6 +24,37 @@ p {
 	margin: 1em 0;
 }
 
+
+.breadcrumbs {
+	font-size: 0.8em;
+	margin: 0.5em 0;
+}
+
+.breadcrumbs li {
+	display: inline-block;
+	margin: 0.5em;
+}
+
+.breadcrumbs li:first-child {
+	margin-left: 0;
+}
+
+.breadcrumbs li:last-child {
+	margin-right: 0;
+}
+
+.breadcrumbs a {
+	color: #808080;
+}
+
+.breadcrumbs a:hover {
+	color: #000000;
+}
+
+.branchesLength {
+	font-size: 0.8em;
+}
+
 .preloader {
 	position: absolute;
 	width: 50em;
@@ -74,6 +105,7 @@ button {
 .section {
 	margin-left: 100px;
 	opacity: 0;
+	margin-top: 2em;
 	-webkit-transition: All 0.5s ease 0s;
 	-moz-transition: All 0.5s ease 0s;
 	-o-transition: All 0.5s ease 0s;

@@ -1,15 +1,14 @@
-<script id="breadcrumbButton" type="text/template">
-	<li><a href="{{model.path}}" data-controller="sandbox.Button">{{model.id}}</a></li>
-</script>
 <script id="main" type="text/template">
-	<div class="circle1 shape size1 circle" data-controller="sandbox.ShapeImage">
-		<div class="circle2 shape size2 circle" data-controller="sandbox.ShapeImage">
-			<div class="circle3 shape size3 circle" data-controller="sandbox.ShapeImage">
-				<div class="circle4 shape size4 circle" data-controller="sandbox.ShapeImage">
-					<div class="circle5 shape size5 circle" data-controller="sandbox.ShapeImage">
-						<div class="circle6 shape size6 circle" data-controller="sandbox.ShapeImage">
-							<div class="circle7 shape size7 circle" data-controller="sandbox.ShapeImage">
-								<div class="circle8 shape size8 circle" data-controller="sandbox.ShapeImage">
+	<div class="circles" data-controller="tsunami.Branch">
+		<div class="shape level1" data-controller="sandbox.ShapeImage">
+			<div class="shape level2" data-controller="sandbox.ShapeImage">
+				<div class="shape level3" data-controller="sandbox.ShapeImage">
+					<div class="shape level4" data-controller="sandbox.ShapeImage">
+						<div class="shape level5" data-controller="sandbox.ShapeImage">
+							<div class="shape level6" data-controller="sandbox.ShapeImage">
+								<div class="shape level7" data-controller="sandbox.ShapeImage">
+									<div class="shape level8" data-controller="sandbox.ShapeImage">
+									</div>
 								</div>
 							</div>
 						</div>
@@ -18,14 +17,16 @@
 			</div>
 		</div>
 	</div>
-	<div class="square1 shape size1" data-controller="sandbox.Shape">
-		<div class="square2 shape size2" data-controller="sandbox.Shape">
-			<div class="square3 shape size3" data-controller="sandbox.Shape">
-				<div class="square4 shape size4" data-controller="sandbox.Shape">
-					<div class="square5 shape size5" data-controller="sandbox.Shape">
-						<div class="square6 shape size6" data-controller="sandbox.Shape">
-							<div class="square7 shape size7" data-controller="sandbox.Shape">
-								<div class="square8 shape size8" data-controller="sandbox.Shape">
+	<div class="squares" data-controller="tsunami.Branch">
+		<div class="shape level1" data-controller="sandbox.Shape">
+			<div class="shape level2" data-controller="sandbox.Shape">
+				<div class="shape level3" data-controller="sandbox.Shape">
+					<div class="shape level4" data-controller="sandbox.Shape">
+						<div class="shape level5" data-controller="sandbox.Shape">
+							<div class="shape level6" data-controller="sandbox.Shape">
+								<div class="shape level7" data-controller="sandbox.Shape">
+									<div class="shape level8" data-controller="sandbox.Shape">
+									</div>
 								</div>
 							</div>
 						</div>
@@ -35,51 +36,36 @@
 		</div>
 	</div>
 	<p>
-		<a href="{{router.fragment}}shapes/circle1" data-controller="sandbox.Button">circle1</a>
-		<a href="{{router.fragment}}shapes/circle1/circle2" data-controller="sandbox.Button">circle2</a>
-		<a href="{{router.fragment}}shapes/circle1/circle2/circle3" data-controller="sandbox.Button">circle3</a>
-		<a href="{{router.fragment}}shapes/circle1/circle2/circle3/circle4" data-controller="sandbox.Button">circle4</a>
-		<a href="{{router.fragment}}shapes/circle1/circle2/circle3/circle4/circle5" data-controller="sandbox.Button">circle5</a>
-		<a href="{{router.fragment}}shapes/circle1/circle2/circle3/circle4/circle5/circle6" data-controller="sandbox.Button">circle6</a>
-		<a href="{{router.fragment}}shapes/circle1/circle2/circle3/circle4/circle5/circle6/circle7" data-controller="sandbox.Button">circle7</a>
-		<a href="{{router.fragment}}shapes/circle1/circle2/circle3/circle4/circle5/circle6/circle7/circle8" data-controller="sandbox.Button">circle8</a>
+		circles
+		<a href="{{router.fragment}}shapes/circles/level1" data-controller="sandbox.Button">level1</a>
+		<a href="{{router.fragment}}shapes/circles/level1/level2" data-controller="sandbox.Button">level2</a>
+		<a href="{{router.fragment}}shapes/circles/level1/level2/level3" data-controller="sandbox.Button">level3</a>
+		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4" data-controller="sandbox.Button">level4</a>
+		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5" data-controller="sandbox.Button">level5</a>
+		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6" data-controller="sandbox.Button">level6</a>
+		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6/level7" data-controller="sandbox.Button">level7</a>
+		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6/level7/level8" data-controller="sandbox.Button">level8</a>
 	</p>
 	<p>
-		<a href="{{router.fragment}}shapes/square1" data-controller="sandbox.Button">square1</a>
-		<a href="{{router.fragment}}shapes/square1/square2" data-controller="sandbox.Button">square2</a>
-		<a href="{{router.fragment}}shapes/square1/square2/square3" data-controller="sandbox.Button">square3</a>
-		<a href="{{router.fragment}}shapes/square1/square2/square3/square4" data-controller="sandbox.Button">square4</a>
-		<a href="{{router.fragment}}shapes/square1/square2/square3/square4/square5" data-controller="sandbox.Button">square5</a>
-		<a href="{{router.fragment}}shapes/square1/square2/square3/square4/square5/square6" data-controller="sandbox.Button">square6</a>
-		<a href="{{router.fragment}}shapes/square1/square2/square3/square4/square5/square6/square7" data-controller="sandbox.Button">square7</a>
-		<a href="{{router.fragment}}shapes/square1/square2/square3/square4/square5/square6/square7/square8" data-controller="sandbox.Button">square8</a>
+		squares
+		<a href="{{router.fragment}}shapes/squares/level1" data-controller="sandbox.Button">level1</a>
+		<a href="{{router.fragment}}shapes/squares/level1/level2" data-controller="sandbox.Button">level2</a>
+		<a href="{{router.fragment}}shapes/squares/level1/level2/level3" data-controller="sandbox.Button">level3</a>
+		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4" data-controller="sandbox.Button">level4</a>
+		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5" data-controller="sandbox.Button">level5</a>
+		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6" data-controller="sandbox.Button">level6</a>
+		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6/level7" data-controller="sandbox.Button">level7</a>
+		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6/level7/level8" data-controller="sandbox.Button">level8</a>
 	</p>
 	<p>
-		<a href="{{router.path}}" data-controller="sandbox.Button">home</a>
+		<a href="{{root.path}}" data-controller="sandbox.Button">home</a>
 	</p>
 	<p>
 		<a href="{{router.fragment}}shapes/rectangle" data-controller="sandbox.Button">rectangle</a>
 	</p>
 	<p>
-		<a href="{{router.fragment}}circle3" data-controller="sandbox.Button">circle3</a>
+		<a href="{{router.fragment}}circle5" data-controller="sandbox.Button">circle5</a>
 	</p>
 	<div class="rectangle" data-controller="sandbox.Rectangle"></div>
-	<ul class="breadcrumbs" data-controller="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumbButton"></ul>
-	<div class="branchesLength">
-		<span data-controller="tsunami.DataBind" data-model="router.branches.length"></span>
-		<span> </span>
-		<span data-controller="tsunami.Noun" data-singular="branch" data-plural="branches" data-model="router.branches.length"></span>
-		<span> in the router</span>
-	</div>
-	<div>
-		<span>There's </span>
-		<span data-controller="tsunami.Switch" data-model="router.branches.length">
-			<span class="case" data-value="0">no branch</span>
-			<span class="case" data-value="1">one branch</span>
-			<span class="case" data-value="2">two branches</span>
-			<span class="default">more than two branches</span>
-		</span>
-		<span> in the router</span>
-	</div>
 	<button onclick="scope.testClick(this)" class="test-button">test</button>
 </script>

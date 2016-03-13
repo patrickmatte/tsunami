@@ -71,7 +71,6 @@ tsunami = this.tsunami || {};
 			path = path.split("&")[0];
 		}
 		path = this._applyRedirect(path);
-
 		this._gotoLocation(path);
 		if (this._history && pushState) {
 			this._history.pushState({path:value}, "", value);
@@ -130,11 +129,14 @@ tsunami = this.tsunami || {};
 	};
 
 	p._startTransitions = function() {
+		var currentLocationArray = this.branches.value.map(function(item) {
+			return item.id;
+		});
 		var nextLocationArray = this._nextLocation.split("/");
 		var breakIndex = -1;
-		for (var i = 0; i < this.branches.value.length; i++) {
-			var branchId = this.branches.value[i].id;
-			var nextBranchId = nextLocationArray[i];
+		for (var i = 0; i < currentLocationArray.length; i++) {
+			var branchId = currentLocationArray.slice(0, i + 1).join("/");
+			var nextBranchId = nextLocationArray.slice(0, i + 1).join("/")
 			if (branchId == nextBranchId) {
 				breakIndex = i;
 			}

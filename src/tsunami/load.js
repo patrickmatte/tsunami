@@ -41,7 +41,7 @@ tsunami.load.image = function(url, img) {
 
 };
 
-tsunami.load.progressiveImage = function(url, img) {
+tsunami.load.imageWithProgress = function(url, img) {
 
 	if (!img) {
 		img = new Image();
@@ -140,7 +140,7 @@ tsunami.load.xhr = function(url, method, data, requestHeaders, responseType, noC
 
 };
 
-tsunami.load.htmlTemplates = function(url) {
+tsunami.load.templates = function(url) {
 
 	var promise = tsunami.load.xhr(url, "GET", null, null, "text", null);
 	var promise2 = promise.then(function(xhr) {
@@ -214,7 +214,7 @@ tsunami.load.script = function(url, id, noCache) {
 
 };
 
-tsunami.load.styleSheet = function(url, id, noCache) {
+tsunami.load.style = function(url, id, noCache) {
 
 	var promise = tsunami.load.xhr(url, "GET", null, null, "text", noCache);
 	var promise2 = promise.then(function(xhr) {

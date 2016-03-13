@@ -28,35 +28,34 @@ tsunami.mustacheRender = function(text, scope) {
 	return Mustache.render(text, scope);
 };
 */
+
 tsunami.compileTemplate = function(text) {
 	return Handlebars.compile(text);
 };
 
 tsunami.renderTemplate = function(template, scope) {
-	return template(scope);
+	var text = template(scope);
+	return text;
 };
 
 router = new tsunami.Router();
 router.path = location.origin + location.pathname;
 router.fragment = "?";
+this.router.history = new tsunami.History(this.router.path, this.router.fragment, tsunami.HistoryFallback.HASH);
 router.redirect("", "shapes");
-router.redirect("shapes", "shapes/circle1/circle2");
-router.redirect("circle3", "shapes/circle1/circle2/circle3");
-
-var text = document.querySelector("#root-template").text;
-var template = tsunami.compileTemplate(text);
-tsunami.append(template, document.body, this);
-
-router.root = document.querySelector(".root").controller;
-router.preloader = document.querySelector(".preloader").controller;
-
+router.redirect("shapes", "shapes/circles/level1/level2");
+router.redirect("circle5", "shapes/circles/level1/level2/level3/level4/level5");
 router.addEventListener("locationChange", function(e) {
 	//console.log("router locationChange", e.location);
 });
-router.addEventListener("complete", function() {
+router.addEventListener("complete", function(e) {
 	console.log("router complete", router.getLocation());
 });
-//tsunami.applyWrapperAttribute(document.body, "data-wrapper", this);
 
-router.history = new tsunami.History(router.path, router.fragment, tsunami.HistoryFallback.HASH);
-router.history.start();
+tsunami.load.templates("assets/root.html").then(function(templates) {
+	this.templates = templates;
+	tsunami.append(this.templates.root, document.body, this);
+	this.router.root = document.querySelector(".root").controller;
+	this.router.preloader = document.querySelector(".preloader").controller;
+	this.router.history.start();
+});

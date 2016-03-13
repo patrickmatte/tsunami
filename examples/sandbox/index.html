@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<title>tsunami sandbox</title>
 	<link rel="stylesheet" type="text/css" href="assets/style.css">
+</head>
+<body>
 	<script src="../../src/tsunami/utils/Polyfills.js"></script>
 	<script src="../../src/tsunami/EventDispatcher.js"></script>
 	<script src="../../src/tsunami/tsunami.js"></script>
@@ -33,7 +35,7 @@
 	<script src="../../src/tsunami/controllers/Select.js"></script>
 	<script src="../../src/tsunami/controllers/Branch.js"></script>
 	<script src="../../src/tsunami/controllers/BranchImport.js"></script>
-	<script src="../../src/tsunami/controllers/ModularBranch.js"></script>
+	<script src="../../src/tsunami/controllers/BranchModules.js"></script>
 	<script src="../../src/tsunami/animation/Easing.js"></script>
 	<script src="../../src/tsunami/animation/Tween.js"></script>
 	<script src="../../src/tsunami/animation/TimeTween.js"></script>
@@ -44,24 +46,8 @@
 	<script src="../../src/tsunami/Router.js"></script>
 	<script src="assets/mustache.min.js"></script>
 	<script src="assets/handlebars.js"></script>
-	<script id="root-template" type="text/template">
-		<div class="root" data-controller="sandbox.Root">
-			<nav>
-				<a href="{{router.fragment}}shapes" data-controller="sandbox.Button">shapes</a>
-				<a href="{{router.fragment}}inputs" data-controller="sandbox.Button">inputs</a>
-				<a href="{{router.fragment}}animation" data-controller="sandbox.Button">animation</a>
-			</nav>
-			<div class="section shapes" data-controller="tsunami.BranchImport" data-source="assets/shapes.js" data-class="sandbox.Shapes"></div>
-			<div class="section inputs" data-controller="tsunami.BranchImport" data-source="assets/inputs.js" data-class="sandbox.Inputs"></div>
-			<div class="preloader" data-controller="sandbox.Preloader">
-				<div class="progressbar" data-controller="tsunami.DisplayObject"></div>
-			</div>
-		</div>
-	</script>
-</head>
-<body>
-	<script src="assets/Preloader.js"></script>
-	<script src="assets/Root.js"></script>
+	<script src="assets/preloader.js"></script>
+	<script src="assets/root.js"></script>
 	<script src="assets/main.js"></script>
 </body>
 </html>

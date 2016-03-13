@@ -1,36 +1,26 @@
 (function () {
 
 	sandbox.Shapes = function(element, scope) {
-		tsunami.Branch.call(this, element, scope);
+		tsunami.BranchModules.call(this, element, scope)
 	};
 
-	var p = sandbox.Shapes.prototype = Object.create(tsunami.Branch.prototype);
+	var p = sandbox.Shapes.prototype = Object.create(tsunami.BranchModules.prototype);
 
 	p.constructor = sandbox.Shapes;
 
 	p.load = function(assetList) {
-		var script = tsunami.load.script("assets/shapesMoreCode.js");
-		assetList.add(script);
-
-		var styleSheet = tsunami.load.styleSheet("assets/shapes.css");
-		assetList.add(styleSheet);
-
-		var templates = tsunami.load.htmlTemplates("assets/shapes.html");
-		assetList.add(templates);
-
-		var promise = Promise.all([script, templates, styleSheet]);
-
-		return promise.then(this.templatesLoaded.bind(this));
+		this.assets.scripts.push("assets/shapesMoreCode.js");
+		this.assets.styles.push("assets/shapes.css");
+		this.assets.templates.push("assets/shapes.html");
+		return tsunami.BranchModules.prototype.load.call(this, assetList);
 	};
 
-	p.templatesLoaded = function(arguments) {
-		this.script = arguments[0];
-		this.templates = arguments[1];
-		this.styleSheet = arguments[2];
+	p.loadComplete = function(assets) {
+		tsunami.BranchModules.prototype.loadComplete.call(this, assets);
 
 		sandbox.ShapeImage.urls = this.root.model.images.slice();
 
-		this.elements = tsunami.append(this.templates.main, this.element, this);
+		this.elements = tsunami.append(this.templates[0].main, this.element, this);
 	};
 
 	p.show = function() {

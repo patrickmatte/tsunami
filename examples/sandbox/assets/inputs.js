@@ -9,10 +9,10 @@
 	p.constructor = sandbox.Inputs;
 
 	p.load = function(assetList) {
-		var styleSheet = tsunami.load.styleSheet("assets/inputs.css");
+		var styleSheet = tsunami.load.style("assets/inputs.css");
 		assetList.add(styleSheet);
 
-		var templates = tsunami.load.htmlTemplates("assets/inputs.html");
+		var templates = tsunami.load.templates("assets/inputs.html");
 		assetList.add(templates);
 
 		var promise = Promise.all([templates, styleSheet]);
