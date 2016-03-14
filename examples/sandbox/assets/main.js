@@ -30,11 +30,13 @@ tsunami.mustacheRender = function(text, scope) {
 */
 
 tsunami.compileTemplate = function(text) {
-	return Handlebars.compile(text);
+	return text;
+	//return Handlebars.compile(text);
 };
 
 tsunami.renderTemplate = function(template, scope) {
-	var text = template(scope);
+	var text = Handlebars.compile(template)(scope);
+	//var text = template(scope);
 	return text;
 };
 

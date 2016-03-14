@@ -5,8 +5,8 @@
 
 		this.modelChangeBind = this.modelChange.bind(this);
 
-		this.plural = this.element.getAttribute("data-plural");
-		this.singular = this.element.getAttribute("data-singular");
+		this.plural = this.element.querySelector(".plural");
+		this.singular = this.element.querySelector(".singular");
 
 		var modelPath = this.element.getAttribute("data-model");
 		if (modelPath) {
@@ -29,27 +29,24 @@
 				}
 			}
 			this._model = value;
-			if (this._model) {
+			if (!isNaN(this._model)) {
 				if (this._model instanceof tsunami.Number) {
 					this._model.addEventListener("change", this.modelChangeBind);
 					this.modelChangeBind();
 				} else {
-					if (this._model > 1){
-						this.element.innerHTML = this.plural;
-					} else {
-						this.element.innerHTML = this.singular;
-					}
+					this.update(this.model);
 				}
 			}
 		}
 	});
 
 	p.modelChange = function(event) {
-		if (this._model.value > 1){
-			this.element.innerHTML = this.plural;
-		} else {
-			this.element.innerHTML = this.singular;
-		}
+		this.update(this.model.value);
+	};
+
+	p.update = function(value) {
+		this.plural.style.display = (value > 1)?"inline-block":"none";
+		this.singular.style.display = (value < 2)?"inline-block":"none";
 	};
 
 	p.destroy = function() {

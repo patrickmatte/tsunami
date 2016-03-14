@@ -27,12 +27,13 @@ tsunami = this.tsunami || {};
 		}
 		var imagesPromise = Promise.all(imagePromises);
 
+		this.templates = {};
 		var templateAssets = new tsunami.AssetList();
 		assetList.add(templateAssets);
 		var templatePromises = [];
 		for (var i = 0; i < this.assets.templates.length; i++) {
 			var template = this.assets.templates[i];
-			var templatePromise = tsunami.load.templates(template);
+			var templatePromise = tsunami.load.templates(template, this.templates);
 			templateAssets.add(templatePromise);
 			templatePromises.push(templatePromise);
 		}
@@ -87,9 +88,17 @@ tsunami = this.tsunami || {};
 
 	p.loadComplete = function(assets){
 		this.images = assets[0];
-		this.templates = assets[1];
 		this.styles = assets[2];
 		this.scripts = assets[3];
+	};
+
+	p.hide = function() {
+		this.images = null;
+		this.templates = null;
+		tsunami.removeElements(this.styles);
+		this.styles = null;
+		tsunami.removeElements(this.scripts);
+		this.scripts = null;
 	};
 
 }());

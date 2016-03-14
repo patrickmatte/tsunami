@@ -5,12 +5,15 @@
 			<a href="{{router.fragment}}inputs" data-controller="sandbox.Button">inputs</a>
 			<a href="{{router.fragment}}animation" data-controller="sandbox.Button">animation</a>
 		</nav>
+		<ul class="breadcrumbs" data-controller="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumb"></ul>
 		<div class="branchesLength">
 			<span data-controller="tsunami.DataBind" data-model="router.branches.length"></span>
-			<span data-controller="tsunami.Noun" data-singular=" branch" data-plural=" branches" data-model="router.branches.length"></span>
+			<span data-controller="tsunami.Noun" data-model="router.branches.length">
+				<span class="singular">branch</span>
+				<span class="plural">branches</span>
+			</span>
 			<span> in the router</span>
 		</div>
-		<ul class="breadcrumbs" data-controller="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumb"></ul>
 		<div class="switch" data-include="templates.switch"></div>
 		<div class="section shapes" data-controller="tsunami.BranchImport" data-source="assets/shapes.js" data-class="sandbox.Shapes"></div>
 		<div class="section inputs" data-controller="tsunami.BranchImport" data-source="assets/inputs.js" data-class="sandbox.Inputs"></div>

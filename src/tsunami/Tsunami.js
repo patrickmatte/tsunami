@@ -33,15 +33,19 @@ tsunami.events.change = "change";
 
 tsunami.evalProperty = function(path, scope) {
 	var array = path.split(".");
+	var object = scope;
 	while(array.length > 0) {
 		var name = array.shift();
 		var arr = name.split("[");
 		for (var i = 0; i < arr.length; i++) {
 			var prop = arr[i].split("]")[0];
-			scope = scope[prop];
+			object = object[prop];
+			if (!object) {
+				console.log("Error! The reference '" + path + "' is not valid in " + scope);
+			}
 		}
 	}
-	return scope;
+	return object;
 };
 
 tsunami.renderTemplate = null;
@@ -54,10 +58,10 @@ tsunami.Command = function(name, method) {
 tsunami.applyCommands = function(element, scope) {
 	var elements = tsunami.getAllObjects(element);
 	for (var i = elements.length - 1; i > -1; i--) {
-		var element = elements[i];
+		var el = elements[i];
 		for (var j = 0; j < tsunami.commands.length; j++) {
 			var command = tsunami.commands[j].method;
-			command(element, scope);
+			command(el, scope);
 		}
 	}
 };
@@ -90,7 +94,6 @@ tsunami.commands.push(new tsunami.Command("data-include", function(element, scop
 }));
 
 /*
-
 tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
 	var objects = tsunami.getAllObjects(element);
 	for (var i = objects.length - 1; i > -1; i--) {
@@ -127,7 +130,7 @@ tsunami.applyWrapper = function(element, method) {
 	}
 	method(element);
 };
- */
+*/
 
 tsunami.createHTML = function(template, scope) {
 	var factory = document.createElement("div");
@@ -168,12 +171,15 @@ tsunami.append = function(template, parent, scope) {
 };
 
 tsunami.destroyElement = function(element) {
-	if (element.destroy) {
-		try {
-			element.destroy();
-		} catch(e) {
+	if (element.controller) {
+		if (element.controller.destroy) {
+			try {
+				element.controller.destroy();
+			} catch(e) {
+			}
 		}
 	}
+	element.innerHTML = null;
 };
 
 tsunami.destroyElements = function(elements) {
@@ -184,7 +190,9 @@ tsunami.destroyElements = function(elements) {
 };
 
 tsunami.removeElement = function(element) {
-	element.parentNode.removeChild(element);
+	if (element.parentNode) {
+		element.parentNode.removeChild(element);
+	}
 };
 
 tsunami.removeElements = function(elements) {

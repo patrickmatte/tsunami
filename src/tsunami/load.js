@@ -140,14 +140,15 @@ tsunami.load.xhr = function(url, method, data, requestHeaders, responseType, noC
 
 };
 
-tsunami.load.templates = function(url) {
-
+tsunami.load.templates = function(url, templates) {
+	if (!templates) {
+		templates = {};
+	}
 	var promise = tsunami.load.xhr(url, "GET", null, null, "text", null);
 	var promise2 = promise.then(function(xhr) {
 		var container = document.createElement("div");
 		container.innerHTML = xhr.response;
 		var scripts = container.querySelectorAll("script");
-		var templates = {};
 
 		for (var i = 0; i < scripts.length; i++) {
 			var script = scripts.item(i);

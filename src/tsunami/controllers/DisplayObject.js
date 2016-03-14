@@ -13,6 +13,9 @@
 
 	p.destroy = function() {
 		this.style.destroy();
+		tsunami.destroyElements(this.element.childNodes);
+		tsunami.removeElements(this.element.childNodes);
+		this.element.innerHTML = "";
 		this.element = null;
 		this.scope = null;
 		tsunami.EventDispatcher.prototype.destroy.call(this);

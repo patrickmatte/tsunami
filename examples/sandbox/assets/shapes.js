@@ -1,26 +1,20 @@
 (function () {
 
 	sandbox.Shapes = function(element, scope) {
-		tsunami.BranchModules.call(this, element, scope)
+		tsunami.BranchModules.call(this, element, scope);
+		this.assets.scripts.push("assets/shapesMoreCode.js");
+		this.assets.styles.push("assets/shapes.css");
+		this.assets.templates.push("assets/shapes.html");
 	};
 
 	var p = sandbox.Shapes.prototype = Object.create(tsunami.BranchModules.prototype);
 
 	p.constructor = sandbox.Shapes;
 
-	p.load = function(assetList) {
-		this.assets.scripts.push("assets/shapesMoreCode.js");
-		this.assets.styles.push("assets/shapes.css");
-		this.assets.templates.push("assets/shapes.html");
-		return tsunami.BranchModules.prototype.load.call(this, assetList);
-	};
-
 	p.loadComplete = function(assets) {
 		tsunami.BranchModules.prototype.loadComplete.call(this, assets);
-
 		sandbox.ShapeImage.urls = this.root.model.images.slice();
-
-		this.elements = tsunami.append(this.templates[0].main, this.element, this);
+		this.elements = tsunami.append(this.templates.shapes, this.element, this);
 	};
 
 	p.show = function() {
@@ -38,12 +32,8 @@
 	p.hideComplete = function() {
 		tsunami.destroyElements(this.elements);
 		tsunami.removeElements(this.elements);
-		tsunami.removeElement(this.script);
-		tsunami.removeElement(this.styleSheet);
-		this.script = null;
-		this.templates = null;
-		this.styleSheet = null;
 		this.elements = null;
+		return tsunami.BranchModules.prototype.hide.call(this);
 	};
 
 	p.testClick = function() {

@@ -1,55 +1,44 @@
 (function () {
 
 	sandbox.Inputs = function(element, scope) {
-		tsunami.Branch.call(this, element, scope);
+		tsunami.BranchModules.call(this, element, scope);
+		this.assets.styles.push("assets/inputs.css");
+		this.assets.templates.push("assets/inputs.html");
 	};
 
-	var p = sandbox.Inputs.prototype = Object.create(tsunami.Branch.prototype);
+	var p = sandbox.Inputs.prototype = Object.create(tsunami.BranchModules.prototype);
 
 	p.constructor = sandbox.Inputs;
 
-	p.load = function(assetList) {
-		var styleSheet = tsunami.load.style("assets/inputs.css");
-		assetList.add(styleSheet);
-
-		var templates = tsunami.load.templates("assets/inputs.html");
-		assetList.add(templates);
-
-		var promise = Promise.all([templates, styleSheet]);
-
-		return promise.then(this.templatesLoaded.bind(this));
-	};
-
-	p.templatesLoaded = function(args) {
-		this.templates = args[0];
-		this.styleSheet = args[1];
-
+	p.loadComplete = function(assets) {
+		tsunami.BranchModules.prototype.loadComplete.call(this, assets);
 		this.elements = tsunami.append(this.templates.inputs, this.element, this);
 	};
 
 	p.show = function() {
 		var model = this.root.model;
-		document.querySelector(".myStringSetter").addEventListener("click", function() {
+
+		this.element.querySelector(".myStringSetter").addEventListener("click", function() {
 			model.myString.value = "yo";
 		});
 
-		document.querySelector(".myNumberSetter").addEventListener("click", function() {
+		this.element.querySelector(".myNumberSetter").addEventListener("click", function() {
 			model.myNumber.value = 100;
 		});
 
-		document.querySelector(".myRangeSetter").addEventListener("click", function() {
+		this.element.querySelector(".myRangeSetter").addEventListener("click", function() {
 			model.myRange.value = 10;
 		});
 
-		document.querySelector(".myCheckboxSetter").addEventListener("click", function() {
+		this.element.querySelector(".myCheckboxSetter").addEventListener("click", function() {
 			model.myCheckbox.value = !model.myCheckbox.value;
 		});
 
-		document.querySelector(".myRadioSetter").addEventListener("click", function() {
+		this.element.querySelector(".myRadioSetter").addEventListener("click", function() {
 			model.myCarMaker.value = "audi";
 		});
 
-		document.querySelector(".mySelectValueSetter").addEventListener("click", function() {
+		this.element.querySelector(".mySelectValueSetter").addEventListener("click", function() {
 			model.myCarMaker.value = "audi";
 		});
 
@@ -67,8 +56,7 @@
 	p.hideComplete = function() {
 		tsunami.destroyElements(this.elements);
 		tsunami.removeElements(this.elements);
-		tsunami.removeElement(this.styleSheet);
-		this.elements = null;
+		return tsunami.BranchModules.prototype.hide.call(this);
 	};
 
 }());

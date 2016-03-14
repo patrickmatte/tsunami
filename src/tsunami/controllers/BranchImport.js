@@ -29,7 +29,6 @@ tsunami = this.tsunami || {};
 
 	p.scriptLoaded = function(script) {
 		this.script = script;
-
 		var method = tsunami.evalProperty(this.branchClass, window);
 		this.branch = new method(this.element, this.scope);
 		this.branch.root = this.root;
@@ -71,9 +70,9 @@ tsunami = this.tsunami || {};
 	};
 
 	p.hideComplete = function() {
-		this.script.parentNode.removeChild(this.script);
-		this.script = null;
 		this.branch = null;
+		tsunami.removeElement(this.script);
+		this.script = null;
 	};
 
 	p.getBranch = function(id) {
