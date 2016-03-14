@@ -8,8 +8,7 @@ tsunami = this.tsunami || {};
 			images:[],
 			templates:[],
 			scripts:[],
-			styles:[],
-			models:[]
+			styles:[]
 		}
 	};
 

@@ -13,8 +13,18 @@
 
 	p.destroy = function() {
 		this.style.destroy();
-		tsunami.destroyElements(this.element.childNodes);
-		tsunami.removeElements(this.element.childNodes);
+		for (var i = 0; i < this.element.childNodes.length; i++) {
+			var element = this.element.childNodes.item(i);
+			if (element.controller) {
+				if (element.controller.destroy) {
+					try {
+						element.controller.destroy();
+					} catch(e) {
+					}
+				}
+			}
+			element.innerHTML = null;
+		}
 		this.element.innerHTML = "";
 		this.element = null;
 		this.scope = null;

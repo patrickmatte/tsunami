@@ -45,6 +45,7 @@ tsunami = this.tsunami || {};
 	});
 
 	p.modelChange = function(event) {
+		//console.log("InputCheckbox modelChange");
 		this.element.checked = this._model.value;
 	};
 

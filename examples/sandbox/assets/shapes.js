@@ -30,8 +30,6 @@
 	};
 
 	p.hideComplete = function() {
-		tsunami.destroyElements(this.elements);
-		tsunami.removeElements(this.elements);
 		this.elements = null;
 		return tsunami.BranchModules.prototype.hide.call(this);
 	};

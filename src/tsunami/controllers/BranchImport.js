@@ -70,6 +70,7 @@ tsunami = this.tsunami || {};
 	};
 
 	p.hideComplete = function() {
+		this.branch.destroy();
 		this.branch = null;
 		tsunami.removeElement(this.script);
 		this.script = null;

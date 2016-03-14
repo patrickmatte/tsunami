@@ -187,6 +187,7 @@ tsunami.destroyElements = function(elements) {
 		var element = elements[i];
 		tsunami.destroyElement(element);
 	}
+	tsunami.removeElements(elements);
 };
 
 tsunami.removeElement = function(element) {
