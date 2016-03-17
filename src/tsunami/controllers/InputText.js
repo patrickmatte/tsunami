@@ -3,7 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.InputText = function(element, scope) {
-		tsunami.DisplayObject.call(this, element, scope);
+		tsunami.HTMLElement.call(this, element, scope);
 
 		this.modelChangeBind = this.modelChange.bind(this);
 		this.inputBind = this.input.bind(this);
@@ -14,7 +14,7 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.InputText.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.InputText.prototype = Object.create(tsunami.HTMLElement.prototype);
 
 	p.constructor = tsunami.InputText;
 
@@ -55,7 +55,7 @@ tsunami = this.tsunami || {};
 
 	p.destroy = function() {
 		this.model = null;
-		tsunami.DisplayObject.prototype.destroy.call(this);
+		tsunami.HTMLElement.prototype.destroy.call(this);
 	};
 
 }());

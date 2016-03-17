@@ -1,7 +1,7 @@
 (function() {
 
 	tsunami.Button = function(element, scope) {
-		tsunami.DisplayObject.call(this, element, scope);
+		tsunami.HTMLElement.call(this, element, scope);
 
 		this.onRelease = function(){};
 
@@ -13,7 +13,7 @@
 		}
 	};
 
-	var p = tsunami.Button.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.Button.prototype = Object.create(tsunami.HTMLElement.prototype);
 
 	p.constructor = tsunami.Button;
 

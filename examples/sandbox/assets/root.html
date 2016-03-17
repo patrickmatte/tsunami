@@ -1,37 +1,36 @@
-<script id="root" type="text/template">
-	<div class="root" data-controller="sandbox.Root">
+<script id="rootTemplate" type="text/template">
+	<div class="root" is="sandbox.Root">
 		<nav>
-			<a href="{{router.fragment}}shapes" data-controller="sandbox.Button">shapes</a>
-			<a href="{{router.fragment}}inputs" data-controller="sandbox.Button">inputs</a>
-			<a href="{{router.fragment}}animation" data-controller="sandbox.Button">animation</a>
+			<a href="{{router.fragment}}shapes" is="sandbox.Button">shapes</a>
+			<a href="{{router.fragment}}inputs" is="sandbox.Button">inputs</a>
+			<a href="{{router.fragment}}animation" is="sandbox.Button">animation</a>
 		</nav>
-		<ul class="breadcrumbs" data-controller="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumb"></ul>
+		<ul class="breadcrumbs" is="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumb"></ul>
 		<div class="branchesLength">
-			<span data-controller="tsunami.DataBind" data-model="router.branches.length"></span>
-			<span data-controller="tsunami.Noun" data-model="router.branches.length">
+			<span is="tsunami.DataBind" data-model="router.branches.length"></span>
+			<span is="tsunami.Noun" data-model="router.branches.length">
 				<span class="singular">branch</span>
 				<span class="plural">branches</span>
 			</span>
 			<span> in the router</span>
 		</div>
-		<div class="switch" data-include="templates.switch"></div>
-		<div class="section shapes" data-controller="tsunami.BranchImport" data-source="assets/shapes.js" data-class="sandbox.Shapes"></div>
-		<div class="section inputs" data-controller="tsunami.BranchImport" data-source="assets/inputs.js" data-class="sandbox.Inputs"></div>
-		<div class="preloader" data-controller="sandbox.Preloader">
-			<div class="progressbar" data-controller="tsunami.DisplayObject"></div>
+		<div class="switch" data-include="templates.switch">
+			<span>There's </span>
+			<span is="tsunami.Switch" data-model="router.branches.length">
+				<span class="case" data-value="0">no branch</span>
+				<span class="case" data-value="1">one branch</span>
+				<span class="case" data-value="2">two branches</span>
+				<span class="default">more than two branches</span>
+			</span>
+			<span> in the router</span>
+		</div>
+		<div class="section shapes" is="tsunami.BranchImport" data-source="assets/shapes.js" data-class="sandbox.Shapes"></div>
+		<div class="section inputs" is="tsunami.BranchImport" data-source="assets/inputs.js" data-class="sandbox.Inputs"></div>
+		<div class="preloader" is="sandbox.Preloader">
+			<div class="progressbar" is="tsunami.HTMLElement"></div>
 		</div>
 	</div>
 </script>
 <script id="breadcrumb" type="text/template">
-	<li><a href="{{model.path}}" data-controller="sandbox.Button">{{model.id}}</a></li>
-</script>
-<script id="switch" type="text/template">
-	<span>There's </span>
-	<span data-controller="tsunami.Switch" data-model="router.branches.length">
-			<span class="case" data-value="0">no branch</span>
-			<span class="case" data-value="1">one branch</span>
-			<span class="case" data-value="2">two branches</span>
-			<span class="default">more than two branches</span>
-		</span>
-	<span> in the router</span>
+	<li><a href="{{model.path}}" is="sandbox.Button">{{model.id}}</a></li>
 </script>

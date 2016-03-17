@@ -1,0 +1,28 @@
+{
+  "name": "",
+  "version": "",
+  "description": "",
+  "main": "",
+  "scripts": {
+  },
+  "repository": {
+	"type": "git",
+	"url": ""
+  },
+  "keywords": [
+	"web",
+	"components",
+	"shadow",
+	"dom",
+	"custom",
+	"elements",
+	"html",
+	"imports"
+  ],
+  "author": "Patrick Matte",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+	"webcomponentsjs": "^0.7.12"
+  }
+}

@@ -1,13 +1,15 @@
 <script id="shapes" type="text/template">
-	<div class="circles" data-controller="tsunami.Branch">
-		<div class="shape level1" data-controller="sandbox.ShapeImage">
-			<div class="shape level2" data-controller="sandbox.ShapeImage">
-				<div class="shape level3" data-controller="sandbox.ShapeImage">
-					<div class="shape level4" data-controller="sandbox.ShapeImage">
-						<div class="shape level5" data-controller="sandbox.ShapeImage">
-							<div class="shape level6" data-controller="sandbox.ShapeImage">
-								<div class="shape level7" data-controller="sandbox.ShapeImage">
-									<div class="shape level8" data-controller="sandbox.ShapeImage">
+	<div class="container">
+		<div class="circles" is="tsunami.Branch">
+			<div class="shape level1" is="sandbox.ShapeImage">
+				<div class="shape level2" is="sandbox.ShapeImage">
+					<div class="shape level3" is="sandbox.ShapeImage">
+						<div class="shape level4" is="sandbox.ShapeImage">
+							<div class="shape level5" is="sandbox.ShapeImage">
+								<div class="shape level6" is="sandbox.ShapeImage">
+									<div class="shape level7" is="sandbox.ShapeImage">
+										<div class="shape level8" is="sandbox.ShapeImage">
+										</div>
 									</div>
 								</div>
 							</div>
@@ -16,16 +18,16 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="squares" data-controller="tsunami.Branch">
-		<div class="shape level1" data-controller="sandbox.Shape">
-			<div class="shape level2" data-controller="sandbox.Shape">
-				<div class="shape level3" data-controller="sandbox.Shape">
-					<div class="shape level4" data-controller="sandbox.Shape">
-						<div class="shape level5" data-controller="sandbox.Shape">
-							<div class="shape level6" data-controller="sandbox.Shape">
-								<div class="shape level7" data-controller="sandbox.Shape">
-									<div class="shape level8" data-controller="sandbox.Shape">
+		<div class="squares" is="tsunami.Branch">
+			<div class="shape level1" is="sandbox.Shape">
+				<div class="shape level2" is="sandbox.Shape">
+					<div class="shape level3" is="sandbox.Shape">
+						<div class="shape level4" is="sandbox.Shape">
+							<div class="shape level5" is="sandbox.Shape">
+								<div class="shape level6" is="sandbox.Shape">
+									<div class="shape level7" is="sandbox.Shape">
+										<div class="shape level8" is="sandbox.Shape">
+										</div>
 									</div>
 								</div>
 							</div>
@@ -34,38 +36,38 @@
 				</div>
 			</div>
 		</div>
+		<p>
+			circles
+			<a href="{{router.fragment}}shapes/circles/level1" is="sandbox.Button">level1</a>
+			<a href="{{router.fragment}}shapes/circles/level1/level2" is="sandbox.Button">level2</a>
+			<a href="{{router.fragment}}shapes/circles/level1/level2/level3" is="sandbox.Button">level3</a>
+			<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4" is="sandbox.Button">level4</a>
+			<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5" is="sandbox.Button">level5</a>
+			<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6" is="sandbox.Button">level6</a>
+			<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6/level7" is="sandbox.Button">level7</a>
+			<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6/level7/level8" is="sandbox.Button">level8</a>
+		</p>
+		<p>
+			squares
+			<a href="{{router.fragment}}shapes/squares/level1" is="sandbox.Button">level1</a>
+			<a href="{{router.fragment}}shapes/squares/level1/level2" is="sandbox.Button">level2</a>
+			<a href="{{router.fragment}}shapes/squares/level1/level2/level3" is="sandbox.Button">level3</a>
+			<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4" is="sandbox.Button">level4</a>
+			<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5" is="sandbox.Button">level5</a>
+			<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6" is="sandbox.Button">level6</a>
+			<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6/level7" is="sandbox.Button">level7</a>
+			<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6/level7/level8" is="sandbox.Button">level8</a>
+		</p>
+		<p>
+			<a href="{{root.path}}" is="sandbox.Button">home</a>
+		</p>
+		<p>
+			<a href="{{router.fragment}}shapes/rectangle" is="sandbox.Button">rectangle</a>
+		</p>
+		<p>
+			<a href="{{router.fragment}}circle5" is="sandbox.Button">circle5</a>
+		</p>
+		<div class="rectangle" is="sandbox.Rectangle"></div>
+		<button onclick="scope.testClick(this)" class="test-button">test</button>
 	</div>
-	<p>
-		circles
-		<a href="{{router.fragment}}shapes/circles/level1" data-controller="sandbox.Button">level1</a>
-		<a href="{{router.fragment}}shapes/circles/level1/level2" data-controller="sandbox.Button">level2</a>
-		<a href="{{router.fragment}}shapes/circles/level1/level2/level3" data-controller="sandbox.Button">level3</a>
-		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4" data-controller="sandbox.Button">level4</a>
-		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5" data-controller="sandbox.Button">level5</a>
-		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6" data-controller="sandbox.Button">level6</a>
-		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6/level7" data-controller="sandbox.Button">level7</a>
-		<a href="{{router.fragment}}shapes/circles/level1/level2/level3/level4/level5/level6/level7/level8" data-controller="sandbox.Button">level8</a>
-	</p>
-	<p>
-		squares
-		<a href="{{router.fragment}}shapes/squares/level1" data-controller="sandbox.Button">level1</a>
-		<a href="{{router.fragment}}shapes/squares/level1/level2" data-controller="sandbox.Button">level2</a>
-		<a href="{{router.fragment}}shapes/squares/level1/level2/level3" data-controller="sandbox.Button">level3</a>
-		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4" data-controller="sandbox.Button">level4</a>
-		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5" data-controller="sandbox.Button">level5</a>
-		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6" data-controller="sandbox.Button">level6</a>
-		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6/level7" data-controller="sandbox.Button">level7</a>
-		<a href="{{router.fragment}}shapes/squares/level1/level2/level3/level4/level5/level6/level7/level8" data-controller="sandbox.Button">level8</a>
-	</p>
-	<p>
-		<a href="{{root.path}}" data-controller="sandbox.Button">home</a>
-	</p>
-	<p>
-		<a href="{{router.fragment}}shapes/rectangle" data-controller="sandbox.Button">rectangle</a>
-	</p>
-	<p>
-		<a href="{{router.fragment}}circle5" data-controller="sandbox.Button">circle5</a>
-	</p>
-	<div class="rectangle" data-controller="sandbox.Rectangle"></div>
-	<button onclick="scope.testClick(this)" class="test-button">test</button>
 </script>

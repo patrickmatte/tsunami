@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="../node_modules/webcomponents.js/CustomElements.min.js"></script>
+	<script src="../src/tsunami/tsunami.js"></script>
+	<style>
+		sandbox-shape {
+			position: relative;
+			width: 100px;
+			height: 100px;
+			display: block;
+		}
+		sandbox-shape-image {
+			position: relative;
+			width: 100px;
+			height: 100px;
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<script>
+
+		sandbox = {};
+
+		(function () {
+
+			var prototype = Object.create(HTMLElement.prototype);
+
+			prototype.createdCallback = function() {
+				this.innerHTML = "sandbox.Shape";
+				console.log("sandbox.Shape.createdCallback", this);
+				this.style.backgroundColor = "#ff0000";
+			};
+
+			prototype.show = function(test) {
+				console.log("sandbox.Shape.show", this, test);
+			};
+
+			sandbox.Shape = document.registerElement("sandbox-shape", {
+				prototype: prototype
+			});
+
+		}());
+
+		(function () {
+
+			var prototype = Object.create(sandbox.Shape.prototype);
+
+			prototype.createdCallbackShape = prototype.createdCallback;
+
+			prototype.createdCallback = function() {
+				this.createdCallbackShape();
+				console.log("sandbox.ShapeImage.createdCallback", this);
+				this.style.backgroundColor = "#ff00ff";
+			};
+
+			prototype.showShape = prototype.show;
+
+			prototype.show = function() {
+				this.showShape("yoyoyo");
+				console.log("sandbox.ShapeImage.show", this);
+			};
+
+			sandbox.ShapeImage = document.registerElement("sandbox-shape-image", {
+				prototype: prototype
+			});
+
+		}());
+
+
+		var shape = new sandbox.Shape();
+		document.body.appendChild(shape);
+		shape.show();
+
+		var shapeImage = new sandbox.ShapeImage();
+		document.body.appendChild(shapeImage);
+		shapeImage.show();
+
+	</script>
+</body>
+</html>
+
+

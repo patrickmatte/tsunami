@@ -3,10 +3,10 @@ tsunami = this.tsunami || {};
 (function () {
 
 	tsunami.Branch = function(element, scope) {
-		tsunami.DisplayObject.call(this, element, scope);
+		tsunami.HTMLElement.call(this, element, scope);
 	};
 
-	var p = tsunami.Branch.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.Branch.prototype = Object.create(tsunami.HTMLElement.prototype);
 
 	p.constructor = tsunami.Branch;
 

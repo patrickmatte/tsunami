@@ -3,7 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.List = function(element, scope) {
-		tsunami.DisplayObject.call(this, element, scope);
+		tsunami.HTMLElement.call(this, element, scope);
 
 		this.scope = scope;
 		this.providerChangeBind = this.providerChange.bind(this);
@@ -20,7 +20,7 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.List.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.List.prototype = Object.create(tsunami.HTMLElement.prototype);
 
 	p.constructor = tsunami.List;
 
@@ -83,7 +83,7 @@ tsunami = this.tsunami || {};
 
 	p.destroy = function() {
 		this.dataProvider = [];
-		tsunami.DisplayObject.prototype.destroy.call(this);
+		tsunami.HTMLElement.prototype.destroy.call(this);
 	};
 
 }());

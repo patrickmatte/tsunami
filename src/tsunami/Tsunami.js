@@ -68,11 +68,11 @@ tsunami.applyCommands = function(element, scope) {
 
 tsunami.commands = [];
 
-tsunami.commands.push(new tsunami.Command("data-controller", function(element, scope) {
+tsunami.commands.push(new tsunami.Command("is", function(element, scope) {
 	element.scope = scope;
-	var classReference = tsunami.DisplayObject;
+	var classReference = tsunami.HTMLElement;
 	if (element.getAttribute) {
-		var className = element.getAttribute("data-controller");
+		var className = element.getAttribute("is");
 		if (className) {
 			classReference = tsunami.evalProperty(className, window);
 		}
@@ -85,6 +85,7 @@ tsunami.commands.push(new tsunami.Command("data-controller", function(element, s
 	}
 }));
 
+/*
 tsunami.commands.push(new tsunami.Command("data-include", function(element, scope) {
 	var include = element.getAttribute("data-include");
 	if (include) {
@@ -92,6 +93,7 @@ tsunami.commands.push(new tsunami.Command("data-include", function(element, scop
 		tsunami.append(text, element, scope);
 	}
 }));
+*/
 
 /*
 tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
@@ -131,6 +133,28 @@ tsunami.applyWrapper = function(element, method) {
 	method(element);
 };
 */
+
+tsunami.registerElement = function(tagName, options) {
+
+};
+
+tsunami.createElement = function(tagName, scope) {
+	var text = tsunami.elements;
+	var factory = document.createElement("div");
+	if (tsunami.renderTemplate) {
+		if (!scope) {
+			scope = window;
+		}
+		text = tsunami.renderTemplate(tagName, scope);
+	}
+	factory.innerHTML = text;
+	var children = [];
+	for (var i = 0; i < factory.childNodes.length; i++) {
+		var child = factory.childNodes.item(i);
+		children.push(child);
+	}
+	return children;
+};
 
 tsunami.createHTML = function(template, scope) {
 	var factory = document.createElement("div");

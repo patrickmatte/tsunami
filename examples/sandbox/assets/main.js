@@ -56,7 +56,7 @@ router.addEventListener("complete", function(e) {
 
 tsunami.load.templates("assets/root.html").then(function(templates) {
 	this.templates = templates;
-	tsunami.append(this.templates.root, document.body, this);
+	tsunami.append(this.templates.rootTemplate, document.body, this);
 	this.router.root = document.querySelector(".root").controller;
 	this.router.preloader = document.querySelector(".preloader").controller;
 	this.router.history.start();

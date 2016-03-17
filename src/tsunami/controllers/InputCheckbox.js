@@ -3,7 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.InputCheckbox = function(element, scope) {
-		tsunami.DisplayObject.call(this, element, scope);
+		tsunami.HTMLElement.call(this, element, scope);
 
 		this.modelChangeBind = this.modelChange.bind(this);
 		this.changeBind = this.change.bind(this);
@@ -14,7 +14,7 @@ tsunami = this.tsunami || {};
 		}
 	};
 
-	var p = tsunami.InputCheckbox.prototype = Object.create(tsunami.DisplayObject.prototype);
+	var p = tsunami.InputCheckbox.prototype = Object.create(tsunami.HTMLElement.prototype);
 
 	p.constructor = tsunami.InputCheckbox;
 
@@ -57,7 +57,7 @@ tsunami = this.tsunami || {};
 
 	p.destroy = function() {
 		this.model = null;
-		tsunami.DisplayObject.prototype.destroy.call(this);
+		tsunami.HTMLElement.prototype.destroy.call(this);
 	};
 
 }());

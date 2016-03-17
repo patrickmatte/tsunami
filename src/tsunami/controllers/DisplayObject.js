@@ -1,15 +1,15 @@
 (function() {
 
-	tsunami.DisplayObject = function(element, scope) {
+	tsunami.HTMLElement = function(element, scope) {
 		tsunami.EventDispatcher.call(this);
 		this.element = element;
 		this.scope = scope;
 		this.style = new tsunami.Style(element);
 	};
 
-	var p = tsunami.DisplayObject.prototype = Object.create(tsunami.EventDispatcher.prototype);
+	var p = tsunami.HTMLElement.prototype = Object.create(tsunami.EventDispatcher.prototype);
 
-	p.constructor = tsunami.DisplayObject;
+	p.constructor = tsunami.HTMLElement;
 
 	p.destroy = function() {
 		this.style.destroy();
