@@ -19,30 +19,22 @@ sandbox = this.sandbox || {};
 }());
 
 
-/*
+
 Mustache.escape = function(string) {
 	return string;
 };
 
-tsunami.mustacheParse = function(text) {
-	var token = Mustache.parse(text);
-	return text;
-};
-
-tsunami.mustacheRender = function(text, scope) {
+tsunami.mustache = function(text, scope) {
 	return Mustache.render(text, scope);
 };
-*/
 
-tsunami.compileTemplate = function(text) {
-	return text;
-	//return Handlebars.compile(text);
-};
-
+/*
+//Use this for handlebars
 tsunami.mustache = function(template, scope) {
 	var text = Handlebars.compile(template)(scope);
 	return text;
 };
+*/
 
 router = new tsunami.Router();
 router.path = location.origin + location.pathname;
