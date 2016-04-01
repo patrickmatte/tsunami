@@ -196,9 +196,8 @@ tsunami.destroyElement = function(element) {
 					el.destroy();
 				} catch(e) {
 				}
-			} else {
-				element.innerHTML = "";
 			}
+			element.innerHTML = "";
 		}
 	}
 	element.innerHTML = null;
