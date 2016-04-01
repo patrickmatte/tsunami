@@ -3,12 +3,12 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.String = function(value) {
-		tsunami.Model.call(this);
+		tsunami.Data.call(this);
 
 		this.value = value;
 	};
 
-	var p = tsunami.String.prototype = Object.create(tsunami.Model.prototype);
+	var p = tsunami.String.prototype = Object.create(tsunami.Data.prototype);
 
 	p.constructor = tsunami.String;
 

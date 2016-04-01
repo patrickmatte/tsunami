@@ -48,45 +48,49 @@ tsunami.evalProperty = function(path, scope) {
 	return object;
 };
 
+tsunami.templates = {};
+
 tsunami.renderTemplate = null;
 
-tsunami.Command = function(name, method) {
+tsunami.Directive = function(name, method) {
 	this.name = name;
 	this.method = method;
 };
 
-tsunami.applyCommands = function(element, scope) {
+tsunami.applyDirectives = function(element, scope) {
 	var elements = tsunami.getAllObjects(element);
 	for (var i = elements.length - 1; i > -1; i--) {
 		var el = elements[i];
-		for (var j = 0; j < tsunami.commands.length; j++) {
-			var command = tsunami.commands[j].method;
-			command(el, scope);
+		for (var j = 0; j < tsunami.directives.length; j++) {
+			var directive = tsunami.directives[j].method;
+			directive(el, scope);
 		}
 	}
 };
 
-tsunami.commands = [];
+tsunami.directives = [];
 
-tsunami.commands.push(new tsunami.Command("is", function(element, scope) {
-	element.scope = scope;
-	var classReference = tsunami.HTMLElement;
-	if (element.getAttribute) {
-		var className = element.getAttribute("is");
-		if (className) {
-			classReference = tsunami.evalProperty(className, window);
+tsunami.directives.push(new tsunami.Directive("wrapper", function(element, scope) {
+	var wrapper = element.getAttribute("data-wrapper");
+	if (wrapper) {
+		var method = tsunami.evalProperty(wrapper, window);
+		if (method) {
+			method(element);
+			if ("createdCallback" in element) {
+				element.createdCallback();
+			}
 		}
 	}
-	if (classReference) {
-		var controller = new classReference(element, scope);
-		element.controller = controller;
-	} else {
-		console.log ("Warning! '", className + "' is an undefined class reference.");
+}));
+
+tsunami.directives.push(new tsunami.Directive("scope", function(element, scope) {
+	if (("scope" in element)) {
+		element.setScope(scope);
 	}
 }));
 
 /*
-tsunami.commands.push(new tsunami.Command("data-include", function(element, scope) {
+tsunami.directives.push(new tsunami.Directive("data-include", function(element, scope) {
 	var include = element.getAttribute("data-include");
 	if (include) {
 		var text = tsunami.evalProperty(include, scope);
@@ -134,20 +138,13 @@ tsunami.applyWrapper = function(element, method) {
 };
 */
 
-tsunami.registerElement = function(tagName, options) {
-
-};
-
-tsunami.createElement = function(tagName, scope) {
-	var text = tsunami.elements;
+tsunami.importTemplate = function(template, scope) {
+	template = tsunami.templates[template];
 	var factory = document.createElement("div");
-	if (tsunami.renderTemplate) {
-		if (!scope) {
-			scope = window;
-		}
-		text = tsunami.renderTemplate(tagName, scope);
+	if (tsunami.mustache) {
+		template = tsunami.mustache(template, scope);
 	}
-	factory.innerHTML = text;
+	factory.innerHTML = template;
 	var children = [];
 	for (var i = 0; i < factory.childNodes.length; i++) {
 		var child = factory.childNodes.item(i);
@@ -156,50 +153,51 @@ tsunami.createElement = function(tagName, scope) {
 	return children;
 };
 
-tsunami.createHTML = function(template, scope) {
-	var factory = document.createElement("div");
-	if (tsunami.renderTemplate) {
-		if (!scope) {
-			scope = window;
-		}
-		text = tsunami.renderTemplate(template, scope);
-	}
-	factory.innerHTML = text;
-	var children = [];
-	for (var i = 0; i < factory.childNodes.length; i++) {
-		var child = factory.childNodes.item(i);
-		children.push(child);
-	}
-	return children;
-};
-
-tsunami.insertBefore = function(template, referenceNode, scope) {
-	var children = tsunami.createHTML(template, scope);
+tsunami.insertTemplateBefore = function(template, referenceNode, scope) {
+	var children = tsunami.importTemplate(template, scope);
 	var parent = referenceNode.parentNode;
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.insertBefore(child, referenceNode);
-		tsunami.applyCommands(child, scope);
+	}
+	if (window.CustomElements) {
+		window.CustomElements.takeRecords();
+	}
+	for (var i = 0; i < children.length; i++) {
+		var child = children[i];
+		tsunami.applyDirectives(child, scope);
 	}
 	return children;
 };
 
-tsunami.append = function(template, parent, scope) {
-	var children = tsunami.createHTML(template, scope);
+tsunami.appendTemplate = function(template, parent, scope) {
+	var children = tsunami.importTemplate(template, scope);
 	for (var i = 0; i < children.length; i++) {
 		var child = children[i];
 		parent.appendChild(child);
-		tsunami.applyCommands(child, scope);
+	}
+	if (window.CustomElements) {
+		window.CustomElements.takeRecords();
+	}
+	for (var i = 0; i < children.length; i++) {
+		var child = children[i];
+		tsunami.applyDirectives(child, scope);
 	}
 	return children;
 };
 
 tsunami.destroyElement = function(element) {
-	if (element.controller) {
-		if (element.controller.destroy) {
-			try {
-				element.controller.destroy();
-			} catch(e) {
+	if (element) {
+		var elements = tsunami.getAllObjects(element);
+		for (var i = elements.length - 1; i > -1; i--) {
+			var el = elements[i];
+			if (el.destroy) {
+				try {
+					el.destroy();
+				} catch(e) {
+				}
+			} else {
+				element.innerHTML = "";
 			}
 		}
 	}
@@ -233,6 +231,7 @@ tsunami.getAllObjects = function(element, array) {
 	}
 	switch(element.nodeName) {
 		case "#text":
+		case "#comment":
 		case "BR":
 		break;
 		default:

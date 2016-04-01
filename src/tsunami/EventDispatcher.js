@@ -32,11 +32,15 @@ tsunami = this.tsunami || {};
 		if (!event.currentTarget) {
 			event.currentTarget = this;
 		}
-		var listeners = this.listeners;
+		var listeners = this.listeners.slice();
 		for (var i = 0 ; i < listeners.length; i++) {
 			var listener = listeners[i];
 			if (listener.type == event.type) {
-				listener.func(event);
+				try {
+					listener.func(event);
+				} catch(e) {
+					console.log(e, this);
+				}
 			}
 		}
 	};

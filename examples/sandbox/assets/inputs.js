@@ -1,62 +1,45 @@
 (function () {
 
-	sandbox.Inputs = function(element, scope) {
-		tsunami.BranchModules.call(this, element, scope);
+	sandbox.Inputs = function(element) {
+		this.createdCallback();
+		this.element = element;
 		this.assets.styles.push("assets/inputs.css");
 		this.assets.templates.push("assets/inputs.html");
 	};
 
-	var p = sandbox.Inputs.prototype = Object.create(tsunami.BranchModules.prototype);
+	var prototype = sandbox.Inputs.prototype;
 
-	p.constructor = sandbox.Inputs;
+	tsunami.BranchModules(prototype);
 
-	p.loadComplete = function(assets) {
-		tsunami.BranchModules.prototype.loadComplete.call(this, assets);
-		this.elements = tsunami.append(this.templates.inputs, this.element, this);
+	prototype.loadCompleteBranchModules = prototype.loadComplete;
+
+	prototype.loadComplete = function(assets) {
+		this.loadCompleteBranchModules(assets);
+		this.templateElements = tsunami.appendTemplate("inputs", this.element, this);
 	};
 
-	p.show = function() {
-		var model = this.root.model;
-
-		this.element.querySelector(".myStringSetter").addEventListener("click", function() {
-			model.myString.value = "yo";
-		});
-
-		this.element.querySelector(".myNumberSetter").addEventListener("click", function() {
-			model.myNumber.value = 100;
-		});
-
-		this.element.querySelector(".myRangeSetter").addEventListener("click", function() {
-			model.myRange.value = 10;
-		});
-
-		this.element.querySelector(".myCheckboxSetter").addEventListener("click", function() {
-			model.myCheckbox.value = !model.myCheckbox.value;
-		});
-
-		this.element.querySelector(".myRadioSetter").addEventListener("click", function() {
-			model.myCarMaker.value = "audi";
-		});
-
-		this.element.querySelector(".mySelectValueSetter").addEventListener("click", function() {
-			model.myCarMaker.value = "audi";
-		});
-
+	prototype.show = function() {
 		var transition = tsunami.promise.transition(this.element, ["opacity"]);
 		this.element.classList.add("visible");
 		return transition;
 	};
 
-	p.hide = function() {
+	prototype.hideBranchModules = prototype.hide;
+
+	prototype.hide = function() {
 		var transition = tsunami.promise.transition(this.element, ["opacity"]);
 		this.element.classList.remove("visible");
-		return transition;
+		return transition.then(this.hideComplete.bind(this));
 	};
 
-	p.hideComplete = function() {
-		this.elements = null;
-		return tsunami.BranchModules.prototype.hide.call(this);
+	prototype.hideComplete = function() {
+		tsunami.destroyElements(this.templateElements);
+		this.templateElements = null;
+		this.hideBranchModules();
 	};
 
+	prototype.getBranch = function(id) {
+		return this.element.querySelector("." + id);
+	};
 
 }());

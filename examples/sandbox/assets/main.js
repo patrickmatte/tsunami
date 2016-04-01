@@ -2,23 +2,28 @@ sandbox = this.sandbox || {};
 
 (function () {
 
-	sandbox.Button = function(element, scope) {
-		tsunami.RouterButton.call(this, element, scope);
+	sandbox.Button = function(prototype) {
 
-		this.router = window.router;
-		this.pushState = true;
+		tsunami.RouterButton(prototype);
+
+		prototype.createdCallbackRouterButton = prototype.createdCallback;
+
+		prototype.createdCallback = function() {
+			this.createdCallbackRouterButton();
+			this.router = window.router;
+			this.pushState = true;
+		};
+
 	};
-
-	var p = sandbox.Button.prototype = Object.create(tsunami.RouterButton.prototype);
-
-	p.constructor = sandbox.Button;
 
 }());
 
+
+/*
 Mustache.escape = function(string) {
 	return string;
 };
-/*
+
 tsunami.mustacheParse = function(text) {
 	var token = Mustache.parse(text);
 	return text;
@@ -34,9 +39,8 @@ tsunami.compileTemplate = function(text) {
 	//return Handlebars.compile(text);
 };
 
-tsunami.renderTemplate = function(template, scope) {
+tsunami.mustache = function(template, scope) {
 	var text = Handlebars.compile(template)(scope);
-	//var text = template(scope);
 	return text;
 };
 
@@ -55,9 +59,8 @@ router.addEventListener("complete", function(e) {
 });
 
 tsunami.load.templates("assets/root.html").then(function(templates) {
-	this.templates = templates;
-	tsunami.append(this.templates.rootTemplate, document.body, this);
-	this.router.root = document.querySelector(".root").controller;
-	this.router.preloader = document.querySelector(".preloader").controller;
+	tsunami.appendTemplate("root", document.body, this);
+	this.router.root = document.querySelector(".root");
+	this.router.preloader = document.querySelector(".preloader");
 	this.router.history.start();
 });

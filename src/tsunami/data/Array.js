@@ -3,14 +3,14 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Array = function() {
-		tsunami.Model.call(this);
+		tsunami.Data.call(this);
 
 		this.length = new tsunami.Number(NaN);
 		this._value = [];
 		this.push.apply(this, arguments);
 	};
 
-	var p = tsunami.Array.prototype = Object.create(tsunami.Model.prototype);
+	var p = tsunami.Array.prototype = Object.create(tsunami.Data.prototype);
 
 	p.constructor = tsunami.Array;
 

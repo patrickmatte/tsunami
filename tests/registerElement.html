@@ -21,6 +21,9 @@
 	</style>
 </head>
 <body>
+<template id="mytemplate">
+	<sandbox-shape>some content<img/></sandbox-shape>
+</template>
 	<script>
 
 		sandbox = {};
@@ -79,6 +82,16 @@
 		document.body.appendChild(shapeImage);
 		shapeImage.show();
 
+		var t = document.querySelector('#mytemplate');
+		// Populate the src at runtime.
+		t.content.querySelector('img').src = 'logo.png';
+
+		var clone = document.importNode(t.content, true);
+		document.body.appendChild(clone);
+
+		var obj = {};
+		obj["s-shapes"] = "s-shapes";
+		console.log("s-shapes", obj["s-shapes"]);
 	</script>
 </body>
 </html>

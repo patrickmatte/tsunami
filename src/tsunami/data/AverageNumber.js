@@ -3,7 +3,7 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.AverageNumber = function(numbers) {
-		tsunami.Model.call(this);
+		tsunami.Data.call(this);
 		this.numberChangeBind = this.numberChangeHandler.bind(this);
 		this._currentNumbers = [];
 		if (!numbers) {
@@ -14,7 +14,7 @@ tsunami = this.tsunami || {};
 		this.arrayChange();
 	};
 
-	var p = tsunami.AverageNumber.prototype = Object.create(tsunami.Model.prototype);
+	var p = tsunami.AverageNumber.prototype = Object.create(tsunami.Data.prototype);
 
 	p.constructor = tsunami.AverageNumber;
 

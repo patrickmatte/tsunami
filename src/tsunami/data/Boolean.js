@@ -3,11 +3,11 @@ tsunami = this.tsunami || {};
 (function() {
 
 	tsunami.Boolean = function(value) {
-		tsunami.Model.call(this);
+		tsunami.Data.call(this);
 		this.value = value;
 	};
 
-	var p = tsunami.Boolean.prototype = Object.create(tsunami.Model.prototype);
+	var p = tsunami.Boolean.prototype = Object.create(tsunami.Data.prototype);
 
 	p.constructor = tsunami.Boolean;
 
