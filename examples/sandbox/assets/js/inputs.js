@@ -3,8 +3,8 @@
 	sandbox.Inputs = function(element) {
 		this.createdCallback();
 		this.element = element;
-		this.assets.styles.push("assets/inputs.css");
-		this.assets.templates.push("assets/inputs.html");
+		this.assets.styles.push("assets/css/inputs.css");
+		this.assets.templates.push("assets/html/inputs.html");
 	};
 
 	var prototype = sandbox.Inputs.prototype;

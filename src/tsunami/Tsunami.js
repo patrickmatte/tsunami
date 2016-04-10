@@ -295,6 +295,12 @@ tsunami.window.getRect = function() {
 	return rectangle;
 };
 
+Object.defineProperty(tsunami.window, 'rect', {
+	get: function() {
+		return tsunami.window.getRect();
+	}
+});
+
 tsunami.window.localToGlobal = function(element, root, point) {
 	if (!point) {
 		point = new tsunami.geom.Point();

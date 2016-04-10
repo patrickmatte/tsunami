@@ -4,11 +4,14 @@ function getCSSRule(ruleName, deleteFlag) {
          var styleSheet = document.styleSheets[i];
          var ii = 0;
          var cssRule = false;
-         do {
+		  do {
             if (styleSheet.cssRules) {
                cssRule = styleSheet.cssRules[ii];
             } else {
-               cssRule = styleSheet.rules[ii];
+				try {
+					cssRule = styleSheet.rules[ii];
+				} catch(e) {
+				}
             }
             if (cssRule) {
 				if (cssRule instanceof CSSStyleRule) {

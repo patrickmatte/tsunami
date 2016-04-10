@@ -11,7 +11,7 @@ tsunami = this.tsunami || {};
 
 	var p = tsunami.Clock.prototype = Object.create(tsunami.EventDispatcher.prototype);
 
-	tsunami.Clock.TICK = "frame";
+	tsunami.Clock.TICK = "tick";
 	tsunami.Clock.FPS = "fps";
 
 	p.start = function() {
@@ -41,6 +41,9 @@ tsunami = this.tsunami || {};
 		this.index = 0;
 		setTimeout(this.dispatchFrameSeconds.bind(this), 1000);
 	};
+
+	tsunami.clock = new tsunami.Clock();
+	tsunami.clock.start();
 
 }());
 

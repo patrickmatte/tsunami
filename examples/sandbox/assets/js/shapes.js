@@ -3,9 +3,9 @@
 	sandbox.Shapes = function(element) {
 		this.createdCallback();
 		this.element = element;
-		this.assets.scripts.push("assets/shapesMoreCode.js");
-		this.assets.styles.push("assets/shapes.css");
-		this.assets.templates.push("assets/shapes.html");
+		this.assets.scripts.push("assets/js/shapesMoreCode.js");
+		this.assets.styles.push("assets/css/shapes.css");
+		this.assets.templates.push("assets/html/shapes.html");
 	};
 
 	var prototype = sandbox.Shapes.prototype;

@@ -50,7 +50,7 @@ router.addEventListener("complete", function(e) {
 	console.log("router complete", router.getLocation());
 });
 
-tsunami.load.templates("assets/root.html").then(function(templates) {
+tsunami.load.templates("assets/html/root.html").then(function(templates) {
 	tsunami.appendTemplate("root", document.body, this);
 	this.router.root = document.querySelector(".root");
 	this.router.preloader = document.querySelector(".preloader");

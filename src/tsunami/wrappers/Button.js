@@ -7,9 +7,7 @@
 		prototype.createdCallbackElement = prototype.createdCallback;
 
 		prototype.createdCallback = function() {
-			this.onRelease = function(){};
-
-			if (tsunami.isMobile.any) {
+			if ("ontouchend" in this) {
 				this.ontouchend = this.clickHandler.bind(this);
 				this.onclick = this.cancelClick.bind(this);
 			} else {
@@ -54,7 +52,9 @@
 		};
 
 		prototype.onReleaseEvent = function(event) {
-			this.onRelease(event);
+			if (this.onRelease) {
+				this.onRelease(event);
+			}
 		};
 
 		return prototype;
@@ -86,6 +86,24 @@
 
 		};
 
+
+		Object.defineProperty(prototype, 'router', {
+			get: function() {
+				return this.getRouter();
+			},
+			set: function(value) {
+				this.setRouter(value);
+			}
+		});
+
+		prototype.getRouter = function() {
+			return this._router;
+		};
+
+		prototype.setRouter = function(value) {
+			this._router = value;
+		};
+
 		prototype.onReleaseEventButton = prototype.onReleaseEvent;
 
 		prototype.onReleaseEvent = function(event) {
@@ -97,7 +115,7 @@
 					this.router.setLocation(path, this.pushState);
 				}
 			} else {
-				throw("No router on RouterButton", this);
+				console.log("The property 'router' is undefined in RouterButton", this);
 			}
 		};
 

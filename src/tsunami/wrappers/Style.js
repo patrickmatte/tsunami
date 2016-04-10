@@ -1,8 +1,8 @@
 (function() {
 
-	tsunami.Style = function(o) {
+	tsunami.Style = function(style) {
 
-		this.element = o;
+		this.style = style;
 
 		this.units = new tsunami.StyleUnits();
 
@@ -11,102 +11,111 @@
 
 	var p = tsunami.Style.prototype;
 
-	Object.defineProperty(p, 'marginTop', {
+	Object.defineProperty(p, 'fontSize', {
 		get: function() {
-			return eval(this.element.style.marginTop.split(this.units.marginTop)[0]) || 0;
+			return eval(this.style.fontSize.split(this.units.fontSize)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.marginTop = value + this.units.marginTop;
+			this.style.fontSize = value + this.units.fontSize;
+		}
+	});
+
+	Object.defineProperty(p, 'marginTop', {
+		get: function() {
+			return eval(this.style.marginTop.split(this.units.marginTop)[0]) || 0;
+		},
+		set: function(value) {
+			this.style.marginTop = value + this.units.marginTop;
 		}
 	});
 
 	Object.defineProperty(p, 'marginBottom', {
 		get: function() {
-			return eval(this.element.style.marginBottom.split(this.units.marginBottom)[0]) || 0;
+			return eval(this.style.marginBottom.split(this.units.marginBottom)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.marginBottom = value + this.units.marginBottom;
+			this.style.marginBottom = value + this.units.marginBottom;
 		}
 	});
 
 	Object.defineProperty(p, 'marginRight', {
 		get: function() {
-			return eval(this.element.style.marginRight.split(this.units.marginRight)[0]) || 0;
+			return eval(this.style.marginRight.split(this.units.marginRight)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.marginRight = value + this.units.marginRight;
+			this.style.marginRight = value + this.units.marginRight;
 		}
 	});
 
 	Object.defineProperty(p, 'marginLeft', {
 		get: function() {
-			return eval(this.element.style.marginLeft.split(this.units.marginLeft)[0]) || 0;
+			return eval(this.style.marginLeft.split(this.units.marginLeft)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.marginLeft = value + this.units.marginLeft;
+			this.style.marginLeft = value + this.units.marginLeft;
 		}
 	});
 
 	Object.defineProperty(p, 'width', {
 		get: function() {
-			return eval(this.element.style.width.split(this.units.width)[0]) || 0;
+			return eval(this.style.width.split(this.units.width)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.width = value + this.units.width;
+			this.style.width = value + this.units.width;
 		}
 	});
 
 	Object.defineProperty(p, 'height', {
 		get: function() {
-			return eval(this.element.style.height.split(this.units.height)[0]) || 0;
+			return eval(this.style.height.split(this.units.height)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.height = value + this.units.height;
+			this.style.height = value + this.units.height;
 		}
 	});
 
 	Object.defineProperty(p, 'left', {
 		get: function() {
-			return eval(this.element.style.left.split(this.units.left)[0]) || 0;
+			return eval(this.style.left.split(this.units.left)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.left = value + this.units.left;
+			this.style.left = value + this.units.left;
 		}
 	});
 
 	Object.defineProperty(p, 'top', {
 		get: function() {
-			return eval(this.element.style.top.split(this.units.top)[0]) || 0;
+			return eval(this.style.top.split(this.units.top)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.top = value + this.units.top;
+			this.style.top = value + this.units.top;
 		}
 	});
 
 	Object.defineProperty(p, 'right', {
 		get: function() {
-			return eval(this.element.style.right.split(this.units.right)[0]) || 0;
+			return eval(this.style.right.split(this.units.right)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.right = value + this.units.right;
+			this.style.right = value + this.units.right;
 		}
 	});
 
 	Object.defineProperty(p, 'bottom', {
 		get: function() {
-			return eval(this.element.style.bottom.split(this.units.bottom)[0]) || 0;
+			return eval(this.style.bottom.split(this.units.bottom)[0]) || 0;
 		},
 		set: function(value) {
-			this.element.style.bottom = value + this.units.bottom;
+			this.style.bottom = value + this.units.bottom;
 		}
 	});
 
 	Object.defineProperty(p, 'opacity', {
 		get: function() {
-			return (isNaN(this.element.style.opacity))?1:this.element.style.opacity;
+			return (isNaN(this.style.opacity))?1:this.style.opacity;
 		},
 		set: function(value) {
-			this.element.style.opacity = value;
+			this.style.opacity = value;
 		}
 	});
 
@@ -245,7 +254,7 @@
 	});
 
 	p.updateTransform = function() {
-		var style = this.element.style;
+		var style = this.style;
 		var transform = this.getTransform();
 		style.msTransform = transform;
 		style.webkitTransform = transform;
@@ -263,10 +272,11 @@
 	};
 
 	p.destroy = function() {
-		this.element = null;
+		this.style = null;
 	};
 
 	tsunami.StyleUnits = function() {
+		this.fontSize = "px";
 		this.marginTop = "px";
 		this.marginBottom = "px";
 		this.marginRight = "px";

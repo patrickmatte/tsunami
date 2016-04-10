@@ -20,21 +20,25 @@ tsunami = this.tsunami || {};
 
 	var p = tsunami.Tween.prototype = Object.create(tsunami.EventDispatcher.prototype);
 
+	p.constructor = tsunami.Tween;
+
 	var c = tsunami.Tween;
 
 	c.COMPLETE = "complete";
 
 	c.CHANGE = "change";
 
-	c.clock = new tsunami.EventDispatcher();
-
-	c.clock.tick = function() {
-		tsunami.Tween.clock.dispatchEvent({type:"tick"});
-	};
-
 	p.start = function() {
+		var tween = this;
+		var promise = new Promise(function(resolve, reject) {
+			var tweenComplete = function(event) {
+				resolve(tween);
+			};
+			tween.addEventListener(tsunami.Tween.COMPLETE, tweenComplete);
+		});
 		this.setCurrentFrame(this.startFrame);
-		tsunami.Tween.clock.addEventListener("tick", this.tickHandler);
+		tsunami.clock.addEventListener(tsunami.Clock.TICK, this.tickHandler);
+		return promise;
 	};
 
 	p.update = function() {
@@ -42,7 +46,7 @@ tsunami = this.tsunami || {};
 	};
 
 	p.stop = function() {
-		tsunami.Tween.clock.removeEventListener("tick", this.tickHandler);
+		tsunami.clock.removeEventListener(tsunami.Clock.TICK, this.tickHandler);
 	};
 
 	p.getCurrentFrame = function() {
@@ -77,7 +81,9 @@ tsunami = this.tsunami || {};
 				this.completeHandler();
 			}
 			this.dispatchEvent({type:tsunami.Tween.COMPLETE, target:this});
-			this.taskCompleted();
+			if (this.taskCompleted) {
+				this.taskCompleted();
+			}
 		}
 	};
 

@@ -5,7 +5,7 @@ tsunami = this.tsunami || {};
 	tsunami.Element = function(prototype) {
 
 		prototype.createdCallback = function() {
-			this.styleManager = new tsunami.Style(this);
+			this.styleManager = new tsunami.Style(this.style);
 			this.modelChangeBind = this.modelChange.bind(this);
 			this._scope = this;
 		};

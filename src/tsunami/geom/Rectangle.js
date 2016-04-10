@@ -64,8 +64,22 @@ tsunami.geom = tsunami.geom || {};
 		return scale;
 	};
 
+	Object.defineProperty(p, 'size', {
+		get: function() {
+			return this.getSize();
+		},
+		set: function(value) {
+			this.setSize(value);
+		}
+	});
+
 	p.getSize = function() {
 		return new tsunami.geom.Point(this.width, this.height);
+	};
+
+	p.setSize = function(point) {
+		this.width = point.x;
+		this.height = point.y;
 	};
 
 	p.toString = function() {

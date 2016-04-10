@@ -345,7 +345,7 @@ tsunami = this.tsunami || {};
 			this.branch.root = this.root;
 			this.branch.router = this.router;
 			this.branch.path = this.path;
-			this.branch.parent = this.parent;
+			this.branch.parent = this.parent.branch;
 		}
 		var method = this.branch[this.taskName];
 		if (method) {
