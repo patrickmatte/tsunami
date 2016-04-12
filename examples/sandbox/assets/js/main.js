@@ -36,18 +36,18 @@ tsunami.mustache = function(template, scope) {
 };
 */
 
-router = new tsunami.Router();
-router.path = location.origin + location.pathname;
-router.fragment = "?";
+this.router = new tsunami.Router();
+this.router.path = location.origin + location.pathname;
+this.router.fragment = "?";
 this.router.history = new tsunami.History(this.router.path, this.router.fragment, tsunami.HistoryFallback.HASH);
-router.redirect("", "shapes");
-router.redirect("shapes", "shapes/circles/level1/level2");
-router.redirect("circle5", "shapes/circles/level1/level2/level3/level4/level5");
-router.addEventListener("locationChange", function(e) {
+this.router.redirect("", "shapes");
+this.router.redirect("shapes", "shapes/circles/level1/level2");
+this.router.redirect("circle5", "shapes/circles/level1/level2/level3/level4/level5");
+this.router.addEventListener("locationChange", function(e) {
 	//console.log("router locationChange", e.location);
 });
-router.addEventListener("complete", function(e) {
-	console.log("router complete", router.getLocation());
+this.router.addEventListener("complete", function(e) {
+	console.log("router complete", e.target.getLocation());
 });
 
 tsunami.load.templates("assets/html/root.html").then(function(templates) {
