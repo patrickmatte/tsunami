@@ -1,11 +1,10 @@
-<script id="root" type="text/template">
+<script id="root-template" type="text/template">
 	<div class="root" data-wrapper="sandbox.Root">
 		<nav>
 			<a href="{{router.fragment}}shapes" data-wrapper="sandbox.Button">shapes</a>
 			<a href="{{router.fragment}}inputs" data-wrapper="sandbox.Button">inputs</a>
-			<a href="{{router.fragment}}animation" data-wrapper="sandbox.Button">animation</a>
 		</nav>
-		<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="breadcrumb"></ul>
+		<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="breadcrumb-button"></ul>
 		<div class="branchesLength">
 			<span data-wrapper="tsunami.DataBind" data-model="router.branches.length"></span>
 			<span data-wrapper="tsunami.Noun" data-model="router.branches.length">
@@ -24,13 +23,15 @@
 			</span>
 			<span> in the router</span>
 		</div>
-		<div class="section shapes" data-wrapper="tsunami.BranchImport" data-source="assets/js/shapes.js" data-class="sandbox.Shapes"></div>
-		<div class="section inputs" data-wrapper="tsunami.BranchImport" data-source="assets/js/inputs.js" data-class="sandbox.Inputs"></div>
+		<div class="content">
+			<div class="section shapes" data-wrapper="sandbox.Shapes"></div>
+			<div class="section inputs" data-wrapper="sandbox.Inputs"></div>
+		</div>
 		<div class="preloader" data-wrapper="sandbox.Preloader">
 			<div class="progressbar" data-wrapper="tsunami.Element"></div>
 		</div>
 	</div>
 </script>
-<script id="breadcrumb" type="text/template">
+<script id="breadcrumb-button" type="text/template">
 	<li><a href="{{model.path}}" data-wrapper="sandbox.Button">{{model.id}}</a></li>
 </script>

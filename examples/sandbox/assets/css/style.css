@@ -24,6 +24,18 @@ p {
 	margin: 1em 0;
 }
 
+.branch {
+	display: none;
+}
+
+.branch.loaded {
+	display: block;
+	visibility: hidden;
+}
+
+.branch.visible {
+	visibility: visible;
+}
 
 .breadcrumbs {
 	font-size: 0.8em;

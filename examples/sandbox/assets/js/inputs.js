@@ -1,45 +1,48 @@
 (function () {
 
-	sandbox.Inputs = function(element) {
-		this.createdCallback();
-		this.element = element;
-		this.assets.styles.push("assets/css/inputs.css");
-		this.assets.templates.push("assets/html/inputs.html");
-	};
+	sandbox.Inputs = function(prototype) {
 
-	var prototype = sandbox.Inputs.prototype;
+		tsunami.BranchModules(prototype);
 
-	tsunami.BranchModules(prototype);
+		prototype.createdCallbackBranchModules = prototype.createdCallback;
 
-	prototype.loadCompleteBranchModules = prototype.loadComplete;
+		prototype.createdCallback = function() {
+			this.createdCallbackBranchModules();
+			this.assets.styles.push("assets/css/inputs.css");
+			this.assets.templates.push("assets/html/inputs.html");
+		};
 
-	prototype.loadComplete = function(assets) {
-		this.loadCompleteBranchModules(assets);
-		this.templateElements = tsunami.appendTemplate("inputs", this.element, this);
-	};
+		prototype.loadCompleteBranchModules = prototype.loadComplete;
 
-	prototype.show = function() {
-		var transition = tsunami.promise.transition(this.element, ["opacity"]);
-		this.element.classList.add("visible");
-		return transition;
-	};
+		prototype.loadComplete = function(assets) {
+			this.loadCompleteBranchModules(assets);
+			this.templateElements = tsunami.appendTemplate("inputs-template", this, this);
+		};
 
-	prototype.hideBranchModules = prototype.hide;
+		prototype.show = function() {
+			var transition = tsunami.promise.transition(this, ["opacity"]);
+			this.classList.add("visible");
+			return transition;
+		};
 
-	prototype.hide = function() {
-		var transition = tsunami.promise.transition(this.element, ["opacity"]);
-		this.element.classList.remove("visible");
-		return transition.then(this.hideComplete.bind(this));
-	};
+		prototype.hideBranchModules = prototype.hide;
 
-	prototype.hideComplete = function() {
-		tsunami.destroyElements(this.templateElements);
-		this.templateElements = null;
-		this.hideBranchModules();
-	};
+		prototype.hide = function() {
+			var transition = tsunami.promise.transition(this, ["opacity"]);
+			this.classList.remove("visible");
+			return transition.then(this.hideComplete.bind(this));
+		};
 
-	prototype.getBranch = function(id) {
-		return this.element.querySelector("." + id);
+		prototype.hideComplete = function() {
+			tsunami.destroyElements(this.templateElements);
+			this.templateElements = null;
+			this.hideBranchModules();
+		};
+
+		prototype.getBranch = function(id) {
+			return this.querySelector("." + id);
+		};
+
 	};
 
 }());

@@ -1,10 +1,10 @@
-<script id="selectOption" type="text/template">
+<script id="select-option-template" type="text/template">
 	<option value="{{model.value}}">{{model.title}}</option>
 </script>
-<script id="radio" type="text/template">
-	<input type="radio" name="carmaker" value="{{model.value}}" data-wrapper="tsunami.Input" data-model="scope.root.model.myCarMaker"> {{model.title}}<br/>
+<script id="radio-template" type="text/template">
+	<label><input type="radio" name="carmaker" value="{{model.value}}" data-wrapper="tsunami.Input" data-model="scope.root.model.myCarMaker"> {{model.title}}</label><br/>
 </script>
-<script id="inputs" type="text/template">
+<script id="inputs-template" type="text/template">
 	<div class="container">
 		<div>
 			model.myString = <span data-wrapper="tsunami.DataBind" data-model="root.model.myString"></span>
@@ -37,7 +37,7 @@
 		<div>
 			model.myCheckbox = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCheckbox"></span>
 			<br/>
-			<input type="checkbox" checked data-wrapper="tsunami.Input" data-model="root.model.myCheckbox"> checkbox
+			<label><input type="checkbox" checked data-wrapper="tsunami.Input" data-model="root.model.myCheckbox"> checkbox</label>
 			<br/>
 			<button data-wrapper="tsunami.Element" data-model="root.model.myCheckbox" onclick="model.value = !model.value">toggle myCheckbox</button>
 		</div>
@@ -45,14 +45,14 @@
 		<div>
 			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
-			<span data-wrapper="tsunami.List" data-provider="root.model.carMakers" data-template="radio"></span>
+			<span data-wrapper="tsunami.List" data-provider="root.model.carMakers" data-template="radio-template"></span>
 			<button data-wrapper="tsunami.Element" data-model="root.model.myCarMaker" onclick="model.value = '{{root.model.defaultCarMaker}}'">set myCarMaker to {{root.model.defaultCarMaker}}</button>
 		</div>
 		<br/>
 		<div>
 			model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="root.model.myCarMaker"></span>
 			<br/>
-			<select data-wrapper="tsunami.Select" data-model="root.model.myCarMaker" data-provider="root.model.carMakers" data-template="selectOption"></select>
+			<select data-wrapper="tsunami.Select" data-model="root.model.myCarMaker" data-provider="root.model.carMakers" data-template="select-option-template"></select>
 			<br/>
 			<button data-wrapper="tsunami.Element" data-model="root.model.myCarMaker" onclick="model.value = '{{root.model.defaultCarMaker}}'">set myCarMaker to {{root.model.defaultCarMaker}}</button>
 		</div>
