@@ -17,9 +17,8 @@
 
 		prototype.loadComplete = function(assets) {
 			this.loadCompleteBranchModules(assets);
-
 			sandbox.ShapeImage.urls = this.root.model.images.slice();
-			this.templateElements = tsunami.appendTemplate("shapes-template", this, this);
+			this.templateElements = tsunami.appendTemplate(this.templates.shapesTemplate, this, this);
 		};
 
 		prototype.show = function() {

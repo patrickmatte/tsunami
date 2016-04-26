@@ -90,12 +90,20 @@ tsunami = this.tsunami || {};
 
 		prototype.loadComplete = function(assets){
 			this.images = assets[0];
+			this.templates = {};
+			for (var i = 0; i < assets[1].length; i++) {
+				var object = assets[1][i];
+				for (var j in object) {
+					this.templates[j] = object[j]
+				}
+			}
 			this.styles = assets[2];
 			this.scripts = assets[3];
 		};
 
 		prototype.hide = function() {
 			this.images = null;
+			this.templates = null;
 			tsunami.removeElements(this.styles);
 			this.styles = null;
 			tsunami.removeElements(this.scripts);

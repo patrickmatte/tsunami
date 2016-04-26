@@ -77,12 +77,13 @@
 				return Mustache.render(text, scope);
 			};
 
-			var promise = tsunami.load.templates("templates.html", tsunami.templates);
+			var promise = tsunami.load.templates("templates.html", {});
 			promise.then(this.templatesLoaded.bind(this));
 		}
 
 		function templatesLoaded(templates) {
-			var elements = tsunami.appendTemplate("my-main-section", document.body, this);
+			this.templates = templates;
+			var elements = tsunami.appendTemplate(templates.myMainSection, document.body, this);
 			//console.log("elements", elements);
 		}
 

@@ -1,10 +1,10 @@
-<script id="root-template" type="text/template">
+<script id="rootTemplate" type="text/template">
 	<div class="root" data-wrapper="sandbox.Root">
 		<nav>
 			<a href="{{router.fragment}}shapes" data-wrapper="sandbox.Button">shapes</a>
 			<a href="{{router.fragment}}inputs" data-wrapper="sandbox.Button">inputs</a>
 		</nav>
-		<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="breadcrumb-button"></ul>
+		<ul class="breadcrumbs" data-wrapper="tsunami.List" data-provider="router.branches" data-template="templates.breadcrumbButton"></ul>
 		<div class="branchesLength">
 			<span data-wrapper="tsunami.DataBind" data-model="router.branches.length"></span>
 			<span data-wrapper="tsunami.Noun" data-model="router.branches.length">
@@ -32,6 +32,6 @@
 		</div>
 	</div>
 </script>
-<script id="breadcrumb-button" type="text/template">
+<script id="breadcrumbButton" type="text/template">
 	<li><a href="{{model.path}}" data-wrapper="sandbox.Button">{{model.id}}</a></li>
 </script>

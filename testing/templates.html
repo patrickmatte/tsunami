@@ -1,6 +1,6 @@
-<script id="my-main-section" type="text/template">
+<script id="myMainSection" type="text/template">
 	<div class="my-main-section">
-		<ul is="cars-list" data-provider="model.carMakers" data-template="car-item"></ul>
+		<ul is="cars-list" data-provider="model.carMakers" data-template="templates.carItem"></ul>
 		<div is="my-string" data-model="model.myString"></div>
 		<input type="text" is="my-string-input" data-model="model.myString">
 		<input type="text" data-wrapper="tsunami.Input" data-model="model.myString">
@@ -8,8 +8,8 @@
 		<input type="range" data-wrapper="tsunami.Input" data-model="model.myRange" min="0" max="50" value="10">
 		<div data-wrapper="tsunami.DataBind" data-model="model.myNumbersAverage"></div>
 		<input type="checkbox" data-wrapper="tsunami.Input" data-model="model.myCheckbox"> checkbox
-		<div data-wrapper="tsunami.List" data-provider="model.carMakers" data-template="radio"></div>
-		<select data-wrapper="tsunami.Select" data-model="model.myCarMaker" data-provider="model.carMakers" data-template="option"></select>
+		<div data-wrapper="tsunami.List" data-provider="model.carMakers" data-template="templates.radio"></div>
+		<select data-wrapper="tsunami.Select" data-model="model.myCarMaker" data-provider="model.carMakers" data-template="templates.option"></select>
 	</div>
 
 	<div>
@@ -51,19 +51,19 @@
 	<div>
 		model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="model.myCarMaker"></span>
 		<br/>
-		<span data-wrapper="tsunami.List" data-provider="model.carMakers" data-template="radio"></span>
+		<span data-wrapper="tsunami.List" data-provider="model.carMakers" data-template="templates.radio"></span>
 		<button class="myRadioSetter">set myCarMaker to {{model.defaultCarMaker}}</button>
 	</div>
 	<br/>
 	<div>
 		model.myCarMaker = <span data-wrapper="tsunami.DataBind" data-model="model.myCarMaker"></span>
 		<br/>
-		<select data-wrapper="tsunami.Select" data-model="model.myCarMaker" data-provider="model.carMakers" data-template="option"></select>
+		<select data-wrapper="tsunami.Select" data-model="model.myCarMaker" data-provider="model.carMakers" data-template="templates.option"></select>
 		<br/>
 		<button class="mySelectValueSetter">set myCarMaker to {{model.defaultCarMaker}}</button>
 	</div>
 </script>
-<script id="car-item" type="text/template">
+<script id="carItem" type="text/template">
 	<li is="car-item" class="{{model.id}}">{{index}} {{model.title}}</li>
 </script>
 <script id="radio" type="text/template">

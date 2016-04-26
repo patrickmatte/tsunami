@@ -143,15 +143,16 @@ tsunami.load.xhr = function(url, method, data, requestHeaders, responseType, noC
 tsunami.load.templates = function(url) {
 	var promise = tsunami.load.xhr(url, "GET", null, null, "text", null);
 	var promise2 = promise.then(function(xhr) {
+		var object = {};
 		var container = document.createElement("div");
 		container.innerHTML = xhr.response;
 		var scripts = container.querySelectorAll("script");
 		for (var i = 0; i < scripts.length; i++) {
 			var script = scripts.item(i);
 			var template = script.text;
-			tsunami.templates[script.id] = template;
+			object[script.id] = template;
 		}
-		return tsunami.templates;
+		return object;
 	});
 
 	Object.defineProperty(promise2, "progress", {

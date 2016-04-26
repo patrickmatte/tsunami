@@ -16,7 +16,7 @@
 
 		prototype.loadComplete = function(assets) {
 			this.loadCompleteBranchModules(assets);
-			this.templateElements = tsunami.appendTemplate("inputs-template", this, this);
+			this.templateElements = tsunami.appendTemplate(this.templates.inputsTemplate, this, this);
 		};
 
 		prototype.show = function() {

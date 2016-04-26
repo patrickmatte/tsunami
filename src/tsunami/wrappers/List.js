@@ -19,7 +19,10 @@ tsunami = this.tsunami || {};
 		prototype.setScope = function(value) {
 			this.setScopeElement(value);
 
-			this.template = this.getAttribute("data-template");
+			var template = this.getAttribute("data-template");
+			if (template) {
+				this.template = tsunami.evalProperty(template, value);
+			}
 
 			var dataProvider = this.getAttribute("data-provider");
 			if (dataProvider) {

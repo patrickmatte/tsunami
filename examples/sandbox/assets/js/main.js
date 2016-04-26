@@ -51,7 +51,8 @@ this.router.addEventListener("complete", function(e) {
 });
 
 tsunami.load.templates("assets/html/root.html").then(function(templates) {
-	tsunami.appendTemplate("root-template", document.body, this);
+	this.templates = templates;
+	tsunami.appendTemplate(templates.rootTemplate, document.body, this);
 	this.router.root = document.querySelector(".root");
 	this.router.preloader = document.querySelector(".preloader");
 	this.router.history.start();

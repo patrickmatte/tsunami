@@ -48,8 +48,6 @@ tsunami.evalProperty = function(path, scope) {
 	return object;
 };
 
-tsunami.templates = {};
-
 tsunami.renderTemplate = null;
 
 tsunami.Directive = function(name, method) {
@@ -139,7 +137,6 @@ tsunami.applyWrapper = function(element, method) {
 */
 
 tsunami.importTemplate = function(template, scope) {
-	template = tsunami.templates[template];
 	var factory = document.createElement("div");
 	if (tsunami.mustache) {
 		template = tsunami.mustache(template, scope);
