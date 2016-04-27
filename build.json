@@ -1,0 +1,43 @@
+[
+  {
+	"output":"build/tsunami.js",
+	"files":[
+		"src/tsunami/utils/Polyfills.js",
+		"src/tsunami/EventDispatcher.js",
+		"src/tsunami/tsunami.js",
+		"src/tsunami/geom/Point.js",
+		"src/tsunami/geom/Rectangle.js",
+		"src/tsunami/geom/Ratio.js",
+		"src/tsunami/promise.js",
+		"src/tsunami/load.js",
+		"src/tsunami/data/Data.js",
+		"src/tsunami/data/Number.js",
+		"src/tsunami/data/String.js",
+		"src/tsunami/data/Boolean.js",
+		"src/tsunami/data/Array.js",
+		"src/tsunami/data/AverageNumber.js",
+		"src/tsunami/wrappers/Style.js",
+		"src/tsunami/wrappers/Element.js",
+		"src/tsunami/wrappers/List.js",
+		"src/tsunami/wrappers/DataBind.js",
+		"src/tsunami/wrappers/Button.js",
+		"src/tsunami/wrappers/Attribute.js",
+		"src/tsunami/wrappers/Noun.js",
+		"src/tsunami/wrappers/Switch.js",
+		"src/tsunami/wrappers/Input.js",
+		"src/tsunami/wrappers/Select.js",
+		"src/tsunami/wrappers/Branch.js",
+		"src/tsunami/wrappers/BranchImport.js",
+		"src/tsunami/wrappers/BranchModules.js",
+		"src/tsunami/animation/Easing.js",
+		"src/tsunami/animation/Tween.js",
+		"src/tsunami/animation/TimeTween.js",
+		"src/tsunami/animation/Timeline.js",
+		"src/tsunami/animation/Clock.js",
+		"src/tsunami/utils/NumberUtil.js",
+		"src/tsunami/History.js",
+		"src/tsunami/Router.js"
+	]
+  }
+
+]
