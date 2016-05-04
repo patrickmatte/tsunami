@@ -1204,6 +1204,95 @@ tsunami.geom = tsunami.geom || {};
 	};
 	
 }());
+(function() {
+	
+	tsunami.geom.Vector3D = function(x, y, z) {
+		this.constructor(x, y, z);
+	};
+	
+	var c = tsunami.geom.Vector3D;
+	var p = c.prototype;
+	
+	p.constructor = function(x, y, z) {
+		if (isNaN(x)) x = 0;
+		if (isNaN(y)) y = 0;
+		if (isNaN(z)) z = 0;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	};
+	
+	p.clone = function() {
+		return new tsunami.geom.Vector3D(this.x, this.y, this.z);
+	};
+	
+	p.add = function(vector) {
+		this.x += vector.x;
+		this.y += vector.y;
+		this.z += vector.z;
+		return this;
+	};
+	
+	p.multiply = function(vector) {
+		this.x = this.x * vector.x;
+		this.y = this.y * vector.y;
+		this.z = this.z * vector.z;
+		return this;
+	};
+	
+	p.divide = function(vector) {
+		this.x = this.x / vector.x;
+		this.y = this.y / vector.y;
+		this.z = this.z / vector.z;
+		return this;
+	};
+	
+	p.copyFrom = function(vector) {
+		this.x = vector.x;
+		this.y = vector.y;
+		this.z = vector.z;
+		return this;
+	};
+	
+	p.subtract = function(v) {
+		this.x -= v.x;
+		this.y -= v.y;
+		this.z -= v.z;
+		return this;
+	};
+	
+	p.toString = function() {
+		return "[Vector3D" + " x=" + this.x + " y=" + this.y + " z=" + this.z + "]";
+	};
+	
+	c.interpolate = function(v1, v2, position) {
+		var x = (v1.x + v2.x) * position;
+		var y = (v1.y + v2.y) * position;
+		var z = (v1.z + v2.z) * position;
+		return new tsunami.geom.Vector3D(x, y, z);
+	};
+	
+	c.distance = function(v1, v2) {
+		return Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
+	};
+	
+	c.polar = function(length, radians) {
+		var vector = new tsunami.geom.Vector3D();
+		vector.x = length * Math.cos(radians);
+		vector.y = length * Math.sin(radians);
+		return vector;
+	};
+
+	c.spherePoint = function(radius, radiansX, radiansY) {
+		var xCoord2 = radius * Math.cos(radiansX);
+		var yCoord2 = radius * Math.sin(radiansX);
+		var xCoord = xCoord2 * Math.cos(radiansY);
+		var yCoord = xCoord2 * Math.sin(radiansY);
+		return new tsunami.geom.Vector3D(xCoord, yCoord2, yCoord);
+	};
+
+}());
+
 tsunami = this.tsunami || {};
 tsunami.promise = tsunami.promise || {};
 
@@ -3321,6 +3410,7 @@ tsunami = this.tsunami || {};
 		var tween = this;
 		var promise = new Promise(function(resolve, reject) {
 			var tweenComplete = function(event) {
+				tween.removeEventListener(tsunami.Tween.COMPLETE, tweenComplete);
 				resolve(tween);
 			};
 			tween.addEventListener(tsunami.Tween.COMPLETE, tweenComplete);
@@ -3370,13 +3460,11 @@ tsunami = this.tsunami || {};
 				this.completeHandler();
 			}
 			this.dispatchEvent({type:tsunami.Tween.COMPLETE, target:this});
-			if (this.taskCompleted) {
-				this.taskCompleted();
-			}
 		}
 	};
 
 }());
+
 tsunami = this.tsunami || {};
 
 (function() {
@@ -3411,6 +3499,7 @@ tsunami = this.tsunami || {};
 		var tween = this;
 		var promise = new Promise(function(resolve, reject) {
 			var tweenComplete = function(event) {
+				tween.removeEventListener(tsunami.TimeTween.COMPLETE, tweenComplete);
 				resolve(tween);
 			};
 			tween.addEventListener(tsunami.TimeTween.COMPLETE, tweenComplete);
@@ -3462,13 +3551,11 @@ tsunami = this.tsunami || {};
 				this.completeHandler();
 			}
 			this.dispatchEvent({type:tsunami.TimeTween.COMPLETE, target:this});
-			if (this.taskCompleted) {
-				this.taskCompleted();
-			}
 		}
 	};
 
 }());
+
 tsunami = this.tsunami || {};
 
 (function() {
@@ -3494,12 +3581,25 @@ tsunami = this.tsunami || {};
 		this.tickHandler = this.tick.bind(this);
 	};
 
+	tsunami.Timeline.COMPLETE = "complete";
+	tsunami.Timeline.CHANGE = "change";
+
 	var p = tsunami.Timeline.prototype = Object.create(tsunami.EventDispatcher.prototype);
 
 	p.start = function() {
+		var timeline = this;
+		var promise = new Promise(function(resolve, reject) {
+			var timelineComplete = function(event) {
+				timeline.removeEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
+				resolve(timeline);
+			};
+			timeline.addEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
+		});
+
 		this.clockStartTime = tsunami.clock.time;
 		tsunami.clock.addEventListener("tick", this.tickHandler);
 		this.setTime(0);
+		return promise;
 	};
 
 	p.stop = function() {
@@ -3519,8 +3619,7 @@ tsunami = this.tsunami || {};
 			if (this.completeHandler) {
 				this.completeHandler();
 			}
-			this.dispatchEvent({type:tsunami.TimeTween.COMPLETE, target:this});
-			this.taskCompleted();
+			this.dispatchEvent({type:tsunami.Timeline.COMPLETE, target:this});
 		}
 	};
 
@@ -3535,8 +3634,6 @@ tsunami = this.tsunami || {};
 		}
 
 		this.time = value;
-
-		//console.log("oldTime", oldTime, "value", value);
 
 		this.minTimeReached = Math.min(this.minTimeReached, value);
 		this.maxTimeReached = Math.max(this.maxTimeReached, value);
@@ -3603,15 +3700,13 @@ tsunami = this.tsunami || {};
 			if (value >= startTime && value <= endTime) {
 				tween.setTime(value);
 			} else if (direction == tsunami.TimelineAction.FORWARDS && value > endTime && tween.time != endTime && endTime >= this.minTimeReached ) {
-				//console.log("FORWARDS", tween.toString());
 				tween.setTime(endTime);
 			} else if (direction == tsunami.TimelineAction.BACKWARDS && value < startTime && tween.time != startTime && this.maxTimeReached > startTime) {
-				//console.log("BACKWARDS", tween.toString());
 				tween.setTime(startTime);
 			}
 		}
 
-		var changeEvent = {type:tsunami.TimeTween.CHANGE, target:this};
+		var changeEvent = {type:tsunami.Timeline.CHANGE, target:this};
 		if (this.changeHandler) {
 			this.changeHandler(changeEvent);
 		}
@@ -3690,6 +3785,7 @@ tsunami = this.tsunami || {};
 	};
 
 }());
+
 tsunami = this.tsunami || {};
 
 (function() {
@@ -4228,6 +4324,140 @@ tsunami.utils = tsunami.utils || {};
 		};
 
 }());
+
+/*
+function getCSSRule(ruleName, deleteFlag) {
+   if (document.styleSheets) {
+      for (var i = 0; i < document.styleSheets.length; i++) {
+         var styleSheet = document.styleSheets[i];
+         var ii = 0;
+         var cssRule = false;
+		  do {
+            if (styleSheet.cssRules) {
+               cssRule = styleSheet.cssRules[ii];
+            } else {
+				try {
+					cssRule = styleSheet.rules[ii];
+				} catch(e) {
+				}
+            }
+            if (cssRule) {
+				if (cssRule instanceof CSSStyleRule) {
+				   if (cssRule.selectorText == ruleName) {
+					  if (deleteFlag == 'delete') {
+						 if (styleSheet.cssRules) {
+							styleSheet.deleteRule(ii);
+						 } else {
+							styleSheet.removeRule(ii);
+						 }
+						 return true;
+					  } else {
+						 return cssRule;
+					  }
+				   }
+				}
+            }
+            ii++;
+         } while (cssRule)
+      }
+   }
+   return false;
+}
+*/
+
+function getCSSRule(ruleName, deleteFlag) {
+	if (document.styleSheets) {
+		for (var i = 0; i < document.styleSheets.length; i++) {
+			var styleSheet = document.styleSheets[i];
+			var rules = styleSheet.cssRules || styleSheet.rules;
+			if (rules) {
+				for (var j = 0; j < rules.length; j++) {
+					var cssRule = rules[j];
+					if (cssRule instanceof CSSStyleRule) {
+						if (cssRule.selectorText == ruleName) {
+							if (deleteFlag == 'delete') {
+								if (styleSheet.cssRules) {
+									styleSheet.deleteRule(j);
+								} else {
+									styleSheet.removeRule(j);
+								}
+								return true;
+							} else {
+								return cssRule;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+
+function killCSSRule(ruleName) {
+   return getCSSRule(ruleName,'delete');
+}
+
+function addCSSRule(ruleName) {
+   if (document.styleSheets) {
+      if (!getCSSRule(ruleName)) {
+         if (document.styleSheets[0].addRule) {
+            document.styleSheets[0].addRule(ruleName, null,0);
+         } else {
+            document.styleSheets[0].insertRule(ruleName+' { }', 0);
+         }
+      }
+   }
+   return getCSSRule(ruleName);
+} 
+
+tsunami = this.tsunami || {};
+tsunami.utils = tsunami.utils || {};
+
+(function() {
+
+	tsunami.utils.Medias = function(medias) {
+		tsunami.EventDispatcher.call(this);
+		this.medias = medias || new Array();
+	};
+
+	tsunami.utils.Medias.CHANGE = "change";
+
+	var p = tsunami.utils.Medias.prototype = Object.create(tsunami.EventDispatcher.prototype);
+
+	p.constructor = tsunami.utils.Medias;
+
+	p.mqlListener = function(event) {
+		var mql = event.target;
+		if (mql.matches) {
+			for (var i = 0; i < this.medias.length; i++) {
+				var media = this.medias[i];
+				if (media.mql == mql) {
+					this.mql = media.mql;
+					this.data = media.data;
+				}
+			}
+		}
+		this.dispatchEvent({type:tsunami.utils.Medias.CHANGE});
+	};
+
+	p.matchMedia = function(media, data) {
+		var mql = window.matchMedia(media);
+		mql.addListener(this.mqlListener.bind(this));
+		if (mql.matches) {
+			this.mql = mql;
+			this.data = data;
+		}
+		this.medias.push({
+			mql:mql,
+			data:data
+		});
+	};
+
+}());
+
+
 
 tsunami = this.tsunami || {};
 

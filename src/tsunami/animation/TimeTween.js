@@ -32,6 +32,7 @@ tsunami = this.tsunami || {};
 		var tween = this;
 		var promise = new Promise(function(resolve, reject) {
 			var tweenComplete = function(event) {
+				tween.removeEventListener(tsunami.TimeTween.COMPLETE, tweenComplete);
 				resolve(tween);
 			};
 			tween.addEventListener(tsunami.TimeTween.COMPLETE, tweenComplete);
@@ -83,9 +84,6 @@ tsunami = this.tsunami || {};
 				this.completeHandler();
 			}
 			this.dispatchEvent({type:tsunami.TimeTween.COMPLETE, target:this});
-			if (this.taskCompleted) {
-				this.taskCompleted();
-			}
 		}
 	};
 

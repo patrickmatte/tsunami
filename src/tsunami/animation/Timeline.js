@@ -23,12 +23,25 @@ tsunami = this.tsunami || {};
 		this.tickHandler = this.tick.bind(this);
 	};
 
+	tsunami.Timeline.COMPLETE = "complete";
+	tsunami.Timeline.CHANGE = "change";
+
 	var p = tsunami.Timeline.prototype = Object.create(tsunami.EventDispatcher.prototype);
 
 	p.start = function() {
+		var timeline = this;
+		var promise = new Promise(function(resolve, reject) {
+			var timelineComplete = function(event) {
+				timeline.removeEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
+				resolve(timeline);
+			};
+			timeline.addEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
+		});
+
 		this.clockStartTime = tsunami.clock.time;
 		tsunami.clock.addEventListener("tick", this.tickHandler);
 		this.setTime(0);
+		return promise;
 	};
 
 	p.stop = function() {
@@ -48,8 +61,7 @@ tsunami = this.tsunami || {};
 			if (this.completeHandler) {
 				this.completeHandler();
 			}
-			this.dispatchEvent({type:tsunami.TimeTween.COMPLETE, target:this});
-			this.taskCompleted();
+			this.dispatchEvent({type:tsunami.Timeline.COMPLETE, target:this});
 		}
 	};
 
@@ -64,8 +76,6 @@ tsunami = this.tsunami || {};
 		}
 
 		this.time = value;
-
-		//console.log("oldTime", oldTime, "value", value);
 
 		this.minTimeReached = Math.min(this.minTimeReached, value);
 		this.maxTimeReached = Math.max(this.maxTimeReached, value);
@@ -132,15 +142,13 @@ tsunami = this.tsunami || {};
 			if (value >= startTime && value <= endTime) {
 				tween.setTime(value);
 			} else if (direction == tsunami.TimelineAction.FORWARDS && value > endTime && tween.time != endTime && endTime >= this.minTimeReached ) {
-				//console.log("FORWARDS", tween.toString());
 				tween.setTime(endTime);
 			} else if (direction == tsunami.TimelineAction.BACKWARDS && value < startTime && tween.time != startTime && this.maxTimeReached > startTime) {
-				//console.log("BACKWARDS", tween.toString());
 				tween.setTime(startTime);
 			}
 		}
 
-		var changeEvent = {type:tsunami.TimeTween.CHANGE, target:this};
+		var changeEvent = {type:tsunami.Timeline.CHANGE, target:this};
 		if (this.changeHandler) {
 			this.changeHandler(changeEvent);
 		}

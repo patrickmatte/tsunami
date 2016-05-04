@@ -8,6 +8,7 @@
 		"src/tsunami/geom/Point.js",
 		"src/tsunami/geom/Rectangle.js",
 		"src/tsunami/geom/Ratio.js",
+		"src/tsunami/geom/Vector3D.js",
 		"src/tsunami/promise.js",
 		"src/tsunami/load.js",
 		"src/tsunami/data/Data.js",
@@ -35,6 +36,8 @@
 		"src/tsunami/animation/Timeline.js",
 		"src/tsunami/animation/Clock.js",
 		"src/tsunami/utils/NumberUtil.js",
+		"src/tsunami/utils/CSSUtils.js",
+		"src/tsunami/utils/Medias.js",
 		"src/tsunami/History.js",
 		"src/tsunami/Router.js"
 	]

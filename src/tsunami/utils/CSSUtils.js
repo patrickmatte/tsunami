@@ -1,3 +1,4 @@
+/*
 function getCSSRule(ruleName, deleteFlag) {
    if (document.styleSheets) {
       for (var i = 0; i < document.styleSheets.length; i++) {
@@ -35,6 +36,37 @@ function getCSSRule(ruleName, deleteFlag) {
    }
    return false;
 }
+*/
+
+function getCSSRule(ruleName, deleteFlag) {
+	if (document.styleSheets) {
+		for (var i = 0; i < document.styleSheets.length; i++) {
+			var styleSheet = document.styleSheets[i];
+			var rules = styleSheet.cssRules || styleSheet.rules;
+			if (rules) {
+				for (var j = 0; j < rules.length; j++) {
+					var cssRule = rules[j];
+					if (cssRule instanceof CSSStyleRule) {
+						if (cssRule.selectorText == ruleName) {
+							if (deleteFlag == 'delete') {
+								if (styleSheet.cssRules) {
+									styleSheet.deleteRule(j);
+								} else {
+									styleSheet.removeRule(j);
+								}
+								return true;
+							} else {
+								return cssRule;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
 
 function killCSSRule(ruleName) {
    return getCSSRule(ruleName,'delete');
