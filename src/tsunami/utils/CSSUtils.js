@@ -42,7 +42,12 @@ function getCSSRule(ruleName, deleteFlag) {
 	if (document.styleSheets) {
 		for (var i = 0; i < document.styleSheets.length; i++) {
 			var styleSheet = document.styleSheets[i];
-			var rules = styleSheet.cssRules || styleSheet.rules;
+			var rules;
+			try {
+				rules = styleSheet.cssRules || styleSheet.rules;
+			} catch(e) {
+
+			}
 			if (rules) {
 				for (var j = 0; j < rules.length; j++) {
 					var cssRule = rules[j];

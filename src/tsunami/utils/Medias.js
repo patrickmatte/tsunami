@@ -15,11 +15,10 @@ tsunami.utils = tsunami.utils || {};
 	p.constructor = tsunami.utils.Medias;
 
 	p.mqlListener = function(event) {
-		var mql = event.target;
-		if (mql.matches) {
+		if (event.matches) {
 			for (var i = 0; i < this.medias.length; i++) {
 				var media = this.medias[i];
-				if (media.mql == mql) {
+				if (media.mql.media == event.media) {
 					this.mql = media.mql;
 					this.data = media.data;
 				}
@@ -42,5 +41,6 @@ tsunami.utils = tsunami.utils || {};
 	};
 
 }());
+
 
 

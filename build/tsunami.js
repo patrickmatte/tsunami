@@ -4369,7 +4369,12 @@ function getCSSRule(ruleName, deleteFlag) {
 	if (document.styleSheets) {
 		for (var i = 0; i < document.styleSheets.length; i++) {
 			var styleSheet = document.styleSheets[i];
-			var rules = styleSheet.cssRules || styleSheet.rules;
+			var rules;
+			try {
+				rules = styleSheet.cssRules || styleSheet.rules;
+			} catch(e) {
+
+			}
 			if (rules) {
 				for (var j = 0; j < rules.length; j++) {
 					var cssRule = rules[j];
@@ -4429,11 +4434,10 @@ tsunami.utils = tsunami.utils || {};
 	p.constructor = tsunami.utils.Medias;
 
 	p.mqlListener = function(event) {
-		var mql = event.target;
-		if (mql.matches) {
+		if (event.matches) {
 			for (var i = 0; i < this.medias.length; i++) {
 				var media = this.medias[i];
-				if (media.mql == mql) {
+				if (media.mql.media == event.media) {
 					this.mql = media.mql;
 					this.data = media.data;
 				}
@@ -4456,6 +4460,7 @@ tsunami.utils = tsunami.utils || {};
 	};
 
 }());
+
 
 
 
