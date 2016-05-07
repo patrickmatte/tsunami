@@ -37,7 +37,7 @@ tsunami = this.tsunami || {};
 			};
 			tween.addEventListener(tsunami.TimeTween.COMPLETE, tweenComplete);
 		});
-		this.clockStartTime = tsunami.clock.time;
+		this.clockStartTime = new Date();
 		tsunami.clock.addEventListener(tsunami.Clock.TICK, this.tickHandler);
 		this.setTime(0);
 		return promise;
