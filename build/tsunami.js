@@ -591,7 +591,7 @@ tsunami.isMobile = {
 
 tsunami.isMobile.any = (tsunami.isMobile.android || tsunami.isMobile.blackBerry || tsunami.isMobile.iOS || tsunami.isMobile.windows);
 
-if (tsunami.isMobile.any) {
+if ("ontouchend" in window) {
 	tsunami.events = {
 		mouseover: "touchstart",
 		mouseout: "touchend",
