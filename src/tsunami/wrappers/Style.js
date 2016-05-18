@@ -129,7 +129,7 @@
 		},
 		set: function(value) {
 			this._translateX = value;
-			this.transform += this.transformSpace() + "translateX(" + value + this.units.translateX + ")";
+			this._transform += this.transformSpace() + "translateX(" + value + this.units.translateX + ")";
 		}
 	});
 
@@ -139,7 +139,7 @@
 		},
 		set: function(value) {
 			this._translateY = value;
-			this.transform += this.transformSpace() + "translateY(" + value + this.units.translateY + ")";
+			this._transform += this.transformSpace() + "translateY(" + value + this.units.translateY + ")";
 		}
 	});
 
@@ -149,7 +149,7 @@
 		},
 		set: function(value) {
 			this._translateZ = value;
-			this.transform += this.transformSpace() + "translateZ(" + value + this.units.translateZ + ")";
+			this._transform += this.transformSpace() + "translateZ(" + value + this.units.translateZ + ")";
 		}
 	});
 

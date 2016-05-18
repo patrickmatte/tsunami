@@ -112,3 +112,25 @@ tsunami.promise.callback = function(target, method) {
 	return promise;
 
 };
+
+tsunami.promise.waitForFrames = function(total) {
+	total = Math.max(1, Math.round(total));
+
+	var count = 0;
+
+	var promise = new Promise(function(resolve, reject){
+
+		function animationFrame() {
+			count++;
+			if (count >= total) {
+				resolve();
+			} else {
+				window.requestAnimationFrame(animationFrame);
+			}
+		}
+
+		window.requestAnimationFrame(animationFrame);
+
+	});
+
+};

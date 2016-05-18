@@ -86,7 +86,6 @@
 
 		};
 
-
 		Object.defineProperty(prototype, 'router', {
 			get: function() {
 				return this.getRouter();
@@ -111,7 +110,7 @@
 
 			if (this.router) {
 				var path = this.getPath();
-				if (path) {
+				if (path != undefined && path != null) {
 					this.router.setLocation(path, this.pushState);
 				}
 			} else {

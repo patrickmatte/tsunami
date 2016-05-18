@@ -50,12 +50,7 @@ tsunami = this.tsunami || {};
 
 	p.tick = function(event) {
 		this.setTime((tsunami.clock.time - this.clockStartTime) / 1000);
-		var duration = 0;
-		for (var i = 0; i < this.tweens.length; i++) {
-			var tween = this.tweens[i];
-			var tweenDuration = tween.startTime + tween.duration;
-			duration = Math.max(duration, tweenDuration);
-		}
+		var duration = this.getDuration();
 		if (this.time >= duration) {
 			this.stop();
 			if (this.completeHandler) {
@@ -63,6 +58,16 @@ tsunami = this.tsunami || {};
 			}
 			this.dispatchEvent({type:tsunami.Timeline.COMPLETE, target:this});
 		}
+	};
+
+	p.getDuration = function() {
+		var duration = 0;
+		for (var i = 0; i < this.tweens.length; i++) {
+			var tween = this.tweens[i];
+			var tweenDuration = tween.startTime + tween.duration;
+			duration = Math.max(duration, tweenDuration);
+		}
+		return duration;
 	};
 
 	p.getTime = function() {
