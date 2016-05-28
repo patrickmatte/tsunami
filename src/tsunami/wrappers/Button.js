@@ -17,18 +17,28 @@
 
 		prototype.dontClickAfterDrag = function() {
 			this.touchMoveHandler = this.touchMove.bind(this);
-			this.ontouchstart = this.touchStart.bind(this);
+			this.addEventListener(tsunami.events.mousedown, this.touchStart.bind(this));
 		};
 
 		prototype.touchStart = function(event) {
-			var mouse = event.touches[0];
+			var mouse = event;
+			if (event.touches) {
+				if (event.touches[0]) {
+					mouse = event.touches[0];
+				}
+			}
 			this.touchStartPoint = new tsunami.geom.Point(mouse.pageX, mouse.pageY);
-			document.removeEventListener("touchmove", this.touchMoveHandler);
-			document.addEventListener("touchmove", this.touchMoveHandler);
+			document.removeEventListener(tsunami.events.mousemove, this.touchMoveHandler);
+			document.addEventListener(tsunami.events.mousemove, this.touchMoveHandler);
 		};
 
 		prototype.touchMove = function(event) {
-			var mouse = event.touches[0];
+			var mouse = event;
+			if (event.touches) {
+				if (event.touches[0]) {
+					mouse = event.touches[0];
+				}
+			}
 			var touchMovePoint = new tsunami.geom.Point(mouse.pageX, mouse.pageY);
 
 			var distance = tsunami.geom.Point.distance(touchMovePoint, this.touchStartPoint);
@@ -43,7 +53,7 @@
 
 		prototype.clickHandler = function(event) {
 			event.preventDefault();
-			document.removeEventListener("touchmove", this.touchMoveHandler);
+			document.removeEventListener(tsunami.events.mousemove, this.touchMoveHandler);
 			if (this.invalidTouchend) {
 				this.invalidTouchend = false;
 				return;

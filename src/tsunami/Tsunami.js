@@ -10,13 +10,16 @@ tsunami.isMobile = {
 
 tsunami.isMobile.any = (tsunami.isMobile.android || tsunami.isMobile.blackBerry || tsunami.isMobile.iOS || tsunami.isMobile.windows);
 
+tsunami.isTouch = ("ontouchend" in window);
+
 if ("ontouchend" in window) {
 	tsunami.events = {
 		mouseover: "touchstart",
 		mouseout: "touchend",
 		mousedown: "touchstart",
 		mouseup: "touchend",
-		mousemove: "touchmove"
+		mousemove: "touchmove",
+		click: "touchend"
 	}
 } else {
 	tsunami.events = {
@@ -24,7 +27,8 @@ if ("ontouchend" in window) {
 		mouseout: "mouseout",
 		mousedown: "mousedown",
 		mouseup: "mouseup",
-		mousemove: "mousemove"
+		mousemove: "mousemove",
+		click: "click"
 	}
 }
 
