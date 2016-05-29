@@ -36,6 +36,7 @@
 		"src/tsunami/animation/Timeline.js",
 		"src/tsunami/animation/Clock.js",
 		"src/tsunami/utils/NumberUtil.js",
+		"src/tsunami/utils/KeyPressGroup.js",
 		"src/tsunami/utils/CSSUtils.js",
 		"src/tsunami/utils/Medias.js",
 		"src/tsunami/History.js",
