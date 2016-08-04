@@ -165,11 +165,33 @@ tsunami.load.templates = function(url) {
 
 };
 
+tsunami.load.html = function(url) {
+	var promise = tsunami.load.xhr(url, "GET", null, null, "text", null);
+	var promise2 = promise.then(function(xhr) {
+		return xhr.response;
+	});
+
+	Object.defineProperty(promise2, "progress", {
+		get: function () {
+			return promise.progress;
+		}
+	});
+
+	return promise2;
+
+};
+
 tsunami.load.json = function(url, method, data, requestHeaders, noCache) {
 
 	var promise = tsunami.load.xhr(url, method, data, requestHeaders, "text", noCache);
 	var promise2 = promise.then(function(xhr) {
-		return JSON.parse(xhr.response);
+		var obj = {};
+		try {
+			obj = JSON.parse(xhr.response)
+		} catch (e) {
+			console.log(e, " in " + url);
+		}
+		return obj;
 	}, function() {
 		return {};
 	});
@@ -194,8 +216,12 @@ tsunami.load.script = function(url, id, noCache) {
 		if (id) {
 			script.id = id;
 		}
-		script.text = xhr.response;
 		document.querySelector("head").appendChild(script);
+		try {
+			script.text = xhr.response;
+		} catch(e) {
+			console.log(e, " in " + url);
+		}
 		return script;
 	});
 

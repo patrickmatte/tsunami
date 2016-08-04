@@ -1,19 +1,8 @@
-tsunami = this.tsunami || {};
-tsunami.utils = tsunami.utils || {};
-
 (function() {
 
-	tsunami.utils.StringUtil = function() {}
+	var c = tsunami.validation = {};
 
-	var c = tsunami.utils.StringUtil;
-
-	var p = tsunami.utils.StringUtil.prototype;
-
-	c.capitalize = function(string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	}
-
-	c.validateEmail = function(emailAddress) {
+	c.email = function(emailAddress) {
 		var sQtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
 		var sDtext = '[^\\x0d\\x5b-\\x5d\\x80-\\xff]';
 		var sAtom = '[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+';
@@ -37,7 +26,4 @@ tsunami.utils = tsunami.utils || {};
 		return false;
 	};
 
-
 }());
-
-

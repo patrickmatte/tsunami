@@ -78,6 +78,9 @@ tsunami = this.tsunami || {};
 			this.styleManager.destroy();
 			this.innerHTML = "";
 			this.scope = null;
+			if (this.parentNode) {
+				this.parentNode.removeChild(this);
+			}
 		};
 
 		return prototype;

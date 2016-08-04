@@ -86,13 +86,7 @@ tsunami = this.tsunami || {};
 		};
 
 		prototype._removeElements = function() {
-			for (var i = 0; i < this.elements.length; i++) {
-				var oldElement = this.elements[i];
-				oldElement.model = null;
-				if (oldElement.parentNode) {
-					oldElement.parentNode.removeChild(oldElement);
-				}
-			}
+			tsunami.destroyElements(this.elements);
 			this.elements = [];
 		};
 
@@ -102,10 +96,11 @@ tsunami = this.tsunami || {};
 					model:array[i],
 					index:i,
 					length:array.length,
-					scope:this.scope
+					scope:this
 				};
-				var elements = tsunami.appendTemplate(this.template, this, scope);
-				this.elements = this.elements.concat(elements);
+				var element = tsunami.importTemplate(this.template, scope);
+				this.appendChild(element);
+				this.elements.push(element);
 			}
 		};
 

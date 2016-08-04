@@ -114,6 +114,9 @@ tsunami.promise.callback = function(target, method) {
 };
 
 tsunami.promise.waitForFrames = function(total) {
+	if (isNaN(total)) {
+		total = 1;
+	}
 	total = Math.max(1, Math.round(total));
 
 	var count = 0;
@@ -132,5 +135,7 @@ tsunami.promise.waitForFrames = function(total) {
 		window.requestAnimationFrame(animationFrame);
 
 	});
+
+	return promise;
 
 };

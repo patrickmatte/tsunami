@@ -4,12 +4,12 @@ sandbox = this.sandbox || {};
 
 	sandbox.Root = function(prototype) {
 
-		tsunami.Branch(prototype);
+		tsunami.Element(prototype);
 
-		prototype.createdCallbackBranch = prototype.createdCallback;
+		prototype.createdCallbackElement = prototype.createdCallback;
 
 		prototype.createdCallback = function() {
-			this.createdCallbackBranch();
+			this.createdCallbackElement();
 			this.model = {
 				myString:new tsunami.String("test"),
 				navModel:"test",
@@ -69,10 +69,15 @@ sandbox = this.sandbox || {};
 			 ])
 			 ];
 			 */
+			
+			this.branches = {
+				shapes:new sandbox.Shapes(),
+				inputs:new sandbox.Inputs()
+			}
 		};
 
-		prototype.load = function() {
-
+		prototype.getBranch = function(id) {
+			return this.branches[id];
 		};
 
 		return prototype;

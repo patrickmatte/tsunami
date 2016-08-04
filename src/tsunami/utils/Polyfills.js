@@ -34,6 +34,56 @@ if (!window.location.origin) {
 })();
 
 
+// Adds ES5 Object.create functionality
+if (typeof Object.create != 'function') {
+	Object.create = (function(undefined) {
+		var Temp = function() {};
+		return function (prototype, propertiesObject) {
+			if(prototype !== Object(prototype) && prototype !== null) {
+				throw TypeError('Argument must be an object, or null');
+			}
+			Temp.prototype = prototype || {};
+			if (propertiesObject !== undefined) {
+				Object.defineProperties(Temp.prototype, propertiesObject);
+			}
+			var result = new Temp();
+			Temp.prototype = null;
+			// to imitate the case of Object.create(null)
+			if(prototype === null) {
+				result.__proto__ = null;
+			}
+			return result;
+		};
+	})();
+}
+
+
+// Adds ES2015 Object.assign functionality
+if (typeof Object.assign != 'function') {
+	Object.assign = function(target) {
+		'use strict';
+		if (target == null) {
+			throw new TypeError('Cannot convert undefined or null to object');
+		}
+
+		target = Object(target);
+		for (var index = 1; index < arguments.length; index++) {
+			var source = arguments[index];
+			if (source != null) {
+				for (var key in source) {
+					if (Object.prototype.hasOwnProperty.call(source, key)) {
+						target[key] = source[key];
+					}
+				}
+			}
+		}
+		return target;
+	};
+}
+
+
+
+
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel

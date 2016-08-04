@@ -1,11 +1,7 @@
 (function() {
 
-	tsunami.CanvasUtil = function() {};
-	
-	var c = tsunami.CanvasUtil;
-	
-	var p = tsunami.CanvasUtil.prototype;
-	
+	var c = tsunami.canvas = {};
+
 	c.patternFill = function(canvas, pattern) {
 		var ctx = canvas.getContext("2d");
 		var x = 0;
@@ -19,7 +15,7 @@
 			y += pattern.height;
 		}
 	};
-	
+
 	c.cloneImage = function(image, scaleX, scaleY, canvas) {
 		if (isNaN(scaleX)) {
 			scaleX = 1;
@@ -35,6 +31,6 @@
 		var ctx = canvas.getContext("2d");
 		ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
 		return canvas;
-	}
-	
+	};
+
 }());

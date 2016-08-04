@@ -40,9 +40,9 @@ this.router = new tsunami.Router();
 this.router.path = location.origin + location.pathname;
 this.router.fragment = "?";
 this.router.history = new tsunami.History(this.router.path, this.router.fragment, tsunami.HistoryFallback.HASH);
-this.router.redirect("", "shapes");
-this.router.redirect("shapes", "shapes/circles/level1/level2");
-this.router.redirect("circle5", "shapes/circles/level1/level2/level3/level4/level5");
+this.router.addRedirect("", "shapes");
+this.router.addRedirect("shapes", "shapes/circles/level1/level2");
+this.router.addRedirect("circle5", "shapes/circles/level1/level2/level3/level4/level5");
 this.router.addEventListener("locationChange", function(e) {
 	//console.log("router locationChange", e.location);
 });
@@ -50,10 +50,15 @@ this.router.addEventListener("complete", function(e) {
 	console.log("router complete", e.target.getLocation());
 });
 
-tsunami.load.templates("assets/html/root.html").then(function(templates) {
-	this.templates = templates;
-	tsunami.appendTemplate(templates.rootTemplate, document.body, this);
-	this.router.root = document.querySelector(".root");
+var rootPromise = tsunami.load.html("assets/html/root.html");
+var breadCrumbButtonPromise = tsunami.load.html("assets/html/breadcrumbButton.html");
+Promise.all([rootPromise, breadCrumbButtonPromise]).then(function(assets) {
+	this.templates = {
+		breadcrumbButton:assets[1]
+	};
+	var root = tsunami.importTemplate(assets[0], this);
+	document.body.appendChild(root);
+	this.router.root = root;
 	this.router.preloader = document.querySelector(".preloader");
 	this.router.history.start();
 });

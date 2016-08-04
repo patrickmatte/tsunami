@@ -1,5 +1,3 @@
-tsunami = this.tsunami || {};
-
 (function() {
 
 	tsunami.String = function(value) {
@@ -8,9 +6,15 @@ tsunami = this.tsunami || {};
 		this.value = value;
 	};
 
-	var p = tsunami.String.prototype = Object.create(tsunami.Data.prototype);
+	var c = tsunami.String;
 
-	p.constructor = tsunami.String;
+	c.capitalize = function(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	};
+
+	var p = c.prototype = Object.create(tsunami.Data.prototype);
+
+	p.constructor = c;
 
 	Object.defineProperty(p, 'value', {
 		get: function() {

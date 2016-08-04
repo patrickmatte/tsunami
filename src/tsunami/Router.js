@@ -67,9 +67,30 @@ tsunami = this.tsunami || {};
 			return;
 		}
 		var path = value.substr(this.path.length + this.fragment.length);
-		if (path.indexOf("&" != -1)) {
-			path = path.split("&")[0];
+
+		var hashes = path.split("&");
+
+		this.parameters = {};
+		for (var i = 0; i < hashes.length; i++) {
+			var string = hashes[i];
+			var equalIndex = string.indexOf("=");
+			if (equalIndex != -1) {
+				var hash = [];
+				hash[0] = string.substr(0, equalIndex);
+				hash[1] = string.substr(equalIndex + 1);
+				this.parameters[hash[0]] = hash[1];
+			}
 		}
+
+		path = hashes[0];
+
+		// remove slash if it is the last character, we don't need blank pages.
+		var lastChar = path.charAt(path.length - 1);
+		while (lastChar == "/") {
+			path = path.substr(0, path.length - 1);
+			lastChar = path.charAt(path.length - 1);
+		}
+
 		path = this._applyRedirect(path);
 		this._gotoLocation(path);
 		if (this._history && pushState) {
@@ -180,8 +201,12 @@ tsunami = this.tsunami || {};
 		return this[id];
 	};
 
-	p.redirect = function(path, newPath) {
+	p.addRedirect = function(path, newPath) {
 		this.redirects[path] = newPath;
+	};
+
+	p.removeRedirect = function(path) {
+		delete this.redirects[path];
 	};
 
 	p.destroy = function() {
@@ -279,7 +304,7 @@ tsunami = this.tsunami || {};
 				this.startNextBranch();
 			}
 		} else {
-			this.onComplete();
+			this.allComplete();
 		}
 	};
 
@@ -311,18 +336,25 @@ tsunami = this.tsunami || {};
 				//cancelAnimationFrame(this.animationFrame);
 				var promise = this.preloader.hide();
 				if (promise) {
-					var onComplete = this.onComplete.bind(this);
+					var callback = this.allComplete.bind(this);
 					promise.then(function() {
-						onComplete();
+						callback();
 					})
 				} else {
-					this.onComplete();
+					this.allComplete();
 				}
 			} else {
-				this.onComplete();
+				this.allComplete();
 			}
 		}
 	};
+
+	p.allComplete = function() {
+		var method = this.onComplete;
+		tsunami.promise.waitForFrames(2).then(function() {
+			method();
+		});
+	}
 
 }());
 
@@ -424,6 +456,7 @@ tsunami = this.tsunami || {};
 
 	p.add = function(value) {
 		this.assets.push(value);
+		return value;
 	};
 
 }());

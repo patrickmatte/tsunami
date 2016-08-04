@@ -1,8 +1,16 @@
+sandbox.ShapeBranch = function(prototype) {
+
+	prototype.getBranch = function(id) {
+		return this.querySelector("." + id);
+	};
+
+};
+
 (function () {
 
 	sandbox.Shape = function(prototype) {
 
-		tsunami.Branch(prototype);
+		tsunami.Element(prototype);
 
 		prototype.load = function(assetList) {
 			//console.log("load", this.id, "path", this.path, "root", this.root, "router", this.router);
@@ -21,6 +29,10 @@
 			return transition;
 		};
 
+		prototype.getBranch = function(id) {
+			return this.querySelector("." + id);
+		};
+
 		return prototype;
 
 	};
@@ -36,7 +48,7 @@
 		prototype.load = function(assetList) {
 			this.background = new Image();
 			if (sandbox.ShapeImage.urlsCopy.length == 0) {
-				sandbox.ShapeImage.urlsCopy = sandbox.ShapeImage.urls.slice();
+				sandbox.ShapeImage.urlsCopy = this.root.model.images.slice();
 			}
 			var url = sandbox.ShapeImage.urlsCopy.shift();
 			//var image = tsunami.promise.image(url + "?test=" + Math.round(Math.random() * 100000).toString(), this.background);
@@ -64,9 +76,10 @@
 			this.background = null;
 		};
 
-		sandbox.ShapeImage.urlsCopy = [];
 
 	};
+
+	sandbox.ShapeImage.urlsCopy = [];
 
 }());
 

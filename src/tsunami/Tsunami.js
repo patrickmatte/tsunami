@@ -52,7 +52,18 @@ tsunami.evalProperty = function(path, scope) {
 	return object;
 };
 
-tsunami.renderTemplate = null;
+tsunami.applyWrapper = function(element, scope) {
+	var wrapper = element.getAttribute("data-wrapper");
+	if (wrapper) {
+		var method = tsunami.evalProperty(wrapper, window);
+		if (method) {
+			method(element);
+			if ("createdCallback" in element) {
+				element.createdCallback();
+			}
+		}
+	}
+};
 
 tsunami.Directive = function(name, method) {
 	this.name = name;
@@ -60,7 +71,8 @@ tsunami.Directive = function(name, method) {
 };
 
 tsunami.applyDirectives = function(element, scope) {
-	var elements = tsunami.getAllObjects(element);
+	var array = [element];
+	var elements = tsunami.getAllObjects(element, array);
 	for (var i = elements.length - 1; i > -1; i--) {
 		var el = elements[i];
 		for (var j = 0; j < tsunami.directives.length; j++) {
@@ -72,21 +84,10 @@ tsunami.applyDirectives = function(element, scope) {
 
 tsunami.directives = [];
 
-tsunami.directives.push(new tsunami.Directive("wrapper", function(element, scope) {
-	var wrapper = element.getAttribute("data-wrapper");
-	if (wrapper) {
-		var method = tsunami.evalProperty(wrapper, window);
-		if (method) {
-			method(element);
-			if ("createdCallback" in element) {
-				element.createdCallback();
-			}
-		}
-	}
-}));
+tsunami.directives.push(new tsunami.Directive("wrapper", tsunami.applyWrapper));
 
 tsunami.directives.push(new tsunami.Directive("scope", function(element, scope) {
-	if (("scope" in element)) {
+	if (("setScope" in element)) {
 		element.setScope(scope);
 	}
 }));
@@ -101,90 +102,37 @@ tsunami.directives.push(new tsunami.Directive("data-include", function(element, 
 }));
 */
 
-/*
-tsunami.applyWrapperAttribute = function(element, attributeName, scope) {
-	var objects = tsunami.getAllObjects(element);
-	for (var i = objects.length - 1; i > -1; i--) {
-		var object = objects[i];
-		if (object.getAttribute) {
-			var attribute = object.getAttribute(attributeName);
-			if (attribute) {
-				var classNames = attribute.split(" ");
-				for (var k = 0; k < classNames.length; k++) {
-					var className = classNames[k];
-					if (className) {
-						var method;
-						method = tsunami.evalProperty(className, window);
-						if (method) {
-							var obj = method(object, scope);
-						} else {
-							console.log ("Warning! ", className + " is an undefined method.");
-						}
-					}
-				}
-			}
-		}
-	}
-};
+tsunami.templates = {};
 
-tsunami.applyWrapper = function(element, method) {
-	if (!method) {
-		throw "tsunami.applyWrapper was called with an undefined method";
-	}
-	var objects = tsunami.getAllObjects(element);
-	for (var i = objects.length - 1; i > -1; i--) {
-		var object = objects[i];
-		method(object);
-	}
-	method(element);
-};
-*/
+if (Mustache) {
+	tsunami.mustache = function(text, scope) {
+		return Mustache.render(text, scope);
+	};
+}
 
 tsunami.importTemplate = function(template, scope) {
-	var factory = document.createElement("div");
+	var factory = document.createElement("span");
 	if (tsunami.mustache) {
 		template = tsunami.mustache(template, scope);
 	}
 	factory.innerHTML = template;
-	var children = [];
-	for (var i = 0; i < factory.childNodes.length; i++) {
-		var child = factory.childNodes.item(i);
-		children.push(child);
+	var child = factory.childNodes.item(0);
+	if (window.CustomElements) {
+		CustomElements.upgradeSubtree(child);
 	}
-	return children;
+	tsunami.applyDirectives(child, scope);
+	return child;
 };
 
-tsunami.insertTemplateBefore = function(template, referenceNode, scope) {
-	var children = tsunami.importTemplate(template, scope);
-	var parent = referenceNode.parentNode;
-	for (var i = 0; i < children.length; i++) {
-		var child = children[i];
-		parent.insertBefore(child, referenceNode);
+tsunami.initializeElement = function(element) {
+	var array = [element];
+	var elements = tsunami.getAllObjects(element, array);
+	for (var i = elements.length - 1; i > -1; i--) {
+		var el = elements[i];
+		if ("initializeElement" in el) {
+			el.initializeElement();
+		}
 	}
-	if (window.CustomElements) {
-		window.CustomElements.takeRecords();
-	}
-	for (var i = 0; i < children.length; i++) {
-		var child = children[i];
-		tsunami.applyDirectives(child, scope);
-	}
-	return children;
-};
-
-tsunami.appendTemplate = function(template, parent, scope) {
-	var children = tsunami.importTemplate(template, scope);
-	for (var i = 0; i < children.length; i++) {
-		var child = children[i];
-		parent.appendChild(child);
-	}
-	if (window.CustomElements) {
-		window.CustomElements.takeRecords();
-	}
-	for (var i = 0; i < children.length; i++) {
-		var child = children[i];
-		tsunami.applyDirectives(child, scope);
-	}
-	return children;
 };
 
 tsunami.destroyElement = function(element) {
@@ -198,10 +146,11 @@ tsunami.destroyElement = function(element) {
 				} catch(e) {
 				}
 			}
-			element.innerHTML = "";
+			tsunami.destroyElement(el);
 		}
+		element.innerHTML = null;
+		tsunami.removeElement(element);
 	}
-	element.innerHTML = null;
 };
 
 tsunami.destroyElements = function(elements) {
@@ -209,7 +158,6 @@ tsunami.destroyElements = function(elements) {
 		var element = elements[i];
 		tsunami.destroyElement(element);
 	}
-	tsunami.removeElements(elements);
 };
 
 tsunami.removeElement = function(element) {
@@ -225,23 +173,24 @@ tsunami.removeElements = function(elements) {
 	}
 };
 
-tsunami.getAllObjects = function(element, array) {
+tsunami.getAllObjects = function(parent, array) {
 	if (!array) {
 		array = [];
 	}
-	switch(element.nodeName) {
-		case "#text":
-		case "#comment":
-		case "BR":
-		break;
-		default:
-			array.push(element);
-			var children = element.childNodes;
-			for (var i = 0; i < children.length; i++) {
-				var child = children.item(i);
+	var childNodes = parent.childNodes;
+	for (var i = 0; i < childNodes.length; i++) {
+		var child = childNodes.item(i);
+		switch(child.nodeName) {
+			case "#text":
+			case "#comment":
+			case "BR":
+			case "SCRIPT":
+				break;
+			default:
+				array.push(child);
 				tsunami.getAllObjects(child, array);
-			}
-		break;
+				break;
+		}
 	}
 	return array;
 };

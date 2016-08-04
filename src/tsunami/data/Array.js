@@ -10,9 +10,24 @@ tsunami = this.tsunami || {};
 		this.push.apply(this, arguments);
 	};
 
-	var p = tsunami.Array.prototype = Object.create(tsunami.Data.prototype);
+	var c = tsunami.Array;
 
-	p.constructor = tsunami.Array;
+	c.shuffle = function(o) {
+		for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+		return o;
+	};
+
+	c.nodeListToArray = function(nodeList) {
+		var array = new Array();
+		for (var i = 0; i < nodeList.length; i++) {
+			array.push(nodeList.item(i));
+		}
+		return array;
+	};
+	
+	var p = c.prototype = Object.create(tsunami.Data.prototype);
+
+	p.constructor = c;
 
 	p.item = function(index) {
 		return this._value[index];

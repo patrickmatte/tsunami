@@ -26,7 +26,7 @@ tsunami.utils = tsunami.utils || {};
 		}
 		this.dispatchEvent({type:tsunami.utils.Medias.CHANGE});
 	};
-
+	
 	p.matchMedia = function(media, data) {
 		var mql = window.matchMedia(media);
 		mql.addListener(this.mqlListener.bind(this));
