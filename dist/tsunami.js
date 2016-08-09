@@ -671,7 +671,6 @@ tsunami.applyDirectives = function(element, scope) {
 			directive(el, scope);
 		}
 	}
-
 };
 
 tsunami.directives = [];
@@ -679,7 +678,7 @@ tsunami.directives = [];
 tsunami.directives.push(new tsunami.Directive("wrapper", tsunami.applyWrapper));
 
 tsunami.directives.push(new tsunami.Directive("scope", function(element, scope) {
-	if (("scope" in element)) {
+	if (("setScope" in element)) {
 		element.setScope(scope);
 	}
 }));
@@ -696,6 +695,12 @@ tsunami.directives.push(new tsunami.Directive("data-include", function(element, 
 
 tsunami.templates = {};
 
+if (Mustache) {
+	tsunami.mustache = function(text, scope) {
+		return Mustache.render(text, scope);
+	};
+}
+
 tsunami.importTemplate = function(template, scope) {
 	var factory = document.createElement("span");
 	if (tsunami.mustache) {
@@ -708,6 +713,17 @@ tsunami.importTemplate = function(template, scope) {
 	}
 	tsunami.applyDirectives(child, scope);
 	return child;
+};
+
+tsunami.initializeElement = function(element) {
+	var array = [element];
+	var elements = tsunami.getAllObjects(element, array);
+	for (var i = elements.length - 1; i > -1; i--) {
+		var el = elements[i];
+		if ("initializeElement" in el) {
+			el.initializeElement();
+		}
+	}
 };
 
 tsunami.destroyElement = function(element) {
@@ -1305,8 +1321,12 @@ tsunami.load.script = function(url, id, noCache) {
 		if (id) {
 			script.id = id;
 		}
-		script.text = xhr.response;
 		document.querySelector("head").appendChild(script);
+		try {
+			script.text = xhr.response;
+		} catch(e) {
+			console.log(e, " in " + url);
+		}
 		return script;
 	});
 
@@ -2087,6 +2107,7 @@ tsunami = this.tsunami || {};
 
 	p.add = function(value) {
 		this.assets.push(value);
+		return value;
 	};
 
 }());
@@ -2811,6 +2832,14 @@ tsunami = this.tsunami || {};
 	c.shuffle = function(o) {
 		for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
 		return o;
+	};
+
+	c.nodeListToArray = function(nodeList) {
+		var array = new Array();
+		for (var i = 0; i < nodeList.length; i++) {
+			array.push(nodeList.item(i));
+		}
+		return array;
 	};
 	
 	var p = c.prototype = Object.create(tsunami.Data.prototype);
