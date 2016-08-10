@@ -644,13 +644,19 @@ tsunami.evalProperty = function(path, scope) {
 };
 
 tsunami.applyWrapper = function(element, scope) {
-	var wrapper = element.getAttribute("data-wrapper");
-	if (wrapper) {
-		var method = tsunami.evalProperty(wrapper, window);
-		if (method) {
-			method(element);
-			if ("createdCallback" in element) {
-				element.createdCallback();
+	var dataWrapper = element.getAttribute("data-wrapper");
+	if (dataWrapper) {
+		var wrappers = dataWrapper.split(" ");
+		for (var i = 0; i < wrappers.length; i++) {
+			var wrapper = wrappers[i];
+			if (wrapper) {
+				var method = tsunami.evalProperty(wrapper, window);
+				if (method) {
+					method(element);
+					if ("createdCallback" in element) {
+						element.createdCallback();
+					}
+				}
 			}
 		}
 	}
@@ -4289,6 +4295,24 @@ tsunami.utils = tsunami.utils || {};
 			return 'Zero';
 
 		return spelling;
+	};
+
+	c.componentToHex = function(c) {
+		var hex = c.toString(16);
+		return hex.length == 1 ? "0" + hex : hex;
+	};
+
+	c.rgbToHex = function(rgb) {
+		return tsunami.number.componentToHex(rgb.r) + tsunami.number.componentToHex(rgb.g) + tsunami.number.componentToHex(rgb.b);
+	};
+
+	c.hexToRgb = function(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
 	};
 
 }());

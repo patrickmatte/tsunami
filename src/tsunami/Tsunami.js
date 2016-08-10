@@ -53,13 +53,19 @@ tsunami.evalProperty = function(path, scope) {
 };
 
 tsunami.applyWrapper = function(element, scope) {
-	var wrapper = element.getAttribute("data-wrapper");
-	if (wrapper) {
-		var method = tsunami.evalProperty(wrapper, window);
-		if (method) {
-			method(element);
-			if ("createdCallback" in element) {
-				element.createdCallback();
+	var dataWrapper = element.getAttribute("data-wrapper");
+	if (dataWrapper) {
+		var wrappers = dataWrapper.split(" ");
+		for (var i = 0; i < wrappers.length; i++) {
+			var wrapper = wrappers[i];
+			if (wrapper) {
+				var method = tsunami.evalProperty(wrapper, window);
+				if (method) {
+					method(element);
+					if ("createdCallback" in element) {
+						element.createdCallback();
+					}
+				}
 			}
 		}
 	}
