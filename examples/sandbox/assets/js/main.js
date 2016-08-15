@@ -43,8 +43,8 @@ this.router.history = new tsunami.History(this.router.path, this.router.fragment
 this.router.addRedirect("", "shapes");
 this.router.addRedirect("shapes", "shapes/circles/level1/level2");
 this.router.addRedirect("circle5", "shapes/circles/level1/level2/level3/level4/level5");
-this.router.addEventListener("locationChange", function(e) {
-	//console.log("router locationChange", e.location);
+this.router.addEventListener("change", function(e) {
+	//console.log("router change", e.location);
 });
 this.router.addEventListener("complete", function(e) {
 	console.log("router complete", e.target.getLocation());

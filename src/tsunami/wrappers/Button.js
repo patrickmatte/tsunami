@@ -129,7 +129,7 @@
 		};
 
 		prototype.getPath = function() {
-			return this.href;
+			return this.href || this.getAttribute("data-path");
 		};
 
 		return prototype;

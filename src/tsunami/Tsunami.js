@@ -68,6 +68,7 @@ tsunami.applyWrapper = function(element, scope) {
 				}
 			}
 		}
+		//element.removeAttribute("data-wrapper");
 	}
 };
 

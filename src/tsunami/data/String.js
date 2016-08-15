@@ -30,6 +30,9 @@
 	};
 
 	p.setValue = function(value) {
+		if (!value) {
+			value = "";
+		}
 		if (value != this._value) {
 			this._value = value.toString();
 			this.dispatchEvent({type:"change", value:this._value});

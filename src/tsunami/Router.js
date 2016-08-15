@@ -129,7 +129,7 @@ tsunami = this.tsunami || {};
 		if (value == "") {
 			value = this.defaultLocation;
 		}
-		this.dispatchEvent({type:"locationChange", location:value});
+		this.dispatchEvent({type:"change", location:value});
 		this.hasLocation = true;
 		this._overrideLocation = null;
 		if (this._inTransition) {
@@ -191,7 +191,7 @@ tsunami = this.tsunami || {};
 
 	p._showComplete = function(event) {
 		this._inTransition = false;
-		this.dispatchEvent({type:"complete"});
+		this.dispatchEvent({type:"complete", location:this.getLocation()});
 		if (this._overrideLocation) {
 			this._gotoLocation(this._overrideLocation);
 		}

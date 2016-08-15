@@ -9,6 +9,23 @@ tsunami = this.tsunami || {};
 
 	var p = tsunami.EventDispatcher.prototype;
 
+	p.setDebug = function(value) {
+		this._debug = value;
+	};
+
+	p.getDebug = function() {
+		return this._debug;
+	};
+
+	Object.defineProperty(p, 'debug', {
+		get: function() {
+			return this.getDebug();
+		},
+		set: function(value) {
+			this.setDebug(value);
+		}
+	});
+
 	p.addEventListener = function(type, func) {
 		this.listeners.push({type:type, func:func});
 	};

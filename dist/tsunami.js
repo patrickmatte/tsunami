@@ -659,6 +659,7 @@ tsunami.applyWrapper = function(element, scope) {
 				}
 			}
 		}
+		//element.removeAttribute("data-wrapper");
 	}
 };
 
@@ -949,6 +950,23 @@ tsunami = this.tsunami || {};
 	};
 
 	var p = tsunami.EventDispatcher.prototype;
+
+	p.setDebug = function(value) {
+		this._debug = value;
+	};
+
+	p.getDebug = function() {
+		return this._debug;
+	};
+
+	Object.defineProperty(p, 'debug', {
+		get: function() {
+			return this.getDebug();
+		},
+		set: function(value) {
+			this.setDebug(value);
+		}
+	});
 
 	p.addEventListener = function(type, func) {
 		this.listeners.push({type:type, func:func});
@@ -1786,7 +1804,7 @@ tsunami = this.tsunami || {};
 		if (value == "") {
 			value = this.defaultLocation;
 		}
-		this.dispatchEvent({type:"locationChange", location:value});
+		this.dispatchEvent({type:"change", location:value});
 		this.hasLocation = true;
 		this._overrideLocation = null;
 		if (this._inTransition) {
@@ -1848,7 +1866,7 @@ tsunami = this.tsunami || {};
 
 	p._showComplete = function(event) {
 		this._inTransition = false;
-		this.dispatchEvent({type:"complete"});
+		this.dispatchEvent({type:"complete", location:this.getLocation()});
 		if (this._overrideLocation) {
 			this._gotoLocation(this._overrideLocation);
 		}
@@ -3145,6 +3163,9 @@ tsunami = this.tsunami || {};
 	};
 
 	p.setValue = function(value) {
+		if (!value) {
+			value = "";
+		}
 		if (value != this._value) {
 			this._value = value.toString();
 			this.dispatchEvent({type:"change", value:this._value});
@@ -4350,48 +4371,177 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Attribute = function(element, attributeName, value, unit) {
+	tsunami.Attribute = function(element, attributeName, model, unit) {
+		this.modelChangeBind = this.modelChange.bind(this);
 		this.element = element;
 		this.attributeName = attributeName;
 		this.unit = unit;
-		if (value) {
-			this.setValue(value);
-		}
+		this.model = model;
 	};
 
 	var p = tsunami.Attribute.prototype;
 
 	p.constructor = tsunami.Attribute;
 
-	Object.defineProperty(p, 'value', {
+	Object.defineProperty(p, 'model', {
 		get: function() {
-			return this.getValue();
+			return this.getModel();
 		},
 		set: function(value) {
-			this.setValue(value);
+			this.setModel(value);
 		}
 	});
 
-	p.setValue = function(value) {
+	p.getModel = function() {
+		return this._model;
+	};
+
+	p.setModel = function(value) {
+		if (this._model) {
+			if (this._model instanceof tsunami.Data) {
+				this._model.removeEventListener("change", this.modelChangeBind);
+			}
+		}
+		this._model = value;
+		if (value) {
+			if (value instanceof tsunami.Data) {
+				value.addEventListener("change", this.modelChangeBind);
+				this.modelChange();
+			} else {
+				this.updateValue(value);
+			}
+		} else {
+			this.updateValue("");
+		}
+	};
+
+	p.modelChange = function(event) {
+		this.updateValue(this._model.value);
+	};
+
+	p.updateValue = function(value) {
 		var string = value.toString();
-		if (this.unit) {
+		if (string && this.unit) {
 			string += this.unit;
 		}
 		this.element.setAttribute(this.attributeName, string);
-	};
-
-	p.getValue = function() {
-		var value = this.element.getAttribute(this.attribute);
-		if (this.unit) {
-			value = value.split(this.unit)[0];
-		}
-		return value;
 	};
 
 }());
 
 
 
+
+tsunami = this.tsunami || {};
+
+(function () {
+
+	tsunami.Element = function(prototype) {
+
+		prototype.createdCallback = function() {
+			this.debug = this.classList.contains("debug-this");
+			this.styleManager = new tsunami.Style(this.style);
+			this.modelChangeBind = this.modelChange.bind(this);
+			this._scope = this;
+		};
+
+		Object.defineProperty(prototype, 'scope', {
+			get: function() {
+				return this.getScope();
+			},
+			set: function(value) {
+				this.setScope(value);
+			}
+		});
+
+		prototype.getScope = function() {
+			return this._scope;
+		};
+
+		prototype.setScope = function(value) {
+			this._scope = value;
+
+			var model = this.getAttribute("data-model");
+			if (model) {
+				this.model = tsunami.evalProperty(model, value);
+				this.removeAttribute("model");
+			}
+
+			this.attributesBinder = [];
+
+			var removeAttributes = [];
+			for (var i = 0; i < this.attributes.length; i++) {
+				var attribute = this.attributes[i];
+				if (attribute.name.indexOf("data-attr-") == 0) {
+					var attr = attribute.name.split("data-attr-")[1];
+					var attrModel = tsunami.evalProperty(attribute.value, value);
+					removeAttributes.push(attribute.name);
+					this.attributesBinder.push(new tsunami.Attribute(this, attr, attrModel, ""));
+				}
+			}
+
+			for (var j = 0; j < removeAttributes.length; j++) {
+				var attribute = removeAttributes[j];
+				this.removeAttribute(attribute);
+			}
+
+		};
+
+		Object.defineProperty(prototype, 'model', {
+			get: function() {
+				return this.getModel();
+			},
+			set: function(value) {
+				this.setModel(value);
+			}
+		});
+
+		prototype.getModel = function() {
+			return this._model;
+		};
+
+		prototype.setModel = function(value) {
+			if (this._model) {
+				if (this._model instanceof tsunami.Data) {
+					this._model.removeEventListener("change", this.modelChangeBind);
+				}
+			}
+			this._model = value;
+			if (value) {
+				if (value instanceof tsunami.Data) {
+					value.addEventListener("change", this.modelChangeBind);
+					this.modelChange();
+				} else {
+					this.updateValue(value);
+				}
+			} else {
+
+			}
+		};
+
+		prototype.modelChange = function(event) {
+			this.updateValue(this._model.value);
+		};
+
+		prototype.updateValue = function(value) {
+
+		};
+
+		prototype.destroy = function() {
+			this.model = null;
+			this.styleManager.destroy();
+			this.innerHTML = "";
+			this.scope = null;
+			if (this.parentNode) {
+				this.parentNode.removeChild(this);
+			}
+		};
+
+		return prototype;
+
+	};
+
+}());
 
 (function() {
 
@@ -4524,7 +4674,7 @@ tsunami = this.tsunami || {};
 		};
 
 		prototype.getPath = function() {
-			return this.href;
+			return this.href || this.getAttribute("data-path");
 		};
 
 		return prototype;
@@ -4557,97 +4707,6 @@ tsunami = this.tsunami || {};
 
 		prototype.modelChange = function(event) {
 			this.innerHTML = this.model.value;
-		};
-
-		return prototype;
-
-	};
-
-}());
-
-tsunami = this.tsunami || {};
-
-(function () {
-
-	tsunami.Element = function(prototype) {
-
-		prototype.createdCallback = function() {
-			this.styleManager = new tsunami.Style(this.style);
-			this.modelChangeBind = this.modelChange.bind(this);
-			this._scope = this;
-		};
-
-		Object.defineProperty(prototype, 'scope', {
-			get: function() {
-				return this.getScope();
-			},
-			set: function(value) {
-				this.setScope(value);
-			}
-		});
-
-		prototype.getScope = function() {
-			return this._scope;
-		};
-
-		prototype.setScope = function(value) {
-			this._scope = value;
-
-			var model = this.getAttribute("data-model");
-			if (model) {
-				this.model = tsunami.evalProperty(model, value);
-			}
-			this.removeAttribute("model");
-		};
-
-		Object.defineProperty(prototype, 'model', {
-			get: function() {
-				return this.getModel();
-			},
-			set: function(value) {
-				this.setModel(value);
-			}
-		});
-
-		prototype.getModel = function() {
-			return this._model;
-		};
-
-		prototype.setModel = function(value) {
-			if (this._model) {
-				if (this._model instanceof tsunami.Data) {
-					this._model.removeEventListener("change", this.modelChangeBind);
-				}
-			}
-			this._model = value;
-			if (value) {
-				if (value instanceof tsunami.Data) {
-					value.addEventListener("change", this.modelChangeBind);
-					this.modelChange();
-				} else {
-					this.updateValue(value);
-				}
-			} else {
-
-			}
-		};
-
-		prototype.modelChange = function(event) {
-			this.updateValue(this._model.value);
-		};
-
-		prototype.updateValue = function(value) {
-
-		};
-
-		prototype.destroy = function() {
-			this.model = null;
-			this.styleManager.destroy();
-			this.innerHTML = "";
-			this.scope = null;
-			if (this.parentNode) {
-				this.parentNode.removeChild(this);
-			}
 		};
 
 		return prototype;
