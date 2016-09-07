@@ -4567,15 +4567,27 @@ tsunami = this.tsunami || {};
 		prototype.createdCallbackElement = prototype.createdCallback;
 
 		prototype.createdCallback = function() {
+			/*
 			if ("ontouchend" in this) {
 				this.ontouchend = this.clickHandler.bind(this);
 				this.onclick = this.cancelClick.bind(this);
 			} else {
+			*/
 				this.onclick = this.clickHandler.bind(this);
+			//}
+		};
+
+		prototype.setScopeButton = prototype.setScope;
+
+		prototype.setScope = function() {
+			this.setScopeButton();
+			var noClickAfterDrag = eval(this.getAttribute("data-no-click-after-drag"));
+			if (noClickAfterDrag) {
+				this.noClickAfterDrag();
 			}
 		};
 
-		prototype.dontClickAfterDrag = function() {
+		prototype.noClickAfterDrag = function() {
 			this.touchMoveHandler = this.touchMove.bind(this);
 			this.addEventListener(tsunami.events.mousedown, this.touchStart.bind(this));
 		};
@@ -4639,10 +4651,10 @@ tsunami = this.tsunami || {};
 
 		tsunami.Button(prototype);
 
-		prototype.setScopeElement = prototype.setScope;
+		prototype.setScopeRouterButton = prototype.setScope;
 
 		prototype.setScope = function(value) {
-			this.setScopeElement(value);
+			this.setScopeRouterButton(value);
 
 			var router = this.getAttribute("data-router");
 			if (router) {
