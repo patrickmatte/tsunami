@@ -111,9 +111,9 @@ tsunami.directives.push(new tsunami.Directive("data-include", function(element, 
 
 tsunami.templates = {};
 
-if (Mustache) {
+if (window.Mustache) {
 	tsunami.mustache = function(text, scope) {
-		return Mustache.render(text, scope);
+		return window.Mustache.render(text, scope);
 	};
 }
 
