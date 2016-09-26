@@ -30,13 +30,16 @@ tsunami = this.tsunami || {};
 
 	p.start = function() {
 		var tween = this;
-		var promise = new Promise(function(resolve, reject) {
-			var tweenComplete = function(event) {
-				tween.removeEventListener(tsunami.Tween.COMPLETE, tweenComplete);
-				resolve(tween);
-			};
-			tween.addEventListener(tsunami.Tween.COMPLETE, tweenComplete);
-		});
+		var promise;
+		if (Promise) {
+			promise = new Promise(function (resolve, reject) {
+				var tweenComplete = function (event) {
+					tween.removeEventListener(tsunami.Tween.COMPLETE, tweenComplete);
+					resolve(tween);
+				};
+				tween.addEventListener(tsunami.Tween.COMPLETE, tweenComplete);
+			});
+		}
 		this.setCurrentFrame(this.startFrame);
 		tsunami.clock.addEventListener(tsunami.Clock.TICK, this.tickHandler);
 		return promise;

@@ -1,0 +1,19 @@
+[
+	{
+		"output":"dist/tsunami-mini.js",
+		"files":[
+			"src/tsunami/utils/polyfills.js",
+			"src/tsunami/tsunami.js",
+			"src/tsunami/EventDispatcher.js",
+			"src/tsunami/animation/Clock.js",
+			"src/tsunami/animation/Easing.js",
+			"src/tsunami/animation/TimeTween.js",
+			"src/tsunami/geom/Point.js",
+			"src/tsunami/geom/Ratio.js",
+			"src/tsunami/geom/Rectangle.js",
+			"src/tsunami/wrappers/Attribute.js",
+			"src/tsunami/wrappers/Element.js",
+			"src/tsunami/wrappers/Style.js"
+		]
+	}
+]

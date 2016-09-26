@@ -35,6 +35,17 @@ if ("ontouchend" in window) {
 tsunami.events.complete = "complete";
 tsunami.events.change = "change";
 
+tsunami.createCustomEvent = function(type, params) {
+	var event;
+	try {
+		event = new CustomEvent(event, params);
+	} catch(e) {
+		event =  document.createEvent('CustomEvent');
+		event.initCustomEvent(type, params.bubbles, params.bubbles, params.detail);
+	}
+	return event;
+};
+
 tsunami.evalProperty = function(path, scope) {
 	var array = path.split(".");
 	var object = scope;
@@ -123,7 +134,7 @@ tsunami.importTemplate = function(template, scope) {
 		template = tsunami.mustache(template, scope);
 	}
 	factory.innerHTML = template;
-	var child = factory.childNodes.item(0);
+	var child = factory.children.item(0);
 	if (window.CustomElements) {
 		CustomElements.upgradeSubtree(child);
 	}
@@ -348,3 +359,22 @@ tsunami.window.forceProtocol = function(url, protocol) {
 	return url;
 };
 
+tsunami.hasClass = function (element, className) {
+	return element.className.match(new RegExp("(\\s|^)" + className + "(\\s|$)"));
+};
+
+tsunami.addClass = function (element, className) {
+	if (!tsunami.hasClass(element, className)) element.className += " " + className;
+};
+
+tsunami.removeClass = function (element, className) {
+	if (tsunami.hasClass(element, className)) {
+		var reg = new RegExp("(\\s|^)" + className + "(\\s|$)");
+		element.className = element.className.replace(reg," ");
+	}
+};
+
+tsunami.replaceClass = function (element, oldClass, newClass) {
+	tsunami.removeClass(element, oldClass);
+	tsunami.addClass(element, newClass);
+};

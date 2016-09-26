@@ -30,14 +30,16 @@ tsunami = this.tsunami || {};
 
 	p.start = function() {
 		var timeline = this;
-		var promise = new Promise(function(resolve, reject) {
-			var timelineComplete = function(event) {
-				timeline.removeEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
-				resolve(timeline);
-			};
-			timeline.addEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
-		});
-
+		var promise;
+		if (Promise) {
+			promise = new Promise(function (resolve, reject) {
+				var timelineComplete = function (event) {
+					timeline.removeEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
+					resolve(timeline);
+				};
+				timeline.addEventListener(tsunami.Timeline.COMPLETE, timelineComplete);
+			});
+		}
 		this.clockStartTime = new Date();
 		tsunami.clock.addEventListener("tick", this.tickHandler);
 		this.setTime(0);
