@@ -135,7 +135,7 @@ tsunami = this.tsunami || {};
 		if (this._inTransition) {
 			this._overrideLocation = value;
 		} else {
-			//this._overrideLocation = null;
+			this._overrideLocation = null;
 
 			this._nextLocation = "root";
 			if (value != "") {
@@ -180,7 +180,7 @@ tsunami = this.tsunami || {};
 	};
 
 	p._hideComplete = function(event) {
-		if (this._overrideLocation) {
+		if (this._overrideLocation != null || this._overrideLocation != undefined) {
 			this._inTransition = false;
 			this._gotoLocation(this._overrideLocation);
 		} else {
@@ -192,7 +192,7 @@ tsunami = this.tsunami || {};
 	p._showComplete = function(event) {
 		this._inTransition = false;
 		this.dispatchEvent({type:"complete", location:this.getLocation()});
-		if (this._overrideLocation) {
+		if (this._overrideLocation != null || this._overrideLocation != undefined) {
 			this._gotoLocation(this._overrideLocation);
 		}
 	};

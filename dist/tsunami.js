@@ -1840,7 +1840,7 @@ tsunami = this.tsunami || {};
 		if (this._inTransition) {
 			this._overrideLocation = value;
 		} else {
-			//this._overrideLocation = null;
+			this._overrideLocation = null;
 
 			this._nextLocation = "root";
 			if (value != "") {
@@ -1885,7 +1885,7 @@ tsunami = this.tsunami || {};
 	};
 
 	p._hideComplete = function(event) {
-		if (this._overrideLocation) {
+		if (this._overrideLocation != null || this._overrideLocation != undefined) {
 			this._inTransition = false;
 			this._gotoLocation(this._overrideLocation);
 		} else {
@@ -1897,7 +1897,7 @@ tsunami = this.tsunami || {};
 	p._showComplete = function(event) {
 		this._inTransition = false;
 		this.dispatchEvent({type:"complete", location:this.getLocation()});
-		if (this._overrideLocation) {
+		if (this._overrideLocation != null || this._overrideLocation != undefined) {
 			this._gotoLocation(this._overrideLocation);
 		}
 	};
@@ -4605,73 +4605,14 @@ tsunami = this.tsunami || {};
 		prototype.createdCallbackElement = prototype.createdCallback;
 
 		prototype.createdCallback = function() {
-			/*
-			if ("ontouchend" in this) {
-				this.ontouchend = this.clickHandler.bind(this);
-				this.onclick = this.cancelClick.bind(this);
-			} else {
-			*/
-				this.onclick = this.clickHandler.bind(this);
-			//}
-		};
-
-		prototype.setScopeButton = prototype.setScope;
-
-		prototype.setScope = function() {
-			this.setScopeButton();
-			var noClickAfterDrag = eval(this.getAttribute("data-no-click-after-drag"));
-			if (noClickAfterDrag) {
-				this.noClickAfterDrag();
-			}
-		};
-
-		prototype.noClickAfterDrag = function() {
-			this.touchMoveHandler = this.touchMove.bind(this);
-			this.addEventListener(tsunami.events.mousedown, this.touchStart.bind(this));
-		};
-
-		prototype.touchStart = function(event) {
-			var mouse = event;
-			if (event.touches) {
-				if (event.touches[0]) {
-					mouse = event.touches[0];
-				}
-			}
-			this.touchStartPoint = new tsunami.geom.Point(mouse.pageX, mouse.pageY);
-			document.removeEventListener(tsunami.events.mousemove, this.touchMoveHandler);
-			document.addEventListener(tsunami.events.mousemove, this.touchMoveHandler);
-		};
-
-		prototype.touchMove = function(event) {
-			var mouse = event;
-			if (event.touches) {
-				if (event.touches[0]) {
-					mouse = event.touches[0];
-				}
-			}
-			var touchMovePoint = new tsunami.geom.Point(mouse.pageX, mouse.pageY);
-
-			var distance = tsunami.geom.Point.distance(touchMovePoint, this.touchStartPoint);
-			if (distance > 10) {
-				this.invalidTouchend = true;
-			}
-		};
-
-		prototype.cancelClick = function(event) {
-			event.preventDefault();
+			this.addEventListener("click", this.clickHandler.bind(this));
 		};
 
 		prototype.clickHandler = function(event) {
-			event.preventDefault();
-			document.removeEventListener(tsunami.events.mousemove, this.touchMoveHandler);
-			if (this.invalidTouchend) {
-				this.invalidTouchend = false;
-				return;
-			}
-			this.onReleaseEvent(event);
+			this.onReleaseHandler(event);
 		};
 
-		prototype.onReleaseEvent = function(event) {
+		prototype.onReleaseHandler = function(event) {
 			if (this.onRelease) {
 				this.onRelease(event);
 			}
@@ -4723,10 +4664,10 @@ tsunami = this.tsunami || {};
 			this._router = value;
 		};
 
-		prototype.onReleaseEventButton = prototype.onReleaseEvent;
+		prototype.onReleaseHandlerButton = prototype.onReleaseHandler;
 
-		prototype.onReleaseEvent = function(event) {
-			this.onReleaseEventButton(event);
+		prototype.onReleaseHandler = function(event) {
+			this.onReleaseHandlerButton(event);
 
 			if (this.router) {
 				var path = this.getPath();
