@@ -69,6 +69,7 @@
 		prototype.onReleaseHandlerButton = prototype.onReleaseHandler;
 
 		prototype.onReleaseHandler = function(event) {
+			event.preventDefault();
 			this.onReleaseHandlerButton(event);
 
 			if (this.router) {
