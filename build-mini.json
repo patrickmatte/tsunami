@@ -8,6 +8,8 @@
 			"src/tsunami/animation/Clock.js",
 			"src/tsunami/animation/Easing.js",
 			"src/tsunami/animation/TimeTween.js",
+			"src/tsunami/animation/Tween.js",
+			"src/tsunami/animation/Timeline.js",
 			"src/tsunami/geom/Point.js",
 			"src/tsunami/geom/Ratio.js",
 			"src/tsunami/geom/Rectangle.js",

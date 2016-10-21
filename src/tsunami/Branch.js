@@ -2,9 +2,9 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Branch = function(id) {
+	tsunami.Branch = function(id, branches) {
 		this.id = id;
-		this.branches = [];
+		this.branches = branches || [];
 		this.assets = {
 			images:[],
 			templates:[],

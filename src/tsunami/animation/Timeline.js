@@ -20,6 +20,8 @@ tsunami = this.tsunami || {};
 		this.minTimeReached = 0;
 		this.maxTimeReached = 0;
 
+		this.resetTweensOnScrub = false;
+
 		this.tickHandler = this.tick.bind(this);
 	};
 
@@ -145,12 +147,14 @@ tsunami = this.tsunami || {};
 		for (var i = 0; i < this.tweens.length; i++) {
 			var tween = this.tweens[i];
 			var startTime = tween.startTime;
+			//console.log("startTime", tween.startTime);
+
 			var endTime = tween.startTime + tween.duration;
 			if (value >= startTime && value <= endTime) {
 				tween.setTime(value);
-			} else if (direction == tsunami.TimelineAction.FORWARDS && value > endTime && tween.time != endTime && endTime >= this.minTimeReached ) {
+			} else if (direction == tsunami.TimelineAction.FORWARDS && value > endTime && tween.time != endTime && endTime >= this.minTimeReached && this.resetTweensOnScrub) {
 				tween.setTime(endTime);
-			} else if (direction == tsunami.TimelineAction.BACKWARDS && value < startTime && tween.time != startTime && this.maxTimeReached > startTime) {
+			} else if (direction == tsunami.TimelineAction.BACKWARDS && value < startTime && tween.time != startTime && this.maxTimeReached > startTime && this.resetTweensOnScrub) {
 				tween.setTime(startTime);
 			}
 		}

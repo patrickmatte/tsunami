@@ -348,6 +348,47 @@ tsunami.window.isHidden = function() {
 	}
 }());
 
+tsunami.window.getDeviceMotionDifference = function(event) {
+	var width =  document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+	var height =  document.documentElement.clientHeight || document.body.clientHeight || window.innerHeight;
+	var devideOrientation = "landscape";
+	var deviceDirection = "up";
+	var x = 0;
+	var y = 0;
+
+	if (height > width) {
+		devideOrientation = "portrait"
+	}
+
+	if (devideOrientation == "portrait") {
+		if (event.accelerationIncludingGravity.y > 0) {
+			deviceDirection = "down";
+		}
+		x = event.accelerationIncludingGravity.x;
+		y = event.accelerationIncludingGravity.z;
+
+	}
+	if (devideOrientation == "landscape") {
+		if (event.accelerationIncludingGravity.x > 0) {
+			deviceDirection = "down";
+		}
+		x = event.accelerationIncludingGravity.y;
+		y = event.accelerationIncludingGravity.z;
+	}
+
+	if (tsunami.window.devideOrientation != devideOrientation || tsunami.window.deviceDirection != deviceDirection) {
+		tsunami.window.devideOrientation = devideOrientation;
+		tsunami.window.deviceDirection = deviceDirection;
+		this.initialAccelerationIncludingGravity = {x:x, y:y};
+	}
+
+	var diff = {
+		x:x - this.initialAccelerationIncludingGravity.x,
+		y:y - this.initialAccelerationIncludingGravity.y
+	};
+	return diff;
+};
+
 tsunami.window.forceProtocol = function(url, protocol) {
 	var isHttps = (protocol.indexOf("https") != -1);
 	var urlIsHttps = (url.indexOf("https") != -1);

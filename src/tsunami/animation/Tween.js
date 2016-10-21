@@ -2,9 +2,9 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Tween = function(startFrame, duration, target, properties, setters, easing, changeHandler, completeHandler) {
+	tsunami.Tween = function(startTime, duration, target, properties, setters, easing, changeHandler, completeHandler) {
 		tsunami.EventDispatcher.call(this);
-		this.startFrame = startFrame;
+		this.startTime = startTime;
 		this.duration = duration;
 		this.target = target;
 		this.properties = properties || [];
@@ -12,8 +12,8 @@ tsunami = this.tsunami || {};
 		this.easing = easing;
 		this.changeHandler = changeHandler;
 		this.completeHandler = completeHandler;
-		this.currentFrame = this.startFrame;
-		this.currentFrameTarget = this.startFrame;
+		this.time = this.startTime;
+		this.timeTarget = this.startTime;
 		this.updateEase = 0.1;
 		this.tickHandler = this.tick.bind(this);
 	};
@@ -40,26 +40,26 @@ tsunami = this.tsunami || {};
 				tween.addEventListener(tsunami.Tween.COMPLETE, tweenComplete);
 			});
 		}
-		this.setCurrentFrame(this.startFrame);
+		this.setTime(this.startTime);
 		tsunami.clock.addEventListener(tsunami.Clock.TICK, this.tickHandler);
 		return promise;
 	};
 
 	p.update = function() {
-		this.setCurrentFrame(this.currentFrame + (this.currentFrameTarget - this.currentFrame) * this.updateEase);
+		this.setTime(this.time + (this.timeTarget - this.time) * this.updateEase);
 	};
 
 	p.stop = function() {
 		tsunami.clock.removeEventListener(tsunami.Clock.TICK, this.tickHandler);
 	};
 
-	p.getCurrentFrame = function() {
-		return this.currentFrame;
+	p.getTime = function() {
+		return this.time;
 	};
 
-	p.setCurrentFrame = function(value) {
-		this.currentFrame = value;
-		var frame = value - this.startFrame;
+	p.setTime = function(value) {
+		this.time = value;
+		var frame = value - this.startTime;
 		for (var i in this.properties) {
 			var array = this.properties[i];
 			var tweened = this.easing(frame, array[0], array[1], this.duration);
@@ -78,8 +78,8 @@ tsunami = this.tsunami || {};
 	};
 
 	p.tick = function() {
-		this.setCurrentFrame(this.currentFrame + 1);
-		if (this.currentFrame >= this.startFrame + this.duration) {
+		this.setTime(this.time + 1);
+		if (this.time >= this.startTime + this.duration) {
 			this.stop();
 			if (this.completeHandler) {
 				this.completeHandler();
