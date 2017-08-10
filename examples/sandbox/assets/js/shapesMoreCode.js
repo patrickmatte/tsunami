@@ -75,8 +75,7 @@ sandbox.ShapeBranch = function(prototype) {
 			this.removeChild(this.background);
 			this.background = null;
 		};
-
-
+		
 	};
 
 	sandbox.ShapeImage.urlsCopy = [];

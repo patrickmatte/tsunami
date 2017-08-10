@@ -44,7 +44,7 @@
 
 			var pushState = this.getAttribute("data-pushstate");
 			if (pushState) {
-				this.pushState = tsunami.evalProperty(pushState, scope);
+				this.pushState = eval(pushState);
 			}
 
 		};

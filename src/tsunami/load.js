@@ -259,3 +259,55 @@ tsunami.load.style = function(url, id, noCache) {
 	return promise2;
 
 };
+
+tsunami.load.webaudio = function(url, context, loop, volume) {
+	if (!context) {
+		if (!tsunami.webaudioContext) {
+			window.AudioContext = window.AudioContext || window.webkitAudioContext;
+			tsunami.webaudioContext = new AudioContext();
+		}
+		context = tsunami.webaudioContext;
+	}
+
+	var promise = tsunami.load.xhr(url, "GET", null, null, "arraybuffer", null);
+
+	var promise2 = promise.then(function(xhr) {
+		return new Promise(function(resolve, reject) {
+
+			context.decodeAudioData(
+				xhr.response,
+				function(buffer) {
+					if (!buffer) {
+						alert('error decoding file data: ' + url);
+						reject();
+						return;
+					}
+					var sound = {};
+					sound.source = context.createBufferSource();
+					sound.gainNode = context.createGain();
+					sound.gainNode.gain.value = volume;
+					sound.source.buffer = buffer;
+
+					sound.source.connect(sound.gainNode);
+					sound.gainNode.connect(context.destination);
+					sound.source.loop = loop;
+					resolve(sound);
+				},
+				function(error) {
+					reject();
+				}
+			);
+
+		});
+	});
+
+
+	Object.defineProperty(promise2, "progress", {
+		get: function () {
+			return promise.progress;
+		}
+	});
+
+	return promise2;
+
+};

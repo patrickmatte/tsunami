@@ -283,6 +283,19 @@ tsunami.window.localToGlobal = function(element, root, point) {
 	return point;
 };
 
+tsunami.window.localToGlobalY = function(element, root, y) {
+	if (isNaN(y)) {
+		y = 0;
+	}
+	while(element != root) {
+		//point.x += element.offsetLeft - element.parentNode.scrollLeft;
+		//point.y += element.offsetTop - element.parentNode.scrollTop;
+		y += element.offsetTop;
+		element = element.parentNode;
+	}
+	return y;
+};
+
 tsunami.window.isHidden = function() {
 	return document[tsunami.window.hidden];
 };

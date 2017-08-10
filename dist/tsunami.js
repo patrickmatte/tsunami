@@ -939,6 +939,47 @@ tsunami.window.isHidden = function() {
 	}
 }());
 
+tsunami.window.getDeviceMotionDifference = function(event) {
+	var width =  document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+	var height =  document.documentElement.clientHeight || document.body.clientHeight || window.innerHeight;
+	var devideOrientation = "landscape";
+	var deviceDirection = "up";
+	var x = 0;
+	var y = 0;
+
+	if (height > width) {
+		devideOrientation = "portrait"
+	}
+
+	if (devideOrientation == "portrait") {
+		if (event.accelerationIncludingGravity.y > 0) {
+			deviceDirection = "down";
+		}
+		x = event.accelerationIncludingGravity.x;
+		y = event.accelerationIncludingGravity.z;
+
+	}
+	if (devideOrientation == "landscape") {
+		if (event.accelerationIncludingGravity.x > 0) {
+			deviceDirection = "down";
+		}
+		x = event.accelerationIncludingGravity.y;
+		y = event.accelerationIncludingGravity.z;
+	}
+
+	if (tsunami.window.devideOrientation != devideOrientation || tsunami.window.deviceDirection != deviceDirection) {
+		tsunami.window.devideOrientation = devideOrientation;
+		tsunami.window.deviceDirection = deviceDirection;
+		this.initialAccelerationIncludingGravity = {x:x, y:y};
+	}
+
+	var diff = {
+		x:x - this.initialAccelerationIncludingGravity.x,
+		y:y - this.initialAccelerationIncludingGravity.y
+	};
+	return diff;
+};
+
 tsunami.window.forceProtocol = function(url, protocol) {
 	var isHttps = (protocol.indexOf("https") != -1);
 	var urlIsHttps = (url.indexOf("https") != -1);
@@ -1565,9 +1606,9 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Branch = function(id) {
+	tsunami.Branch = function(id, branches) {
 		this.id = id;
-		this.branches = [];
+		this.branches = branches || [];
 		this.assets = {
 			images:[],
 			templates:[],
@@ -2462,6 +2503,8 @@ tsunami = this.tsunami || {};
 		this.minTimeReached = 0;
 		this.maxTimeReached = 0;
 
+		this.resetTweensOnScrub = false;
+
 		this.tickHandler = this.tick.bind(this);
 	};
 
@@ -2587,12 +2630,14 @@ tsunami = this.tsunami || {};
 		for (var i = 0; i < this.tweens.length; i++) {
 			var tween = this.tweens[i];
 			var startTime = tween.startTime;
+			//console.log("startTime", tween.startTime);
+
 			var endTime = tween.startTime + tween.duration;
 			if (value >= startTime && value <= endTime) {
 				tween.setTime(value);
-			} else if (direction == tsunami.TimelineAction.FORWARDS && value > endTime && tween.time != endTime && endTime >= this.minTimeReached ) {
+			} else if (direction == tsunami.TimelineAction.FORWARDS && value > endTime && tween.time != endTime && endTime >= this.minTimeReached && this.resetTweensOnScrub) {
 				tween.setTime(endTime);
-			} else if (direction == tsunami.TimelineAction.BACKWARDS && value < startTime && tween.time != startTime && this.maxTimeReached > startTime) {
+			} else if (direction == tsunami.TimelineAction.BACKWARDS && value < startTime && tween.time != startTime && this.maxTimeReached > startTime && this.resetTweensOnScrub) {
 				tween.setTime(startTime);
 			}
 		}
@@ -2775,9 +2820,9 @@ tsunami = this.tsunami || {};
 
 (function() {
 
-	tsunami.Tween = function(startFrame, duration, target, properties, setters, easing, changeHandler, completeHandler) {
+	tsunami.Tween = function(startTime, duration, target, properties, setters, easing, changeHandler, completeHandler) {
 		tsunami.EventDispatcher.call(this);
-		this.startFrame = startFrame;
+		this.startTime = startTime;
 		this.duration = duration;
 		this.target = target;
 		this.properties = properties || [];
@@ -2785,8 +2830,8 @@ tsunami = this.tsunami || {};
 		this.easing = easing;
 		this.changeHandler = changeHandler;
 		this.completeHandler = completeHandler;
-		this.currentFrame = this.startFrame;
-		this.currentFrameTarget = this.startFrame;
+		this.time = this.startTime;
+		this.timeTarget = this.startTime;
 		this.updateEase = 0.1;
 		this.tickHandler = this.tick.bind(this);
 	};
@@ -2813,26 +2858,26 @@ tsunami = this.tsunami || {};
 				tween.addEventListener(tsunami.Tween.COMPLETE, tweenComplete);
 			});
 		}
-		this.setCurrentFrame(this.startFrame);
+		this.setTime(this.startTime);
 		tsunami.clock.addEventListener(tsunami.Clock.TICK, this.tickHandler);
 		return promise;
 	};
 
 	p.update = function() {
-		this.setCurrentFrame(this.currentFrame + (this.currentFrameTarget - this.currentFrame) * this.updateEase);
+		this.setTime(this.time + (this.timeTarget - this.time) * this.updateEase);
 	};
 
 	p.stop = function() {
 		tsunami.clock.removeEventListener(tsunami.Clock.TICK, this.tickHandler);
 	};
 
-	p.getCurrentFrame = function() {
-		return this.currentFrame;
+	p.getTime = function() {
+		return this.time;
 	};
 
-	p.setCurrentFrame = function(value) {
-		this.currentFrame = value;
-		var frame = value - this.startFrame;
+	p.setTime = function(value) {
+		this.time = value;
+		var frame = value - this.startTime;
 		for (var i in this.properties) {
 			var array = this.properties[i];
 			var tweened = this.easing(frame, array[0], array[1], this.duration);
@@ -2851,8 +2896,8 @@ tsunami = this.tsunami || {};
 	};
 
 	p.tick = function() {
-		this.setCurrentFrame(this.currentFrame + 1);
-		if (this.currentFrame >= this.startFrame + this.duration) {
+		this.setTime(this.time + 1);
+		if (this.time >= this.startTime + this.duration) {
 			this.stop();
 			if (this.completeHandler) {
 				this.completeHandler();
@@ -4667,6 +4712,7 @@ tsunami = this.tsunami || {};
 		prototype.onReleaseHandlerButton = prototype.onReleaseHandler;
 
 		prototype.onReleaseHandler = function(event) {
+			event.preventDefault();
 			this.onReleaseHandlerButton(event);
 
 			if (this.router) {
