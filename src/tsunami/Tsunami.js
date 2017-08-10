@@ -92,6 +92,7 @@ tsunami.applyDirectives = function(element, scope) {
 	var array = [element];
 	var elements = tsunami.getAllObjects(element, array);
 	for (var i = elements.length - 1; i > -1; i--) {
+    //for (var i = 0; i < elements.length; i++) {
 		var el = elements[i];
 		for (var j = 0; j < tsunami.directives.length; j++) {
 			var directive = tsunami.directives[j].method;
@@ -269,31 +270,37 @@ Object.defineProperty(tsunami.window, 'rect', {
 	}
 });
 
-tsunami.window.localToGlobal = function(element, root, point) {
-	if (!point) {
-		point = new tsunami.geom.Point();
-	}
-	while(element != root) {
-		//point.x += element.offsetLeft - element.parentNode.scrollLeft;
-		//point.y += element.offsetTop - element.parentNode.scrollTop;
-		point.x += element.offsetLeft;
-		point.y += element.offsetTop;
-		element = element.parentNode;
-	}
-	return point;
+tsunami.window.localToGlobal = function(element, root, point, debug) {
+    if (!point) {
+        point = new tsunami.geom.Point();
+    }
+    while(element != root) {
+        //point.x += element.offsetLeft - element.parentNode.scrollLeft;
+        //point.y += element.offsetTop - element.parentNode.scrollTop;
+        if (debug) {
+            console.log("$$$ element", element.className, element.offsetTop);
+        }
+        point.x += element.offsetLeft;
+        point.y += element.offsetTop;
+        element = element.parentNode;
+    }
+    return point;
 };
 
-tsunami.window.localToGlobalY = function(element, root, y) {
-	if (isNaN(y)) {
-		y = 0;
-	}
-	while(element != root) {
-		//point.x += element.offsetLeft - element.parentNode.scrollLeft;
-		//point.y += element.offsetTop - element.parentNode.scrollTop;
-		y += element.offsetTop;
-		element = element.parentNode;
-	}
-	return y;
+tsunami.window.localToGlobalY = function(element, root, y, debug) {
+    if (isNaN(y)) {
+        y = 0;
+    }
+    while(element != root) {
+        //point.x += element.offsetLeft - element.parentNode.scrollLeft;
+        //point.y += element.offsetTop - element.parentNode.scrollTop;
+        if (debug) {
+            console.log("element", element.className, element.offsetTop);
+        }
+        y += element.offsetTop;
+        element = element.parentNode;
+    }
+    return y;
 };
 
 tsunami.window.isHidden = function() {
