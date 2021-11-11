@@ -1,3 +1,4 @@
+import AssetList from './AssetList';
 import ArrayData from './data/ArrayData';
 import BaseEvent from './events';
 import RouterTask from './RouterTask';
@@ -16,11 +17,13 @@ export default class Router extends EventTarget {
     this.branches = new ArrayData();
     this.redirects = {};
     this.parameters = {};
-    
-    this.show = new RouterTransition(this, 'show', this._showComplete.bind(this));
-    this.show.tasks = [new RouterTask('load', true), new RouterTask('show', false)];
-    this.hide = new RouterTransition(this, 'hide', this._hideComplete.bind(this));
-    this.hide.tasks = [new RouterTask('hide', false)];
+
+    this.transitions = {
+      show: new RouterTransition(this, 'show'),
+      hide: new RouterTransition(this, 'hide'),
+    };
+    this.transitions.show.tasks = [new RouterTask('load', true), new RouterTask('show', false)];
+    this.transitions.hide.tasks = [new RouterTask('hide', false)];
   }
 
   static get INTERRUPT() {
@@ -141,10 +144,10 @@ export default class Router extends EventTarget {
   }
 
   _startTransitions() {
+    const nextLocationArray = this._nextLocation.split('/');
     const currentLocationArray = this.branches.value.map((branch) => {
       return branch.slug;
     });
-    const nextLocationArray = this._nextLocation.split('/');
     let breakIndex = -1;
     for (let i = 0; i < currentLocationArray.length; i++) {
       const branchId = currentLocationArray.slice(0, i + 1).join('/');
@@ -153,23 +156,12 @@ export default class Router extends EventTarget {
         breakIndex = i;
       }
     }
-    this.hide.branches = this.branches.splice(breakIndex + 1).reverse();
-    let parent = this;
-    if (this.branches.length > 0) {
-      parent = this.branches.item(this.branches.length - 1);
-    }
-    const newBranches = [];
-    for (let i = breakIndex + 1; i < nextLocationArray.length; i++) {
-      const slug = nextLocationArray[i];
-      const branch = this.getBranchFromSlug(parent, slug);
-      newBranches.push(branch);
-      parent = branch;
-    }
 
-    this.checkForDefaultBranches(parent, newBranches);
+    this.transitions.hide.branches = this.branches.splice(breakIndex + 1).reverse();
 
-    this.show.branches = newBranches;
-    this.hide.start();
+    this.transitions.hide.start().then(() => {
+      this._hideComplete();
+    });
   }
 
   checkForDefaultBranches(parent, branches) {
@@ -209,7 +201,7 @@ export default class Router extends EventTarget {
     return branch;
   }
 
-  _hideComplete(event) {
+  _hideComplete() {
     let interruptTheTransition = false;
     if (this.interruptTransitions && this._interruptingLocations.lenth > 0) {
       const nextInterruptedLocation = this._interruptingLocations[0];
@@ -226,12 +218,27 @@ export default class Router extends EventTarget {
       // this.location = this._interruptingLocations.shift();
       this.changeTheLocation(this._interruptingLocations.shift());
     } else {
-      this.branches.push.apply(this.branches, this.show.branches);
-      this.show.start();
+      const nextLocationArray = this._nextLocation.split('/');
+
+      let parent = this.branches.length > 0 ? this.branches.value[this.branches.length - 1] : this;
+      const newBranches = [];
+      for (let i = this.branches.value.length; i < nextLocationArray.length; i++) {
+        const slug = nextLocationArray[i];
+        const branch = this.getBranchFromSlug(parent, slug);
+        newBranches.push(branch);
+        parent = branch;
+      }
+      this.checkForDefaultBranches(parent, newBranches);
+      this.transitions.show.branches = newBranches;
+
+      this.branches.push.apply(this.branches, this.transitions.show.branches);
+      this.transitions.show.start().then(() => {
+        this._showComplete();
+      });
     }
   }
 
-  _showComplete(event) {
+  _showComplete() {
     this._inTransition = false;
     const evt = new BaseEvent(Router.COMPLETE, { location: this.location });
     this.dispatchEvent(evt);
@@ -264,4 +271,3 @@ export default class Router extends EventTarget {
     return '[Router location=' + this.location + ']';
   }
 }
-
