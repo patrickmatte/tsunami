@@ -1,69 +1,57 @@
-tsunami = this.tsunami || {};
+export default class EventDispatcher {
 
-(function() {
-
-    tsunami.EventDispatcher = function() {
+    constructor() {
         this.listeners = [];
         this._debug = false;
     };
 
-    var p = tsunami.EventDispatcher.prototype;
-
-    p.setDebug = function(value) {
-        this._debug = value;
-    };
-
-    p.getDebug = function() {
-        return this._debug;
-    };
-
-    Object.defineProperty(p, 'debug', {
-        get: function() {
-            return this.getDebug();
-        },
-        set: function(value) {
-            this.setDebug(value);
-        }
-    });
-
-    p.addEventListener = function(type, func) {
+    addEventListener(type, func) {
         this.listeners.push({type:type, func:func});
-    };
+    }
 
-    p.removeEventListener = function(type, func) {
-        var newListeners = [];
-        for (var i = 0 ; i < this.listeners.length; i++) {
-            var listener = this.listeners[i];
-            if (listener.type == type && listener.func == func) {
+    removeEventListener(type, func) {
+        let newListeners = [];
 
+        let listeners = this.listeners.slice();
+        for (let i = 0; i < listeners.length; i++) {
+            let listener = listeners[i];
+            let sameType = (listener.type == type);
+            let sameFunc = (listener.func == func);
+            if (sameType && sameFunc) {
             } else {
                 newListeners.push(listener);
             }
         }
-
         this.listeners = newListeners;
-    };
+    }
 
-    p.dispatchEvent = function(event) {
+    dispatchEvent(event) {
         event.target = this;
         if (!event.currentTarget) {
             event.currentTarget = this;
         }
-        var listeners = this.listeners.slice();
-        for (var i = 0 ; i < listeners.length; i++) {
-            var listener = listeners[i];
-            if (listener.type == event.type) {
-                try {
-                    listener.func(event);
-                } catch(e) {
-                    console.log(e, this);
-                }
-            }
+        let listeners = this.listeners.slice();
+        for (let i = 0 ; i < listeners.length; i++) {
+            let listener = listeners[i];
+			if (listener.type == event.type) {
+				let index = this.listeners.indexOf(listener);
+				if (index != -1) {
+					listener.func(event);
+				}
+			}
         }
-    };
+    }
 
-    p.destroy = function() {
+	set debug(value) {
+		this._debug = value;
+	}
+
+	get debug() {
+		return this._debug;
+	}
+
+	destroy() {
         this.listeners = [];
-    };
+    }
 
-}());
+}

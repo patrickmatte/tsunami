@@ -1,91 +1,146 @@
-tsunami = this.tsunami || {};
+import Clock, { getClock } from './Clock';
+import { roundDecimalToPlace } from '../utils/number';
 
-(function() {
+export default class Tween extends EventTarget {
+  constructor(
+    startTime = 0,
+    duration = 1,
+    properties = [],
+    updateHandler = null,
+    completeHandler = null,
+    name = '',
+    debug = false
+  ) {
+    super();
+    if (startTime < 0) {
+      throw new Error('Tween startTime must be greater than or equal to 0');
+    }
+    if (duration <= 0) {
+      throw new Error('Tween duration must be greater than 0');
+    }
+    this.tick = this.tick.bind(this);
+    this._startTime = startTime;
+    this._duration = duration;
+    this.name = name;
+    this.debug = debug;
+    this.properties = properties;
+    this.updateHandler = updateHandler;
+    this.completeHandler = completeHandler;
+    this._tweenTime = NaN;
+    this._time = NaN;
+    this.forceUpdate = false;
+  }
 
-	tsunami.Tween = function(startTime, duration, target, properties, setters, easing, changeHandler, completeHandler) {
-		tsunami.EventDispatcher.call(this);
-		this.startTime = startTime;
-		this.duration = duration;
-		this.target = target;
-		this.properties = properties || [];
-		this.setters = setters || [];
-		this.easing = easing;
-		this.changeHandler = changeHandler;
-		this.completeHandler = completeHandler;
-		this.time = this.startTime;
-		this.timeTarget = this.startTime;
-		this.updateEase = 0.1;
-		this.tickHandler = this.tick.bind(this);
-	};
+  get startTime() {
+    return this._startTime;
+  }
 
-	var p = tsunami.Tween.prototype = Object.create(tsunami.EventDispatcher.prototype);
+  set startTime(value) {
+    this._startTime = value;
+    this.dispatchEvent(new Event(Tween.CHANGE));
+  }
 
-	p.constructor = tsunami.Tween;
+  get endTime() {
+    return this.startTime + this.duration;
+  }
 
-	var c = tsunami.Tween;
+  get duration() {
+    return this._duration;
+  }
 
-	c.COMPLETE = "complete";
+  set duration(value) {
+    this._duration = roundDecimalToPlace(value, 3);
+    this.dispatchEvent(new Event(Tween.CHANGE));
+  }
 
-	c.CHANGE = "change";
+  start(time = 0, updateHandler = null) {
+    this.clock = getClock();
+    this.stop();
+    if (updateHandler) {
+      this.updateHandler = updateHandler;
+    }
+    const promise = new Promise((resolve, reject) => {
+      const completeCallback = (event) => {
+        this.removeEventListener(Tween.COMPLETE, completeCallback);
+        resolve(this);
+      };
+      this.addEventListener(Tween.COMPLETE, completeCallback);
+    });
+    this._tweenTime = NaN;
+    this.time = time;
+    this.previousTime = this.clock.time;
+    this.clock.addEventListener(Clock.TICK, this.tick);
+    return promise;
+  }
 
-	p.start = function() {
-		var tween = this;
-		var promise;
-		if (Promise) {
-			promise = new Promise(function (resolve, reject) {
-				var tweenComplete = function (event) {
-					tween.removeEventListener(tsunami.Tween.COMPLETE, tweenComplete);
-					resolve(tween);
-				};
-				tween.addEventListener(tsunami.Tween.COMPLETE, tweenComplete);
-			});
-		}
-		this.setTime(this.startTime);
-		tsunami.clock.addEventListener(tsunami.Clock.TICK, this.tickHandler);
-		return promise;
-	};
+  tick(event) {
+    const currentTime = this.clock.time;
+    this.time += (currentTime - this.previousTime) / 1000;
+    this.previousTime = currentTime;
+  }
 
-	p.update = function() {
-		this.setTime(this.time + (this.timeTarget - this.time) * this.updateEase);
-	};
+  pause() {
+    this.clock.removeEventListener(Clock.TICK, this.tick);
+  }
 
-	p.stop = function() {
-		tsunami.clock.removeEventListener(tsunami.Clock.TICK, this.tickHandler);
-	};
+  resume() {
+    this.previousTime = this.clock.time;
+    this.clock.addEventListener(Clock.TICK, this.tick);
+  }
 
-	p.getTime = function() {
-		return this.time;
-	};
+  stop() {
+    if(this.clock) this.clock.removeEventListener(Clock.TICK, this.tick);
+  }
 
-	p.setTime = function(value) {
-		this.time = value;
-		var frame = value - this.startTime;
-		for (var i in this.properties) {
-			var array = this.properties[i];
-			var tweened = this.easing(frame, array[0], array[1], this.duration);
-			this.target[i] = tweened;
-		}
-		for (var i in this.setters) {
-			var array = this.setters[i];
-			var tweened = this.easing(frame, array[0], array[1], this.duration);
-			this.target[i](tweened);
-		}
-		var changeEvent = {type:tsunami.Tween.CHANGE, target:this};
-		if (this.changeHandler) {
-			this.changeHandler(changeEvent);
-		}
-		this.dispatchEvent(changeEvent);
-	};
+  get time() {
+    return this._time;
+  }
 
-	p.tick = function() {
-		this.setTime(this.time + 1);
-		if (this.time >= this.startTime + this.duration) {
-			this.stop();
-			if (this.completeHandler) {
-				this.completeHandler();
-			}
-			this.dispatchEvent({type:tsunami.Tween.COMPLETE, target:this});
-		}
-	};
+  set time(value) {
+    // value = Math.min(this.startTime + this.duration, value);
+    // value = Math.max(0, value);
+    this._time = value;
+    let tweenTime = value - this.startTime;
+    tweenTime = Math.max(tweenTime, 0);
+    tweenTime = Math.min(tweenTime, this.duration);
+    if (tweenTime !== this._tweenTime || this.forceUpdate) {
+      this._tweenTime = tweenTime;
+      this.properties.forEach((property) => {
+        property.calculate(tweenTime / this.duration, this.debug);
+      });
+      const updateEvent = new Event(Tween.UPDATE);
+      if (this.updateHandler) {
+        this.updateHandler(updateEvent);
+      }
+      this.dispatchEvent(updateEvent);
+    }
+    if (tweenTime >= this.duration) {
+      const completeEvent = new Event(Tween.COMPLETE);
+      if (this.completeHandler) {
+        this.completeHandler(completeEvent);
+      }
+      this.stop();
+      this.dispatchEvent(completeEvent);
+    }
+  }
 
-}());
+  set timeFraction(value) {
+    this.time = value * this.duration;
+  }
+
+  get timeFraction() {
+    return this.time / this.duration;
+  }
+
+  static get COMPLETE() {
+    return 'complete';
+  }
+
+  static get UPDATE() {
+    return 'update';
+  }
+
+  static get CHANGE() {
+    return 'change';
+  }
+}

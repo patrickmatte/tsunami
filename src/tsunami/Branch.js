@@ -1,142 +1,89 @@
-tsunami = this.tsunami || {};
+export default class Branch extends EventTarget {
+  constructor({ load, show, hide, branches, defaultChild, getBranch } = {}) {
+    super();
+    this.branches = branches || {};
+    if (load) {
+      this.load = load;
+    }
+    if (show) {
+      this.show = show;
+    }
+    if (hide) {
+      this.hide = hide;
+    }
+    if (getBranch) {
+      this.getBranch = getBranch;
+    }
 
-(function() {
+    this._defaultChild = defaultChild;
+    this._parent = null;
+    this._path = null;
+    this._router = null;
+    this._slug = null;
+  }
 
-	tsunami.Branch = function(id, branches) {
-		this.id = id;
-		this.branches = branches || [];
-		this.assets = {
-			images:[],
-			templates:[],
-			scripts:[],
-			styles:[],
-			json:[]
-		}
-	};
-	
-	var prototype = tsunami.Branch.prototype;
+  getBranch(slug) {
+    let branch;
+    if (this.branches[slug]) {
+      branch = this.branches[slug];
+    } else if (this.branches['*']) {
+      branch = this.branches['*'];
+    } else {
+      branch = new Branch();
+      console.log('No branch named ' + slug + ', default branch was created');
+    }
+    return branch;
+  }
 
-	prototype.getBranch = function(id) {
-		var selectedBranch;
-		for (var i = 0; i < this.branches.length; i++) {
-			var branch = this.branches[i];
-			if (branch.id == id) {
-				selectedBranch = branch;
-			}
-		}
-		return selectedBranch;
-	};
+  load(props, assetList) {
+    return Promise.resolve();
+  }
 
-	prototype.load = function(assetList) {
-		var imageAssets = new tsunami.AssetList();
-		assetList.add(imageAssets);
-		var imagePromises = [];
-		if (this.assets.images) {
-			for (var i = 0; i < this.assets.images.length; i++) {
-				var image = this.assets.images[i];
-				var imagePromise = tsunami.load.image(image);
-				imageAssets.add(imagePromise);
-				imagePromises.push(imagePromise);
-			}
-		}
-		var imagesPromise = Promise.all(imagePromises);
+  show(props) {
+    return Promise.resolve();
+  }
 
-		var templateAssets = new tsunami.AssetList();
-		assetList.add(templateAssets);
-		var templatePromises = [];
-		if (this.assets.templates) {
-			for (var i = 0; i < this.assets.templates.length; i++) {
-				var template = this.assets.templates[i];
-				var templatePromise = tsunami.load.html(template);
-				templateAssets.add(templatePromise);
-				templatePromises.push(templatePromise);
-			}
-		}
-		var templatesPromise = Promise.all(templatePromises);
+  hide(props) {
+    return Promise.resolve();
+  }
 
-		var styleAssets = new tsunami.AssetList();
-		assetList.add(styleAssets);
-		var styles = [];
-		if (this.assets.styles) {
-			styles = this.assets.styles.slice();
-		}
-		var stylesPromise = new Promise(function(resolve, reject) {
-			var elements = [];
-			var loadStyle = function() {
-				if (styles.length > 0) {
-					var style = styles.shift();
-					var stylePromise = tsunami.load.style(style);
-					styleAssets.add(stylePromise);
-					stylePromise.then(function(element) {
-						elements.push(element);
-						loadStyle();
-					});
-				} else {
-					resolve(elements);
-				}
-			};
-			loadStyle();
-		});
+  get defaultChild() {
+    return this._defaultChild;
+  }
 
-		var scriptAssets = new tsunami.AssetList();
-		assetList.add(scriptAssets);
+  set defaultChild(value) {
+    this._defaultChild = value;
+  }
 
-		var scripts = [];
-		if (this.assets.scripts) {
-			scripts = this.assets.scripts.slice();
-		}
-		var scriptsPromise = new Promise(function(resolve, reject) {
-			var elements = [];
-			var loadScript = function() {
-				if (scripts.length > 0) {
-					var script = scripts.shift();
-					var scriptPromise = tsunami.load.script(script);
-					scriptAssets.add(scriptPromise);
-					scriptPromise.then(function(element) {
-						elements.push(element);
-						loadScript();
-					});
-				} else {
-					resolve(elements);
-				}
-			};
-			loadScript();
-		});
+  get parent() {
+    return this._parent;
+  }
 
-		var jsonAssets = new tsunami.AssetList();
-		assetList.add(jsonAssets);
-		var jsonPromises = [];
-		if (this.assets.json) {
-			for (var i = 0; i < this.assets.json.length; i++) {
-				var json = this.assets.json[i];
-				var jsonPromise = tsunami.load.json(json);
-				jsonAssets.add(jsonPromise);
-				jsonPromises.push(jsonPromise);
-			}
-		}
-		var jsonsPromise = Promise.all(jsonPromises);
+  set parent(value) {
+    this._parent = value;
+  }
 
-		var promise = Promise.all([imagesPromise, templatesPromise, stylesPromise, scriptsPromise, jsonsPromise]);
-		var promise2 = promise.then(this.loadComplete.bind(this));
-		return promise2;
-	};
+  get path() {
+    return this._path;
+  }
 
-	prototype.loadComplete = function(assets) {
-		this.images = assets[0];
-		this.templates = assets[1];
-		this.styles = assets[2];
-		this.scripts = assets[3];
-		this.json = assets[4];
-	};
+  set path(value) {
+    this._path = value;
+  }
 
-	prototype.hide = function() {
-		this.images = null;
-		this.templates = null;
-		tsunami.removeElements(this.styles);
-		this.styles = null;
-		tsunami.removeElements(this.scripts);
-		this.scripts = null;
-		this.json = null;
-	};
+  get router() {
+    return this._router;
+  }
 
-}());
+  set router(value) {
+    this._router = value;
+  }
+
+  get slug() {
+    return this._slug;
+  }
+
+  set slug(value) {
+    this._slug = value;
+  }
+}

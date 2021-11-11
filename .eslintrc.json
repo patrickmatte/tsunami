@@ -1,0 +1,23 @@
+{
+  "extends": ["eslint:recommended", "prettier"],
+  "plugins": ["prettier"],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "eqeqeq": "off",
+    "no-unused-vars": "off",
+    "no-useless-concat": "off",
+    "prettier/prettier": ["error"],
+    "no-console": "off",
+    "strict": ["error", "global"],
+    "curly": "warn",
+    "no-nested-ternary": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-prototype-builtins": "off"
+  }
+}

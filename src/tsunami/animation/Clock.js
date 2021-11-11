@@ -1,49 +1,64 @@
-tsunami = this.tsunami || {};
+import BaseEvent from '../events';
 
-(function() {
+export default class Clock extends EventTarget {
+  constructor() {
+    super();
+    this.time = NaN;
+    this.index = 0;
+    this.seconds = 0;
+    this.allFrames = 0;
+    this.animationFrame = this.animationFrame.bind(this);
+  }
 
-	tsunami.Clock = function() {
-		tsunami.EventDispatcher.call(this);
-		this.index = 0;
-		this.seconds = 0;
-		this.allFrames = 0;
-	};
+  static get TICK() {
+    return 'tick';
+  }
 
-	var p = tsunami.Clock.prototype = Object.create(tsunami.EventDispatcher.prototype);
+  static get FPS() {
+    return 'fps';
+  }
 
-	tsunami.Clock.TICK = "tick";
-	tsunami.Clock.FPS = "fps";
+  start() {
+    if (this.isRunning) {
+      return;
+    }
+    this.isRunning = true;
+    window.requestAnimationFrame(this.animationFrame);
+    this.fpsTimeout = setTimeout(this.dispatchFrameSeconds.bind(this), 1000);
+    return this;
+  }
 
-	p.start = function() {
-		this.isRunning = true;
-		this.animationFrame();
-		this.fpsTimeout = setTimeout(this.dispatchFrameSeconds.bind(this), 1000);
-	};
+  pause() {
+    this.isRunning = false;
+    clearTimeout(this.fpsTimeout);
+  }
 
-	p.pause = function() {
-		this.isRunning = false;
-		clearTimeout(this.fpsTimeout);
-	};
+  animationFrame(time) {
+    this.time = time;
+    this.index++;
+    const event = new BaseEvent(Clock.TICK, this.time);
+    this.dispatchEvent(event);
+    if (this.isRunning) {
+      window.requestAnimationFrame(this.animationFrame);
+    }
+  }
 
-	p.animationFrame = function() {
-		this.time = new Date();
-		this.index++;
-		this.dispatchEvent({type:tsunami.Clock.TICK});
-		if (this.isRunning) {
-			window.requestAnimationFrame(this.animationFrame.bind(this));
-		}
-	};
+  dispatchFrameSeconds() {
+    this.allFrames += this.index;
+    this.seconds++;
+    const event = new BaseEvent(Clock.FPS, {
+      frames: this.index,
+      averageFrames: Math.round((this.allFrames / this.seconds) * 10) / 10,
+    });
+    this.dispatchEvent(event);
+    this.index = 0;
+    setTimeout(this.dispatchFrameSeconds.bind(this), 1000);
+  }
+}
 
-	p.dispatchFrameSeconds = function() {
-		this.allFrames += this.index;
-		this.seconds++;
-		this.dispatchEvent({type:tsunami.Clock.FPS, frames:this.index, averageFrames:Math.round(this.allFrames / this.seconds * 10) / 10});
-		this.index = 0;
-		setTimeout(this.dispatchFrameSeconds.bind(this), 1000);
-	};
+let clock;
 
-	tsunami.clock = new tsunami.Clock();
-	tsunami.clock.start();
-
-}());
-
+export function getClock() {
+  if (!clock) clock = new Clock().start();
+  return clock;
+}

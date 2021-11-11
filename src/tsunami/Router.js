@@ -1,502 +1,267 @@
-tsunami = this.tsunami || {};
+import ArrayData from './data/ArrayData';
+import BaseEvent from './events';
+import RouterTask from './RouterTask';
+import RouterTransition from './RouterTransition';
 
-(function() {
+export default class Router extends EventTarget {
+  constructor(root) {
+    super();
 
-    tsunami.Router = function(root) {
-        tsunami.EventDispatcher.call(this);
+    this.root = root;
+    this._location = null;
+    this.goToAllLocations = false;
+    this.interruptTransitions = true;
+    this._inTransition = false;
+    this._interruptingLocations = [];
+    this.branches = new ArrayData();
+    this.redirects = {};
+    this.parameters = {};
+    
+    this.show = new RouterTransition(this, 'show', this._showComplete.bind(this));
+    this.show.tasks = [new RouterTask('load', true), new RouterTask('show', false)];
+    this.hide = new RouterTransition(this, 'hide', this._hideComplete.bind(this));
+    this.hide.tasks = [new RouterTask('hide', false)];
+  }
 
-        this._overrideLocation = null;
-        this.branches = new tsunami.Array();
-        this._location = "";
-        this.redirects = {};
-        this.fragment = "";
-        this.path = "";
-        this.root = root;
-        this.popStateHandlerMethod = this.popStateHandler.bind(this);
+  static get INTERRUPT() {
+    return 'interrupt';
+  }
 
-        this.show = new tsunami.RouterTransition(this, "show", this._showComplete.bind(this));
-        this.show.tasks = [
-            new tsunami.RouterTask("load", true),
-            new tsunami.RouterTask("show", false)
-        ];
-        this.hide = new tsunami.RouterTransition(this, "hide", this._hideComplete.bind(this));
-        this.hide.tasks = [
-            new tsunami.RouterTask("hide", false)
-        ];
-        this.defaultLocation = "";
-    };
+  static get CHANGE() {
+    return 'change';
+  }
 
-    var p = tsunami.Router.prototype = Object.create(tsunami.EventDispatcher.prototype);
+  static get COMPLETE() {
+    return 'complete';
+  }
 
-    p.constructor = tsunami.Router;
+  get root() {
+    return this._root;
+  }
 
-    Object.defineProperty(p, 'history', {
-        get: function() {
-            return this._history;
-        },
-        set: function(value) {
-            if (this._history) {
-                this._history.removeEventListener("popstate", this.popStateHandlerMethod);
-            }
-            this._history = value;
-            if (this._history) {
-                this._history.addEventListener("popstate", this.popStateHandlerMethod);
-            }
-        }
-    });
+  set root(value) {
+    this._root = value;
+  }
 
-    p.start = function() {
-        if (this.history) {
-            this.history.start();
-            //this.dispatchEvent({type:"popstate", state:{path:this.state.path}});
-            if (this.history.state) {
-                var path = this.history.state.path;
-                this.setLocation(path, false);
-            } else {
-                this.setLocation(this.path, false);
-            }
-        }
-    };
+  get location() {
+    return this._location;
+  }
 
-    p.popStateHandler = function(event) {
-        var path;
-        if (event.state) {
-            path = event.state.path;
-        } else {
-            path = this.path
-        }
-        this.dispatchEvent({type:"historyChange", path:path});
-        this.setLocation(path, false);
-    };
-
-    p.getLocation = function() {
-        return this._getBranchPath(this.branches.item(this.branches.value.length - 1));
-    };
-
-    p.getLocationShort = function() {
-        var path = "";
-        var branches = this.branches.value;
-        if (branches.length > 1) {
-            for (var i = 1; i < branches.length; i++) {
-                path += branches[i].id;
-                if (i < branches.length - 1) {
-                    path += "/";
-                }
-            }
-        }
-        return path;
-    };
-
-    p.setLocation = function(value, pushState) {
-        if (this._debug) {
-            console.log("setLocation", value);
-        }
-
-        if (value == this.getLocation() && this.hasLocation) {
-            return;
-        }
-        var path = value.substr(this.path.length + this.fragment.length);
-
-        var hashes = path.split("&");
-
-        this.parameters = {};
-        for (var i = 0; i < hashes.length; i++) {
-            var string = hashes[i];
-            var equalIndex = string.indexOf("=");
-            if (equalIndex != -1) {
-                var hash = [];
-                hash[0] = string.substr(0, equalIndex);
-                hash[1] = string.substr(equalIndex + 1);
-                this.parameters[hash[0]] = hash[1];
-            }
-        }
-
-        path = hashes[0];
-
-        // remove slash if it is the last character, we don't need blank pages.
-        var lastChar = path.charAt(path.length - 1);
-        while (lastChar == "/") {
-            path = path.substr(0, path.length - 1);
-            lastChar = path.charAt(path.length - 1);
-        }
-
-        path = this._applyRedirect(path);
-
-
-        if (path == this.getLocationShort() && this.hasLocation) {
-            return;
-        }
-
-        this.location = value;
-
-        this._gotoLocation(path);
-        if (this._history && pushState) {
-            this._history.pushState({path:value}, "", value);
-        }
-    };
-
-    p._applyRedirect = function(path) {
-        var redirect = this.redirects[path];
-        var newPath = redirect || path;
-        if (newPath != path) {
-            newPath = this._applyRedirect(newPath);
-        }
-        return newPath;
-    };
-
-    p._getBranchPath = function(branch) {
-        var pathArray = [];
-        if (branch) {
-            while(branch.id != "root") {
-                pathArray.unshift(branch.id);
-                branch = branch.parent;
-            }
-        }
-        var locationPath = this.path;
-        if (pathArray.length > 0) {
-            locationPath += this.fragment + pathArray.join("/");
-        }
-        return locationPath;
-    };
-
-    p._gotoLocation = function(value) {
-        if (this._debug) {
-            console.log("_gotoLocation", value);
-        }
-
-        if (value == "") {
-            value = this.defaultLocation;
-        }
-        this.dispatchEvent({type:"change", location:value});
-        this.hasLocation = true;
-        this._overrideLocation = null;
-        if (this._inTransition) {
-            this._overrideLocation = value;
-        } else {
-            this._overrideLocation = null;
-
-            this._nextLocation = "root";
-            if (value != "") {
-                this._nextLocation += "/" + value;
-            }
-            if (this._debug) {
-                console.log("_nextLocation", this._nextLocation);
-            }
-            this._inTransition = true;
-            this._startTransitions();
-        }
-    };
-
-    p._startTransitions = function() {
-        var currentLocationArray = this.branches.value.map(function(item) {
-            return item.id;
-        });
-        var nextLocationArray = this._nextLocation.split("/");
-        var breakIndex = -1;
-        for (var i = 0; i < currentLocationArray.length; i++) {
-            var branchId = currentLocationArray.slice(0, i + 1).join("/");
-            var nextBranchId = nextLocationArray.slice(0, i + 1).join("/")
-            if (branchId == nextBranchId) {
-                breakIndex = i;
-            }
-        }
-        this.hide.branches = this.branches.splice(breakIndex + 1).reverse();
-        var parent = this;
-        if (this.branches.value.length > 0) {
-            parent = this.branches.value[this.branches.value.length - 1];
-        }
-        var newBranches = [];
-        for (var i = breakIndex + 1; i < nextLocationArray.length; i++) {
-            var branch = new tsunami.BranchProxy(nextLocationArray[i], parent);
-            branch.root = this.root;
-            branch.path = this._getBranchPath(branch);
-            parent = branch;
-            newBranches.push(branch);
-        }
-        this.show.branches = newBranches;
-        this.hide.start();
-    };
-
-    p._hideComplete = function(event) {
-        if (this._overrideLocation != null || this._overrideLocation != undefined) {
-            this._inTransition = false;
-            this._gotoLocation(this._overrideLocation);
-        } else {
-            this.branches.push.apply(this.branches, this.show.branches);
-            this.show.start();
-        }
-    };
-
-    p._showComplete = function(event) {
-        this._inTransition = false;
-        if (this._overrideLocation != null || this._overrideLocation != undefined) {
-            this._gotoLocation(this._overrideLocation);
-        } else {
-            this.dispatchEvent({type:"complete", location:this.getLocation()});
-        }
-    };
-
-    p.getBranch = function(id) {
-        return this[id];
-    };
-
-    p.addRedirect = function(path, newPath) {
-        this.redirects[path] = newPath;
-    };
-
-    p.removeRedirect = function(path) {
-        delete this.redirects[path];
-    };
-
-    p.destroy = function() {
-        this._overrideLocation = null;
-        this.branches = null;
-        this._location = null;
-        this.redirects = null;
-        this.fragment = null;
-        this.path = null;
-        this.root = null;
-        this.popStateHandlerMethod = null;
-    };
-
-    p.toString = function() {
-        return "[Router name=" + this.name + " location=" + this.getLocation() + "]";
-    };
-
-}());
-
-
-(function() {
-
-    tsunami.RouterTransition = function(router, name, onComplete) {
-        this.router = router;
-        this.name = name;
-        this.onComplete = onComplete;
-    };
-
-    var p = tsunami.RouterTransition.prototype;
-
-    p.start = function() {
-        if (this.branches.length > 0) {
-            var nextTask;
-            for (var i = this.tasks.length - 1; i > -1; i--) {
-                var task = this.tasks[i];
-                task.router = this.router;
-                task.branches = this.branches.slice();
-                if (nextTask) {
-                    task.onComplete = nextTask.start.bind(nextTask);
-                } else {
-                    task.onComplete = this.tasksComplete.bind(this);
-                }
-                nextTask = task;
-            }
-            var firstTask = this.tasks[0];
-            firstTask.start();
-        } else {
-            this.tasksComplete();
-        }
-    };
-
-    p.tasksComplete = function() {
-        this.onComplete();
-    };
-
-}());
-
-(function() {
-
-    tsunami.RouterTask = function(name, preload) {
-        this.name = name;
-        this.preload = preload;
-    };
-
-    var p = tsunami.RouterTask.prototype;
-
-    p.start = function() {
-        this.preloader = null;
-        if (this.branches.length > 0) {
-            if (this.preload) {
-                this.assetList = new tsunami.AssetList();
-                for (var i = 0; i < this.branches.length; i++) {
-                    var branch = this.branches[i];
-                    branch.progress = 0;
-                    branch.assetList = new tsunami.AssetList();
-                    this.assetList.add(branch);
-                }
-                this.preloader = this.router.preloader;
-                if (this.preloader) {
-                    this.isPreloading = true;
-                    var promise = this.preloader.show();
-                    if (promise) {
-                        var startNextBranch = this.startNextBranch.bind(this);
-                        promise.then(function(obj) {
-                            startNextBranch();
-                        });
-                    } else {
-                        this.startNextBranch();
-                    }
-                    this.checkProgress();
-                } else {
-                    this.startNextBranch();
-                }
-            } else {
-                this.startNextBranch();
-            }
-        } else {
-            this.allComplete();
-        }
-    };
-
-    p.checkProgress = function() {
-        if (this.branch) {
-            this.branch.updateProgress();
-        }
-        this.preloader.setProgress(this.assetList.progress);
-        if (this.isPreloading) {
-            this.animationFrame = requestAnimationFrame(this.checkProgress.bind(this));
-        }
-    };
-
-    p.startNextBranch = function() {
-        this.branch = this.branches.shift();
-        this.branch.taskName = this.name;
-        this.branch.preload = this.preload;
-        this.branch.router = this.router;
-        this.branch.onComplete = this.branchComplete.bind(this);
-        this.branch.startTask();
-    };
-
-    p.branchComplete = function() {
-        if (this.branches.length > 0) {
-            this.startNextBranch();
-        } else {
-            if (this.preloader) {
-                this.isPreloading = false;
-                //cancelAnimationFrame(this.animationFrame);
-                var promise = this.preloader.hide();
-                if (promise) {
-                    var callback = this.allComplete.bind(this);
-                    promise.then(function() {
-                        callback();
-                    })
-                } else {
-                    this.allComplete();
-                }
-            } else {
-                this.allComplete();
-            }
-        }
-    };
-
-    p.allComplete = function() {
-        var method = this.onComplete;
-        tsunami.promise.waitForFrames(2).then(function() {
-            method();
-        });
+  set location(value) {
+    if (this.debug) {
+      console.log('Router set location', value);
     }
 
-}());
+    if (value.indexOf('?') !== -1) {
+      value = value.split('?')[0];
+    }
 
-(function() {
-
-    tsunami.BranchProxy = function(id, parent) {
-        this.id = id;
-        this.parent = parent;
-    };
-
-    var p = tsunami.BranchProxy.prototype;
-
-    p.startTask = function() {
-        if (!this.branch) {
-            this.branch = this.parent.getBranch(this.id);
-            if (!this.branch) {
-                this.branch = {};
-                //console.log("No branch '" + this.id + "' in '" + this.parent.id + "'");
-            }
-            this.branch.root = this.root;
-            this.branch.branchID = this.id;
-            this.branch.router = this.router;
-            this.branch.path = this.path;
-            this.branch.parent = this.parent.branch;
+    if (this._inTransition) {
+      if (this.goToAllLocations) {
+        const lastInterruptingLocation = this._interruptingLocations[this._interruptingLocations.length - 1];
+        if (lastInterruptingLocation !== value) {
+          this._interruptingLocations.push(value);
         }
-        var method = this.branch[this.taskName];
-        if (method) {
-            method = method.bind(this.branch);
-            var assetList = (this.preload)?this.assetList:null;
-            var promise = method(assetList);
-            if (promise) {
-                promise.then(this.taskComplete.bind(this), this.taskError.bind(this));
-            } else {
-                this.taskComplete();
-            }
-        } else {
-            this.taskComplete();
+      } else {
+        this._interruptingLocations = [value];
+      }
+    } else {
+      this.changeTheLocation(value);
+    }
+  }
+
+  start() {
+    this.location = '';
+  }
+
+  pushState(value) {
+    this.location = value;
+  }
+
+  changeTheLocation(value) {
+    const hashes = value.split('&');
+    this.parameters = {};
+    for (let i = 0; i < hashes.length; i++) {
+      const string = hashes[i];
+      const equalIndex = string.indexOf('=');
+      if (equalIndex !== -1) {
+        const hash = [];
+        hash[0] = string.substr(0, equalIndex);
+        hash[1] = string.substr(equalIndex + 1);
+        this.parameters[hash[0]] = hash[1];
+      }
+    }
+
+    let path = hashes[0];
+
+    // remove slash if it is the last character, we don't need blank pages.
+    let lastChar = path.charAt(path.length - 1);
+    while (lastChar === '/') {
+      path = path.substr(0, path.length - 1);
+      lastChar = path.charAt(path.length - 1);
+    }
+
+    path = this._applyRedirect(path);
+
+    if (path !== this._location) {
+      this._inTransition = true;
+
+      this._location = path;
+
+      const event = new BaseEvent(Router.CHANGE, { location: path });
+      this.dispatchEvent(event);
+
+      this._nextLocation = 'root';
+      if (path !== '') {
+        this._nextLocation += '/' + path;
+      }
+      // if (this.debug) {
+      //   console.log('Router _nextLocation', this._nextLocation);
+      // }
+
+      setTimeout(() => {
+        this._startTransitions();
+      }, 0);
+    } else {
+      this._showComplete();
+    }
+  }
+
+  _applyRedirect(path) {
+    const redirect = this.redirects[path];
+    let newPath;
+    if (redirect) {
+      newPath = redirect();
+    }
+    newPath = newPath || path;
+    if (newPath !== path) {
+      newPath = this._applyRedirect(newPath);
+    }
+    return newPath;
+  }
+
+  _startTransitions() {
+    const currentLocationArray = this.branches.value.map((branch) => {
+      return branch.slug;
+    });
+    const nextLocationArray = this._nextLocation.split('/');
+    let breakIndex = -1;
+    for (let i = 0; i < currentLocationArray.length; i++) {
+      const branchId = currentLocationArray.slice(0, i + 1).join('/');
+      const nextBranchId = nextLocationArray.slice(0, i + 1).join('/');
+      if (branchId === nextBranchId) {
+        breakIndex = i;
+      }
+    }
+    this.hide.branches = this.branches.splice(breakIndex + 1).reverse();
+    let parent = this;
+    if (this.branches.length > 0) {
+      parent = this.branches.item(this.branches.length - 1);
+    }
+    const newBranches = [];
+    for (let i = breakIndex + 1; i < nextLocationArray.length; i++) {
+      const slug = nextLocationArray[i];
+      const branch = this.getBranchFromSlug(parent, slug);
+      newBranches.push(branch);
+      parent = branch;
+    }
+
+    this.checkForDefaultBranches(parent, newBranches);
+
+    this.show.branches = newBranches;
+    this.hide.start();
+  }
+
+  checkForDefaultBranches(parent, branches) {
+    if (parent) {
+      if (parent.defaultChild) {
+        const slug = parent.defaultChild;
+        const branch = this.getBranchFromSlug(parent, slug);
+        if (branch) {
+          branches.push(branch);
+          this.checkForDefaultBranches(branch, branches);
         }
-    };
+      }
+    }
+  }
 
-    p.updateProgress = function() {
-        //console.log(this.id, "this.taskName", this.taskName, "progress", this.assetList.progress, this.assetList.assets.length);
+  getBranchFromSlug(parent, slug) {
+    let branch;
+    if (slug) {
+      if (!parent.getBranch) {
+        throw new Error("The branch '" + parent.slug + "' doesn't implement the getBranch method for '" + slug + "'");
+      }
+      branch = parent.getBranch(slug);
+      branch.router = this;
+      branch.parent = parent;
+      branch.root = parent.root;
+      branch.slug = slug;
+      let path = '';
+      if (parent === this) {
+        path = '';
+      } else if (parent.slug === 'root') {
+        path = slug;
+      } else {
+        path = parent.path + '/' + slug;
+      }
+      branch.path = path;
+    }
+    return branch;
+  }
 
-        this.progress = this.assetList.progress;
-    };
+  _hideComplete(event) {
+    let interruptTheTransition = false;
+    if (this.interruptTransitions && this._interruptingLocations.lenth > 0) {
+      const nextInterruptedLocation = this._interruptingLocations[0];
+      if (nextInterruptedLocation !== null || nextInterruptedLocation !== undefined) {
+        interruptTheTransition = true;
+      }
+    }
+    if (interruptTheTransition) {
+      this._inTransition = false;
+      const event = new BaseEvent(Router.INTERRUPT, {
+        location: this.location,
+      });
+      this.dispatchEvent(event);
+      // this.location = this._interruptingLocations.shift();
+      this.changeTheLocation(this._interruptingLocations.shift());
+    } else {
+      this.branches.push.apply(this.branches, this.show.branches);
+      this.show.start();
+    }
+  }
 
-    p.taskError = function(obj) {
-        this.taskComplete();
-    };
+  _showComplete(event) {
+    this._inTransition = false;
+    const evt = new BaseEvent(Router.COMPLETE, { location: this.location });
+    this.dispatchEvent(evt);
+    if (this._interruptingLocations.length > 0) {
+      this.changeTheLocation(this._interruptingLocations.shift());
+    }
+  }
 
-    p.taskComplete = function(obj) {
-        this.progress = 1;
-        this.onComplete();
-    };
+  getBranch(slug) {
+    return this.root;
+  }
 
-    p.getBranch = function(id) {
-        var branch;
-        if (this.branch) {
-            if (this.branch.getBranch) {
-                branch = this.branch.getBranch(id);
-            } else {
-                console.log("The getBranch method isn't implemented by '" + this.id + "'");
-            }
-        } else {
-            console.log("No branch '" + this.id + "'");
-        }
-        return branch;
-    };
+  redirect(path, newPath) {
+    if (newPath) {
+      this.redirects[path] = newPath;
+    } else {
+      delete this.redirects[path];
+    }
+  }
 
-}());
+  destroy() {
+    this._interruptingLocations = null;
+    this.branches = null;
+    this.redirects = null;
+    this.root = null;
+    this.popStateBind = null;
+  }
 
+  toString() {
+    return '[Router location=' + this.location + ']';
+  }
+}
 
-(function() {
-
-    tsunami.AssetList = function() {
-        this.assets = [];
-        Object.defineProperty(this, "progress", {
-            get: function () {
-                var progress = 0;
-                var length = this.assets.length;
-                for (var i = 0; i < this.assets.length; i++) {
-                    var promise = this.assets[i];
-                    if (promise.hasOwnProperty("progress")) {
-                        progress += promise.progress;
-                    } else {
-                        length--;
-                    }
-                }
-                if (length > 0) {
-                    progress = progress / length;
-                } else {
-                    progress = 1;
-                }
-                return progress;
-            }
-        });
-    };
-
-    var p = tsunami.AssetList.prototype;
-
-    p.add = function(value) {
-        this.assets.push(value);
-        return value;
-    };
-
-}());

@@ -1,88 +1,83 @@
-(function() {
-	
-	tsunami.geom.Vector3D = function(x, y, z) {
-		this.constructor(x, y, z);
-	};
-	
-	var c = tsunami.geom.Vector3D;
-	var p = c.prototype;
-	
-	p.constructor = function(x, y, z) {
-		if (isNaN(x)) x = 0;
-		if (isNaN(y)) y = 0;
-		if (isNaN(z)) z = 0;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	};
-	
-	p.clone = function() {
-		return new tsunami.geom.Vector3D(this.x, this.y, this.z);
-	};
-	
-	p.add = function(vector) {
-		this.x += vector.x;
-		this.y += vector.y;
-		this.z += vector.z;
-		return this;
-	};
-	
-	p.multiply = function(vector) {
-		this.x = this.x * vector.x;
-		this.y = this.y * vector.y;
-		this.z = this.z * vector.z;
-		return this;
-	};
-	
-	p.divide = function(vector) {
-		this.x = this.x / vector.x;
-		this.y = this.y / vector.y;
-		this.z = this.z / vector.z;
-		return this;
-	};
-	
-	p.copyFrom = function(vector) {
-		this.x = vector.x;
-		this.y = vector.y;
-		this.z = vector.z;
-		return this;
-	};
-	
-	p.subtract = function(v) {
-		this.x -= v.x;
-		this.y -= v.y;
-		this.z -= v.z;
-		return this;
-	};
-	
-	p.toString = function() {
-		return "[Vector3D" + " x=" + this.x + " y=" + this.y + " z=" + this.z + "]";
-	};
-	
-	c.interpolate = function(v1, v2, position) {
-		var x = (v1.x + v2.x) * position;
-		var y = (v1.y + v2.y) * position;
-		var z = (v1.z + v2.z) * position;
-		return new tsunami.geom.Vector3D(x, y, z);
-	};
-	
-	c.distance = function(v1, v2) {
-		return Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
-	};
-	
-	c.polar = function(length, radians) {
-		var vector = new tsunami.geom.Vector3D();
-		vector.x = length * Math.cos(radians);
-		vector.y = length * Math.sin(radians);
-		return vector;
-	};
+export default class Vector3D {
+  constructor(x = 0, y = 0, z = 0) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
 
-	c.spherePoint = function(radius, radiansX, radiansY) {
-		var xCoord2 = radius * Math.cos(radiansX);
-		var yCoord2 = radius * Math.sin(radiansX);
-		var xCoord = xCoord2 * Math.cos(radiansY);
-		var yCoord = xCoord2 * Math.sin(radiansY);
-		return new tsunami.geom.Vector3D(xCoord, yCoord2, yCoord);
-	};
+  static interpolate(v1, v2, position) {
+    const x = (v1.x + v2.x) * position;
+    const y = (v1.y + v2.y) * position;
+    const z = (v1.z + v2.z) * position;
+    return new Vector3D(x, y, z);
+  }
 
-}());
+  static distance(v1, v2) {
+    return Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
+  }
+
+  static polar(length, radians) {
+    const vector = new Vector3D();
+    vector.x = length * Math.cos(radians);
+    vector.y = length * Math.sin(radians);
+    return vector;
+  }
+
+  // static spherePoint(radius, radiansX, radiansY) {
+  // 	let xCoord2 = radius * Math.cos(radiansX);
+  // 	let yCoord2 = radius * Math.sin(radiansX);
+  // 	let xCoord = xCoord2 * Math.cos(radiansY);
+  // 	let yCoord = xCoord2 * Math.sin(radiansY);
+  // 	return new Vector3D(xCoord, yCoord2, yCoord);
+  // }
+
+  static spherePoint(r, ax, ay) {
+    const x = r * Math.cos(ax) * Math.cos(ay);
+    const y = r * Math.sin(ax);
+    const z = r * Math.cos(ax) * Math.sin(ay);
+    return new Vector3D(x, y, z);
+  }
+
+  clone() {
+    return new Vector3D(this.x, this.y, this.z);
+  }
+
+  add(vector) {
+    this.x += vector.x;
+    this.y += vector.y;
+    this.z += vector.z;
+    return this;
+  }
+
+  multiply(vector) {
+    this.x = this.x * vector.x;
+    this.y = this.y * vector.y;
+    this.z = this.z * vector.z;
+    return this;
+  }
+
+  divide(vector) {
+    this.x = this.x / vector.x;
+    this.y = this.y / vector.y;
+    this.z = this.z / vector.z;
+    return this;
+  }
+
+  copyFrom(vector) {
+    this.x = vector.x;
+    this.y = vector.y;
+    this.z = vector.z;
+    return this;
+  }
+
+  subtract(v) {
+    this.x -= v.x;
+    this.y -= v.y;
+    this.z -= v.z;
+    return this;
+  }
+
+  toString() {
+    return '[Vector3D' + ' x=' + this.x + ' y=' + this.y + ' z=' + this.z + ']';
+  }
+}

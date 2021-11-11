@@ -1,82 +1,118 @@
-tsunami = this.tsunami || {};
-tsunami.geom = tsunami.geom || {};
+import { lerp } from '../utils/number';
 
-(function() {
+export default class Point {
+  constructor(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+  }
 
-	tsunami.geom.Point = function(x, y) {
-		this.x = (isNaN(x))?0:x;
-		this.y = (isNaN(y))?0:y;
-	};
+  static lerp(p0, p1, t) {
+    return new Point(lerp(p0.x, p1.x, t), lerp(p0.y, p1.y, t));
+  }
 
-    var c = tsunami.geom.Point;
-    var p = tsunami.geom.Point.prototype;
-	
-	p.clone = function() {
-		return new tsunami.geom.Point(this.x, this.y);
-	};
+  static distance(p1, p2 = new Point()) {
+    return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+  }
 
-	p.add = function(p) {
-		var point = new tsunami.geom.Point();
-		point.x = this.x + p.x;
-		point.y = this.y + p.y;
-		return point;
-	};
+  static polar(len, radians) {
+    return new Point(len * Math.cos(radians), len * Math.sin(radians));
+  }
 
-	p.multiply = function(p) {
-		var point = new tsunami.geom.Point();
-		point.x = this.x * p.x;
-		point.y = this.y * p.y;
-		return point;
-	};
+  static getAngle(point, center = new Point()) {
+    return Math.atan2(point.y - center.y, point.x - center.x);
+  }
 
-	p.divide = function(p) {
-		var point = new tsunami.geom.Point();
-		point.x = this.x / p.x;
-		point.y = this.y / p.y;
-		return point;
-	};
+  static random() {
+    return new Point(Math.random(), Math.random());
+  }
 
-	p.equals = function(point) {
-		return (this.x == point.x && this.y == point.y);
-	};
+  static rotate(p, a) {
+    const x = Math.cos(a) * p.x - Math.sin(a) * p.y;
+    const y = Math.sin(a) * p.x + Math.cos(a) * p.y;
+    p.x = x;
+    p.y = y;
+  }
 
-	p.copyFrom = function(p) {
-		this.x = p.x;
-		this.y = p.y;
-	};
+  add(p) {
+    return new Point(this.x + p.x, this.y + p.y);
+  }
 
-	p.subtract = function(p) {
-		var point = new tsunami.geom.Point();
-		point.x = this.x - p.x;
-		point.y = this.y - p.y;
-		return point;
-	};
+  get magnitude() {
+    return Point.distance(this);
+  }
 
-	p.clamp = function(minX, maxX, minY, maxY) {
-		this.clampX(minX, maxX);
-		this.clampY(minY, maxY);
-	};
+  abs() {
+    return new Point(Math.abs(this.x), Math.abs(this.y));
+  }
 
-	p.clampX = function(min, max) {
-		this.x = Math.max(this.x, min);
-		this.x = Math.min(this.x, max);
-	};
+  clamp(minX, maxX, minY, maxY) {
+    this.clampX(minX, maxX);
+    this.clampY(minY, maxY);
+  }
 
-	p.clampY = function(min, max) {
-		this.y = Math.max(this.y, min);
-		this.y = Math.min(this.y, max);
-	};
+  clampX(min, max) {
+    this.x = Math.max(this.x, min);
+    this.x = Math.min(this.x, max);
+  }
 
-	p.toString = function() {
-		return "[Point" + " x=" + this.x + " y=" + this.y + "]";
-	};
+  clampY(min, max) {
+    this.y = Math.max(this.y, min);
+    this.y = Math.min(this.y, max);
+  }
 
-	c.distance = function(p1, p2) {
-		return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-	};
+  copyFrom(p) {
+    this.x = p.x;
+    this.y = p.y;
+  }
 
-	c.polar = function(len, radians) {
-		return new tsunami.geom.Point(len * Math.cos(radians), len * Math.sin(radians));
-	};
-	
-}());
+  clone() {
+    return new Point(this.x, this.y);
+  }
+
+  equals(point) {
+    return this.x === point.x && this.y === point.y;
+  }
+
+  divide(p) {
+    return new Point(this.x / p.x, this.y / p.y);
+  }
+
+  divideScalar(scalar) {
+    return new Point(this.x / scalar, this.y / scalar);
+  }
+
+  multiply(p) {
+    return new Point(this.x * p.x, this.y * p.y);
+  }
+
+  multiplyScalar(scalar) {
+    return new Point(this.x * scalar, this.y * scalar);
+  }
+
+  set(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  subtract(p) {
+    return new Point(this.x - p.x, this.y - p.y);
+  }
+
+  serialize() {
+    return { x: this.x, y: this.y };
+  }
+
+  deserialize(obj) {
+    this.copyFrom(obj);
+  }
+
+  math(callback) {
+    this.x = callback(this.x);
+    this.y = callback(this.y);
+    return this;
+  }
+
+  toString() {
+    return '[Point x=' + this.x + ' y=' + this.y + ']';
+  }
+}

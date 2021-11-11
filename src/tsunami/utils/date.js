@@ -1,153 +1,165 @@
-(function() {
+import {addLeadingZero} from "./number";
 
-	var c = tsunami.date = {};
+export function timeAMPM(date) {
+	let hours = date.getHours();
+	let ampm = hours >= 12 ? 'pm' : 'am';
+	let minutes = addLeadingZero(date.getMinutes());
+	let seconds = addLeadingZero(date.getSeconds());
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	return { hours, minutes, seconds, ampm };
+}
 
-	c.toUnixString = function(date) {
-		return date.getFullYear() + "-" + tsunami.number.addLeadingZero(date.getMonth() + 1) + "-" + tsunami.number.addLeadingZero(date.getDate()) + " " + tsunami.number.addLeadingZero(date.getHours()) + ":" + tsunami.number.addLeadingZero(date.getMinutes()) + ":" + tsunami.number.addLeadingZero(date.getSeconds());
-	};
+export function formatAMPM(date, spaceBetween = "") {
+	let dateData = timeAMPM(date);
+	let strTime = dateData.hours + ':' + dateData.minutes + spaceBetween + ampm;
+	return strTime;
+}
 
-	c.toUnixUTCString = function(date) {
-		return date.getUTCFullYear() + "-" + tsunami.number.addLeadingZero(date.getUTCMonth() + 1) + "-" + tsunami.number.addLeadingZero(date.getUTCDate()) + " " + tsunami.number.addLeadingZero(date.getUTCHours()) + ":" + tsunami.number.addLeadingZero(date.getUTCMinutes()) + ":" + tsunami.number.addLeadingZero(date.getUTCSeconds());
-	};
+export function toUnixString(date) {
+	return date.getFullYear() + "-" + addLeadingZero(date.getMonth() + 1) + "-" + addLeadingZero(date.getDate()) + " " + addLeadingZero(date.getHours()) + ":" + addLeadingZero(date.getMinutes()) + ":" + addLeadingZero(date.getSeconds());
+}
 
-	c.addHours = function(date, hours) {
-		date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
-		return date;
-	};
+export function toUnixUTCString(date) {
+	return date.getUTCFullYear() + "-" + addLeadingZero(date.getUTCMonth() + 1) + "-" + addLeadingZero(date.getUTCDate()) + " " + addLeadingZero(date.getUTCHours()) + ":" + addLeadingZero(date.getUTCMinutes()) + ":" + addLeadingZero(date.getUTCSeconds());
+}
 
-	c.addDays = function(date, days) {
-		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-		return date;
-	};
+export function addHours(date, hours) {
+	date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+	return date;
+}
 
-	c.months = {
-		en:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-		fr:["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
-	};
+export function addDays(date, days) {
+	date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+	return date;
+}
 
-	c.getMonth = function(date, language) {
-		if (!language) {
-			language = "en";
+export let months = {
+	en:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+	fr:["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+};
+
+export function getMonth(date, language) {
+	if (!language) {
+		language = "en";
+	}
+	let month;
+	switch(language) {
+		case "en":
+			month = months[language][date.getMonth()];
+			break;
+	}
+	return month;
+}
+
+export function getAge(birthDate) {
+	let today = new Date();
+	let age = today.getFullYear() - birthDate.getFullYear();
+	let m = today.getMonth() - birthDate.getMonth();
+	if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+		age--;
+	}
+	return age;
+}
+
+export function treatAsUTC(date) {
+	let result = new Date(date);
+	result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+	return result;
+}
+
+export function minutesBetween(startDate, endDate) {
+	let millisecondsPerMinute = 60 * 1000;
+	return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerMinute;
+}
+
+export function hoursBetween(startDate, endDate) {
+	let millisecondsPerHour = 60 * 60 * 1000;
+	return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerHour;
+}
+
+export function daysBetween(startDate, endDate) {
+	let millisecondsPerDay = 24 * 60 * 60 * 1000;
+	return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+}
+
+export function weeksBetween(startDate, endDate) {
+	let millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+	return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerWeek;
+}
+
+export function monthsBetween(startDate, endDate) {
+	let millisecondsPerMonth = 365 / 12  * 24 * 60 * 60 * 1000;
+	return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerMonth;
+}
+
+export function yearsBetween(startDate, endDate) {
+	let millisecondsPerYear = 365 * 24 * 60 * 60 * 1000;
+	return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerYear;
+}
+
+export function getFamiliarTimeBetween(startDate, endDate) {
+	let text = "";
+	let yearsBetween = yearsBetween(startDate, endDate);
+	if (yearsBetween >= 1) {
+		let yearsBetweenFloor = Math.floor(yearsBetween);
+		if (yearsBetweenFloor > 1) {
+			text = yearsBetweenFloor.toString() + " years ago";
+		} else {
+			text = yearsBetweenFloor.toString() + " year ago";
 		}
-		var month;
-		switch(language) {
-			case "en":
-				month = tsunami.date.months[language][date.getMonth()];
-				break;
-		}
-		return month;
-	};
-
-	c.getAge = function(birthDate) {
-		var today = new Date();
-		var age = today.getFullYear() - birthDate.getFullYear();
-		var m = today.getMonth() - birthDate.getMonth();
-		if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-			age--;
-		}
-		return age;
-	};
-
-	c.treatAsUTC = function(date) {
-		var result = new Date(date);
-		result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
-		return result;
-	};
-
-	c.minutesBetween = function(startDate, endDate) {
-		var millisecondsPerMinute = 60 * 1000;
-		return (tsunami.date.treatAsUTC(endDate) - tsunami.date.treatAsUTC(startDate)) / millisecondsPerMinute;
-	};
-
-	c.hoursBetween = function(startDate, endDate) {
-		var millisecondsPerHour = 60 * 60 * 1000;
-		return (tsunami.date.treatAsUTC(endDate) - tsunami.date.treatAsUTC(startDate)) / millisecondsPerHour;
-	};
-
-	c.daysBetween = function(startDate, endDate) {
-		var millisecondsPerDay = 24 * 60 * 60 * 1000;
-		return (tsunami.date.treatAsUTC(endDate) - tsunami.date.treatAsUTC(startDate)) / millisecondsPerDay;
-	};
-
-	c.weeksBetween = function(startDate, endDate) {
-		var millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
-		return (tsunami.date.treatAsUTC(endDate) - tsunami.date.treatAsUTC(startDate)) / millisecondsPerWeek;
-	};
-
-	c.monthsBetween = function(startDate, endDate) {
-		var millisecondsPerMonth = 365 / 12  * 24 * 60 * 60 * 1000;
-		return (tsunami.date.treatAsUTC(endDate) - tsunami.date.treatAsUTC(startDate)) / millisecondsPerMonth;
-	};
-
-	c.yearsBetween = function(startDate, endDate) {
-		var millisecondsPerYear = 365 * 24 * 60 * 60 * 1000;
-		return (tsunami.date.treatAsUTC(endDate) - tsunami.date.treatAsUTC(startDate)) / millisecondsPerYear;
-	};
-
-	c.getFamiliarTimeBetween = function(startDate, endDate) {
-		var text = "";
-		var yearsBetween = tsunami.date.yearsBetween(startDate, endDate);
-		if (yearsBetween >= 1) {
-			var yearsBetweenFloor = Math.floor(yearsBetween);
-			if (yearsBetweenFloor > 1) {
-				text = yearsBetweenFloor.toString() + " years ago";
+	} else {
+		let monthsBetween = monthsBetween(startDate, endDate);
+		if (monthsBetween >= 1) {
+			let monthsBetweenFloor = Math.floor(monthsBetween);
+			if (monthsBetweenFloor > 1) {
+				text = monthsBetweenFloor.toString() + " months ago";
 			} else {
-				text = yearsBetweenFloor.toString() + " year ago";
+				text = monthsBetweenFloor.toString() + " month ago";
 			}
 		} else {
-			var monthsBetween = tsunami.date.monthsBetween(startDate, endDate);
-			if (monthsBetween >= 1) {
-				var monthsBetweenFloor = Math.floor(monthsBetween);
-				if (monthsBetweenFloor > 1) {
-					text = monthsBetweenFloor.toString() + " months ago";
+			let weeksBetween = weeksBetween(startDate, endDate);
+			if (weeksBetween >= 1) {
+				let weeksBetweenFloor = Math.floor(weeksBetween);
+				if (weeksBetweenFloor > 1) {
+					text = weeksBetweenFloor.toString() + " weeks ago";
 				} else {
-					text = monthsBetweenFloor.toString() + " month ago";
+					text = weeksBetweenFloor.toString() + " week ago";
 				}
 			} else {
-				var weeksBetween = tsunami.date.weeksBetween(startDate, endDate);
-				if (weeksBetween >= 1) {
-					var weeksBetweenFloor = Math.floor(weeksBetween);
-					if (weeksBetweenFloor > 1) {
-						text = weeksBetweenFloor.toString() + " weeks ago";
+				let daysBetween = daysBetween(startDate, endDate);
+				if (daysBetween >= 1) {
+					let daysBetweenFloor = Math.floor(daysBetween);
+					if (daysBetweenFloor > 1) {
+						text = daysBetweenFloor.toString() + " days ago";
 					} else {
-						text = weeksBetweenFloor.toString() + " week ago";
+						text = daysBetweenFloor.toString() + " day ago";
 					}
 				} else {
-					var daysBetween = tsunami.date.daysBetween(startDate, endDate);
-					if (daysBetween >= 1) {
-						var daysBetweenFloor = Math.floor(daysBetween);
-						if (daysBetweenFloor > 1) {
-							text = daysBetweenFloor.toString() + " days ago";
+					let hoursBetween = hoursBetween(startDate, endDate);
+					if (hoursBetween >= 1) {
+						let hoursBetweenFloor = Math.floor(hoursBetween);
+						if (hoursBetweenFloor > 1) {
+							text = hoursBetweenFloor.toString() + " hours ago";
 						} else {
-							text = daysBetweenFloor.toString() + " day ago";
+							text = hoursBetweenFloor.toString() + " hour ago";
 						}
 					} else {
-						var hoursBetween = tsunami.date.hoursBetween(startDate, endDate);
-						if (hoursBetween >= 1) {
-							var hoursBetweenFloor = Math.floor(hoursBetween);
-							if (hoursBetweenFloor > 1) {
-								text = hoursBetweenFloor.toString() + " hours ago";
+						let minutesBetween = minutesBetween(startDate, endDate);
+						if (minutesBetween > 1) {
+							let minutesBetweenFloor = Math.floor(minutesBetween);
+							if (minutesBetweenFloor > 1) {
+								text = minutesBetweenFloor.toString() + " minutes ago";
 							} else {
-								text = hoursBetweenFloor.toString() + " hour ago";
+								text = minutesBetweenFloor.toString() + " minute ago";
 							}
 						} else {
-							var minutesBetween = tsunami.date.minutesBetween(startDate, endDate);
-							if (minutesBetween > 1) {
-								var minutesBetweenFloor = Math.floor(minutesBetween);
-								if (minutesBetweenFloor > 1) {
-									text = minutesBetweenFloor.toString() + " minutes ago";
-								} else {
-									text = minutesBetweenFloor.toString() + " minute ago";
-								}
-							} else {
-								text = "Just now";
-							}
+							text = "Just now";
 						}
 					}
 				}
 			}
 		}
-		return text;
 	}
-
-}());
+	return text;
+}

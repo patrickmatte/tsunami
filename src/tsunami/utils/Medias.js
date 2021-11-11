@@ -1,20 +1,15 @@
-tsunami = this.tsunami || {};
-tsunami.utils = tsunami.utils || {};
+export default class Medias extends EventTarget {
 
-(function() {
+	constructor(medias) {
+		super();
+		this.medias = medias || [];
+	}
 
-	tsunami.utils.Medias = function(medias) {
-		tsunami.EventDispatcher.call(this);
-		this.medias = medias || new Array();
-	};
+	static get CHANGE() {
+		return "change";
+	}
 
-	tsunami.utils.Medias.CHANGE = "change";
-
-	var p = tsunami.utils.Medias.prototype = Object.create(tsunami.EventDispatcher.prototype);
-
-	p.constructor = tsunami.utils.Medias;
-
-	p.mqlListener = function(event) {
+	mqlListener(event) {
 		if (event.matches) {
 			for (var i = 0; i < this.medias.length; i++) {
 				var media = this.medias[i];
@@ -24,10 +19,10 @@ tsunami.utils = tsunami.utils || {};
 				}
 			}
 		}
-		this.dispatchEvent({type:tsunami.utils.Medias.CHANGE});
-	};
+		this.dispatchEvent(new Event(Medias.CHANGE));
+	}
 	
-	p.matchMedia = function(media, data) {
+	matchMedia(media, data) {
 		var mql = window.matchMedia(media);
 		mql.addListener(this.mqlListener.bind(this));
 		if (mql.matches) {
@@ -38,9 +33,6 @@ tsunami.utils = tsunami.utils || {};
 			mql:mql,
 			data:data
 		});
-	};
+	}
 
-}());
-
-
-
+}
