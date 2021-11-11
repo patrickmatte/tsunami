@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { templates } = require('./src/js/templates.js');
 
 function pageTemplate(config) {
   return `
@@ -30,7 +29,21 @@ module.exports = (env, argv) => {
 
   const plugins = [new MiniCssExtractPlugin()];
 
-  const htmlFiles = templates.slice();
+  const htmlFiles = [
+    {
+      template: pageTemplate,
+      title: 'sandbox',
+      filename: 'sandbox.html',
+      class: 'sandbox',
+      head: ``,
+      oldhead: `<link href="./assets/fonts/fonts.css" rel="stylesheet">`,
+      body: `
+        <script>
+          var app = new window.Sandbox();
+        </script>
+      `,
+    },
+  ];
 
   let links = '<ul>';
   htmlFiles.forEach((htmlFile) => {
@@ -39,8 +52,10 @@ module.exports = (env, argv) => {
   links += '</ul>';
 
   htmlFiles.push({
+    template: pageTemplate,
     title: 'index',
     filename: 'index.html',
+    class: 'index',
     head: '',
     body: links,
   });
@@ -48,7 +63,7 @@ module.exports = (env, argv) => {
   htmlFiles.forEach((htmlFile) => {
     plugins.push(
       new HtmlWebpackPlugin({
-        templateContent: pageTemplate(htmlFile),
+        templateContent: htmlFile.template(htmlFile),
         filename: htmlFile.filename,
         env: argv.mode,
         inject: 'head',
