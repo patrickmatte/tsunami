@@ -56,9 +56,8 @@ export default class Clock extends EventTarget {
   }
 }
 
-let clock;
+let clock = new Clock().start();
 
 export function getClock() {
-  if (!clock) clock = new Clock().start();
   return clock;
 }

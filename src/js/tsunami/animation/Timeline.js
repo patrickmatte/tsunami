@@ -46,6 +46,7 @@ export default class Timeline extends EventTarget {
   }
 
   start(time = 0, updateHandler = null) {
+    if (this.debug) console.log('start');
     this.clock = getClock();
     this.stop();
     if (updateHandler) {
@@ -81,7 +82,7 @@ export default class Timeline extends EventTarget {
   }
 
   stop() {
-    if(this.clock) this.clock.removeEventListener(Clock.TICK, this.tick);
+    if (this.clock) this.clock.removeEventListener(Clock.TICK, this.tick);
   }
 
   get time() {
@@ -130,6 +131,7 @@ export default class Timeline extends EventTarget {
       this.stop();
       this.dispatchEvent(completeEvent);
     }
+    if (this.debug) console.log('time', this._time);
   }
 
   set timeFraction(value) {
@@ -189,3 +191,26 @@ export default class Timeline extends EventTarget {
     });
   }
 }
+
+Timeline.findFastestDirection = function (startTime, endTime, duration) {
+  if (endTime > startTime) {
+    const goingStraight = endTime - startTime;
+    const loopBack = duration + startTime - endTime;
+    if (loopBack < goingStraight) {
+      startTime = endTime + loopBack;
+    }
+  } else {
+    const goingStraight = startTime - endTime;
+    const loopBack = duration - startTime + endTime;
+    if (loopBack < goingStraight) {
+      endTime = startTime + loopBack;
+    }
+  }
+
+  const fastestDuration = Math.abs(endTime - startTime);
+  return {
+    startTime,
+    endTime,
+    duration: fastestDuration,
+  };
+};

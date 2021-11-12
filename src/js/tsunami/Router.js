@@ -1,4 +1,3 @@
-import AssetList from './AssetList';
 import ArrayData from './data/ArrayData';
 import BaseEvent from './events';
 import RouterTask from './RouterTask';

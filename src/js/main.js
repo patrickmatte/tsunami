@@ -1,3 +1,3 @@
-import Sandbox from './Sandbox';
+import Sandbox from './sandbox/Sandbox';
 
 const exports = [Sandbox];

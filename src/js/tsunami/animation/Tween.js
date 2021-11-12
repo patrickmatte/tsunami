@@ -89,7 +89,7 @@ export default class Tween extends EventTarget {
   }
 
   stop() {
-    if(this.clock) this.clock.removeEventListener(Clock.TICK, this.tick);
+    if (this.clock) this.clock.removeEventListener(Clock.TICK, this.tick);
   }
 
   get time() {

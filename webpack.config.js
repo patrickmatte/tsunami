@@ -39,7 +39,7 @@ module.exports = (env, argv) => {
       oldhead: `<link href="./assets/fonts/fonts.css" rel="stylesheet">`,
       body: `
         <script>
-          var app = new window.Sandbox();
+          window.Sandbox();
         </script>
       `,
     },

@@ -19,3 +19,11 @@ export default class TweenProperty {
     return val;
   }
 }
+
+export function tweenV3(v3, start, end, easing) {
+  return [
+    new TweenProperty(v3, 'x', start.x, end.x, easing),
+    new TweenProperty(v3, 'y', start.y, end.y, easing),
+    new TweenProperty(v3, 'z', start.z, end.z, easing),
+  ];
+}
