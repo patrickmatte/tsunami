@@ -179,23 +179,24 @@ export default class Router extends EventTarget {
   getBranchFromSlug(parent, slug) {
     let branch;
     if (slug) {
-      if (!parent.getBranch) {
-        throw new Error("The branch '" + parent.slug + "' doesn't implement the getBranch method for '" + slug + "'");
-      }
-      branch = parent.getBranch(slug);
-      branch.router = this;
-      branch.parent = parent;
-      branch.root = parent.root;
-      branch.slug = slug;
-      let path = '';
-      if (parent === this) {
-        path = '';
-      } else if (parent.slug === 'root') {
-        path = slug;
+      if (parent != null) {
+        if (!parent.getBranch) {
+          throw new Error("The branch '" + parent.slug + "' doesn't implement the getBranch method for '" + slug + "'");
+        }
+        branch = parent.getBranch(slug);
+        branch.parent = parent;
+        if (parent == this.root) {
+          branch.path = slug;
+        } else {
+          branch.path = parent.path + '/' + slug;
+        }
       } else {
-        path = parent.path + '/' + slug;
+        branch = this.root;
+        branch.path = '';
       }
-      branch.path = path;
+      branch.router = this;
+      branch.root = this.root;
+      branch.slug = slug;
     }
     return branch;
   }
@@ -219,7 +220,10 @@ export default class Router extends EventTarget {
     } else {
       const nextLocationArray = this._nextLocation.split('/');
 
-      let parent = this.branches.length > 0 ? this.branches.value[this.branches.length - 1] : this;
+      let parent = null;
+      if (this.branches.length > 0) {
+        parent = this.branches.value[this.branches.length - 1];
+      }
       const newBranches = [];
       for (let i = this.branches.value.length; i < nextLocationArray.length; i++) {
         const slug = nextLocationArray[i];
@@ -244,10 +248,6 @@ export default class Router extends EventTarget {
     if (this._interruptingLocations.length > 0) {
       this.changeTheLocation(this._interruptingLocations.shift());
     }
-  }
-
-  getBranch(slug) {
-    return this.root;
   }
 
   redirect(path, newPath) {

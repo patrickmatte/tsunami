@@ -39,9 +39,6 @@ export default function Sandbox() {
     getBranch: () => {
       return new Circle();
     },
-    show: function (branch) {
-      console.time('label');
-    },
   };
   router = new Router(controller);
   router.location = '142F43/FFAB4C/FF5F7E/B000B9';
