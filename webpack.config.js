@@ -129,9 +129,12 @@ module.exports = (env, argv) => {
     devServer: {
       port: process.env.PORT || 8888,
       host: process.env.HOST || '0.0.0.0',
-      disableHostCheck: true,
-      publicPath: '/',
-      contentBase: './build',
+      static: {
+        directory: path.join(__dirname, 'build'),
+      },
+      devMiddleware: {
+        publicPath: '/',
+      },
       // https: true,
     },
   };
