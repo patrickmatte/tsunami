@@ -156,4 +156,18 @@ float snoise(vec3 v)
   m = m * m;
   return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
                                 dot(p2,x2), dot(p3,x3) ) );
-  }
+}
+
+vec2 snoiseVec2( vec2 x ) {
+  float s  = snoise(x);
+  float s1 = snoise(vec2( x.y - 19.1 , x.x + 33.4 ));
+  return vec2( s , s1 );
+}
+
+vec3 snoiseVec3( vec3 x ) {
+  float s  = snoise(vec3( x ));
+  float s1 = snoise(vec3( x.y - 19.1 , x.z + 33.4 , x.x + 47.2 ));
+  float s2 = snoise(vec3( x.z + 74.2 , x.x - 124.5 , x.y + 99.4 ));
+  vec3 c = vec3( s , s1 , s2 );
+  return c;
+}

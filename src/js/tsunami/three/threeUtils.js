@@ -28,6 +28,41 @@ export function localToGlobal3d(element, root, point = new THREE.Vector3(), debu
   return point;
 }
 
+export function getTriangleCenter(triangle) {
+  var vectorA = triangle.a;
+  var vectorB = triangle.b;
+  var vectorC = triangle.c;
+
+  var centerX = (vectorA[0] + vectorB[0] + vectorC[0]) / 3;
+  var centerY = (vectorA[1] + vectorB[1] + vectorC[1]) / 3;
+  var centerZ = (vectorA[2] + vectorB[2] + vectorC[2]) / 3;
+
+  return new THREE.Vector3(centerX, centerY, centerZ);
+}
+
+export function FillTriangleWithPointsBarycentric(vector1, vector2, vector3, output) {
+  let triangle = new THREE.Triangle(vector1, vector2, vector3);
+  let area = triangle.getArea();
+  console.log('Area is ' + area);
+  area = Math.sqrt(area);
+  console.log('sqrt Area is ' + area);
+  let increment = 0.1 / area;
+  for (let r1 = 0; r1 <= 1; r1 += increment) {
+    for (let r2 = 0; r2 <= 1; r2 += increment) {
+      // of course this is javascript we have to write this out instead of
+      // using only one line
+      let sqrtR = Math.sqrt(r1);
+      let A = 1 - sqrtR;
+      let B = sqrtR * (1 - r2);
+      let C = sqrtR * r2;
+      let x = A * vector1.x + B * vector2.x + C * vector3.x;
+      let y = A * vector1.y + B * vector2.y + C * vector3.y;
+      let z = A * vector1.z + B * vector2.z + C * vector3.z;
+      output.push(x, y, z);
+    }
+  }
+}
+
 export function randomVector3(range) {
   return new THREE.Vector3(randomRange(-range, range), randomRange(-range, range), randomRange(-range, range));
 }

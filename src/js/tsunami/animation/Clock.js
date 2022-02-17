@@ -3,7 +3,8 @@ import BaseEvent from '../events';
 export default class Clock extends EventTarget {
   constructor() {
     super();
-    this.time = NaN;
+    this.animationTime = NaN;
+    this.time = 0;
     this.index = 0;
     this.seconds = 0;
     this.allFrames = 0;
@@ -34,7 +35,10 @@ export default class Clock extends EventTarget {
   }
 
   animationFrame(time) {
-    this.time = time;
+    if (isNaN(this.animationTime)) this.animationTime = time;
+    const diff = time - this.animationTime;
+    this.time += diff;
+    this.animationTime = time;
     this.index++;
     const event = new BaseEvent(Clock.TICK, this.time);
     this.dispatchEvent(event);
